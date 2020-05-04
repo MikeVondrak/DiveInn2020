@@ -1,7 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var express = require("express");
-var app = express();
+import express = require('express');
+
+const app: express.Application = express();
 app.get('/', function (req, res) {
     res.send('Hello World!');
 });
