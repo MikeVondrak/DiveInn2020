@@ -1,1 +1,1 @@
-web: node dist/out-tsc/server/app/server.js
+web: node dist/out-tsc/server.js
