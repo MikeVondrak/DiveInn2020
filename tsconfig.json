@@ -20,5 +20,5 @@
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
   },
-  "include": ["./server/app/*"]
+  "include": ["./server/*"]
 }

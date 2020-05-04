@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "echo \"ROOT PKG START\" && ng serve",
+    "build": "echo \"ROOT PKG BUILD\"  && ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "tsc": "tsc",
+    "tsc": "echo \"ROOT PKG TSC\" && tsc",
     "app-serve": "concurrently \"(cd server && npm run dev)\"  \"npm run start\"",
-    "heroku-postbuild": "npm run tsc && ng build --aot --prod"
+    "heroku-postbuild": "echo \"ROOT PKG POSTBUILD\" && npm run tsc && ng build --aot --prod"
   },
   "engines": {
     "node": "12.16.x"
