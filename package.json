@@ -3,13 +3,16 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node ./server/dist/server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "app-serve": "concurrently \"(cd server && npm run dev)\"  \"npm run start\"",
     "heroku-postbuild": "ng build --aot --prod"
+  },
+  "engines": {
+    "node": "12.16.x"
   },
   "private": true,
   "dependencies": {
