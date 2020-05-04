@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "cd server && node /dist/server.js",
+    "start": "node server/dist/server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "tsc": "tsc",
     "app-serve": "concurrently \"(cd server && npm run dev)\"  \"npm run start\"",
-    "heroku-postbuild": "ng build --aot --prod"
+    "heroku-postbuild": "tsc && ng build --aot --prod"
   },
   "engines": {
     "node": "12.16.x"
