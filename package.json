@@ -10,7 +10,7 @@
     "e2e": "ng e2e",
     "tsc": "echo \"ROOT PKG TSC\" && tsc",
     "app-serve": "concurrently \"(cd server && npm run dev)\"  \"npm run start\"",
-    "heroku-postbuild": "echo \"ROOT PKG POSTBUILD\" && npm run tsc && ng build --aot --prod"
+    "heroku-postbuild": "echo \"ROOT PKG POSTBUILD\" && npm run tsc && ng build --prod"
   },
   "engines": {
     "node": "12.16.x"
