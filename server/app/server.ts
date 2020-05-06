@@ -1,7 +1,7 @@
 // const express = require('express'); // old js way of importing
 import express from 'express';
 import compression from 'compression';
-import path from 'path';
+import * as path from 'path';
 
 const _port = process.env.PORT || 3000; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
 const _appLocation = '../../dist/dive-inn'; // output from ng build --prod
