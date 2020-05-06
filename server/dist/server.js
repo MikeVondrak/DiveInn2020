@@ -23,6 +23,8 @@ app.use(compression_1.default());
 console.log("********************************************************************************");
 console.log("********************************************************************************");
 console.log("Running in: " + __dirname);
+var tmp = path.join(__dirname, _appLocation);
+console.log("app: " + _appLocation + ", joined: " + tmp);
 // serve static files
 // __dirname = location where node script is currently executing
 // use path.join to resolve relative path ('../') in _appLocation

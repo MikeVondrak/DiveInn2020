@@ -15,6 +15,8 @@ app.use(compression());
 console.log("********************************************************************************");
 console.log("********************************************************************************");
 console.log("Running in: " + __dirname);
+let tmp = path.join(__dirname, _appLocation);
+console.log("app: " + _appLocation + ", joined: " + tmp);
 
 // serve static files
 // __dirname = location where node script is currently executing
