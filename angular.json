@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "dive-inn-angular": {
+    "dive-inn": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/dive-inn-angular",
+            "outputPath": "dist/dive-inn",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -66,18 +66,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "dive-inn-angular:build"
+            "browserTarget": "dive-inn:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "dive-inn-angular:build:production"
+              "browserTarget": "dive-inn:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "dive-inn-angular:build"
+            "browserTarget": "dive-inn:build"
           }
         },
         "test": {
@@ -114,15 +114,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "dive-inn-angular:serve"
+            "devServerTarget": "dive-inn:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "dive-inn-angular:serve:production"
+              "devServerTarget": "dive-inn:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "dive-inn-angular"
+  "defaultProject": "dive-inn"
 }
