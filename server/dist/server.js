@@ -20,6 +20,8 @@ var _appLocation = '../../dist/dive-inn/'; // output from ng build --prod
 var app = express_1.default();
 // gzip compression middleware for performance
 app.use(compression_1.default());
+console.log("********************************************************************************");
+console.log("********************************************************************************");
 console.log("Running in: " + __dirname);
 // serve static files
 // __dirname = location where node script is currently executing
@@ -31,5 +33,7 @@ app.all('*', function (req, res) {
     res.status(200).sendFile("/", { root: _appLocation });
 });
 app.listen(_port, function () {
+    console.log("********************************************************************************");
+    console.log("********************************************************************************");
     console.log("Node Express server for " + app.name + " listening on port: " + _port);
 });

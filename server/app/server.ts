@@ -12,6 +12,8 @@ const app: express.Application = express();
 // gzip compression middleware for performance
 app.use(compression());
 
+console.log("********************************************************************************");
+console.log("********************************************************************************");
 console.log("Running in: " + __dirname);
 
 // serve static files
@@ -26,5 +28,7 @@ app.all('*', function (req, res) {
 });
 
 app.listen(_port, function () {
+  console.log("********************************************************************************");
+  console.log("********************************************************************************");
   console.log("Node Express server for " + app.name + " listening on port: " + _port);
 });
