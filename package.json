@@ -25,7 +25,6 @@
     "@angular/platform-browser": "~9.1.4",
     "@angular/platform-browser-dynamic": "~9.1.4",
     "@angular/router": "~9.1.4",
-    "@types/compression": "^1.7.0",
     "@types/node": "^12.11.1",
     "compression": "^1.7.4",
     "express": "^4.17.1",
