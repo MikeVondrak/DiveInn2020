@@ -3,19 +3,20 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "echo \"ROOT PKG START\" && ng serve",
-    "build": "echo \"ROOT PKG BUILD\"  && ng build",
+    "start": "ng serve --proxy-config proxy.config.json",
+    "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "tsc": "echo \"ROOT PKG TSC\" && tsc",
+    "tsc": "tsc",
     "app-serve": "concurrently \"(cd server && npm run dev)\"  \"npm run start\"",
-    "heroku-postbuild": "echo \"ROOT PKG POSTBUILD\" && ng build --prod"
+    "heroku-predeploy": "cd server && tsc",
+    "heroku-postbuild": "echo \"HEROKU POSTBUILD\" && ng build --aot --prod"
   },
   "engines": {
     "node": "12.16.x",
     "npm": "6.14.x"
-  },
+  }, 
   "private": true,
   "dependencies": {
     "@angular/animations": "~9.1.4",

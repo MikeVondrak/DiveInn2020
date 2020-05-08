@@ -13,7 +13,6 @@ const app: express.Application = express();
 app.use(compression());
 
 console.log("********************************************************************************");
-console.log("********************************************************************************");
 console.log("Running in: " + __dirname);
 let tmp = path.join(__dirname, _appLocation);
 console.log("app: " + _appLocation + ", joined: " + tmp);
@@ -30,7 +29,6 @@ app.all('*', function (req, res) {
 });
 
 app.listen(_port, function () {
-  console.log("********************************************************************************");
   console.log("********************************************************************************");
   console.log("Node Express server for " + app.name + " listening on port: " + _port);
 });
