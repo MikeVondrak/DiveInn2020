@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "tsc": "tsc",
-    "latest": "npm i && cd server && npn i",
+    "latest": "npm i && cd server && npm i",
     "app-serve": "concurrently \"(cd server && npm run dev)\"  \"npm run start\"",
     "heroku-predeploy": "cd server && tsc",
     "heroku-postbuild": "echo \"HEROKU POSTBUILD\" && ng build --aot --prod"
