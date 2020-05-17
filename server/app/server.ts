@@ -1,38 +1,71 @@
-// equivalent of older: const express = require('express')
-import express from 'express';
+// const express = require('express'); // old js way of importing
+import express, { RequestHandler, Router, Request, Response } from 'express';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 
-// Create a new express application instance
-const app: express.Application = express();
+import * as path from 'path';
 
-app.get('/', function (req, res) {
-  res.send('Hello WWWorld!');
-});
+import { ServerApp } from './server-app';
+import { logger } from './middleware/logger';
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-});
+const _port: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
+
+// running server app from ./server/app or ./server/dist (for prod)
+const _angularAppLocation: string = '../../dist/dive-inn'; // output from ng build --prod
+const _angularAssetsLocation: string = '../../src/assets'; /** @TODO more consistent locations / file structure */
+
+debugFileAndDir();
+
+// list of paths for statically served content
+// __dirname provided by Express, location app is running from
+const angularDist = path.join(__dirname, _angularAppLocation);
+const assets = path.join(__dirname, _angularAssetsLocation);
+const staticPaths: string[] = [
+  angularDist, // published files from Angular --prod build
+  assets // images, fonts, etc
+];
+
+// compile our list of middleware
+const middleWare: RequestHandler[] = [
+  // Express Framework Built-Ins
+  compression(), // gzip for smaller file size / better performance
+  express.json(), // parse JSON in body of request
+  cookieParser(), // parse cookie header of request
+
+  // custom
+  logger
+];
+
+// define controllers for paths
+const controllers: Router[] = [];
+
+const default200Response = (req: Request, res: Response) => {
+  console.log('NODE: Router default 200 response');
+  // serve default file (index.html) for Angular app
+  //res.status(200).sendFile('/', {root: _angularAppLocation});
+  res.send('{ "test_id": 99 }');
+}
+
+const allRoutes = express.Router();
+allRoutes.get('*', default200Response);
+
+controllers.push(allRoutes);
+
+const serverApp = new ServerApp(_port, staticPaths, middleWare, controllers);
+serverApp.beginListening();
 
 
-// const app = express();
-// // Allow any method from any host and log requests
-// app.use((req, res, next) => {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//     res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, DELETE');
-//     if('OPTIONS' === req.method) {
-//         res.sendStatus(200);
-//     } else {
-//         console.log(`${req.ip} ${req.method} ${req.url}`);
-//         next();
-//     }
-// }
-// // Handle POST requests that come in formatted as JSON
-// app.use(express.json())
-// // A default hello word route
-// app.get('/', (req, res) => {
-//     res.send({hello: 'world'});
-// });
-// // start our server on port 4201
-// app.listen(4201, '127.0.0.1', function() {
-//     console.log("Server now listening on 4201");
-// });
+/**
+ * @method debugFileAndDir
+ * __dirname = location where node script is currently executing
+ * use path.join to resolve relative path ('../') in _appLocation
+ * /server/dist/server.js -> ../../dist/dive-inn -> /dist/dive-inn/
+ */
+function debugFileAndDir() {
+  console.log("\n\n********************************************************************************");
+  console.log('Running:\t\t' + __filename);
+  let tmp = path.join(__dirname, _angularAppLocation);
+  console.log('Angular App Path:\t' + _angularAppLocation + '\nResolved:\t\t' + tmp);
+}
+
