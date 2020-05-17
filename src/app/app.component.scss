@@ -1,0 +1,19 @@
+@import '../scss/common-imports';
+
+:host {
+  display: block; // set custom element display since default for unknown elements is 'inline' in most browsers
+
+  margin: 2rem;
+  padding: 2rem;
+  border: 1px solid $dive-red;
+
+  .gray-lt {
+    color: $dive-gray-lt;
+  }
+  .gray-md {
+    color: $dive-gray-md;
+  }
+  .gray-dk {
+    color: $dive-gray-dk;
+  }
+}

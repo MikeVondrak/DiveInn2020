@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "dive-inn-server",
   "version": "1.0.0",
   "description": "Dive Inn Express Server",
   "main": "server.js",

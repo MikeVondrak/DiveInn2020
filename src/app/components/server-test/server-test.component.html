@@ -1,0 +1,8 @@
+<br/>
+<hr/>
+<h1>Server Test</h1>
+
+<button (click)="getAnswer()">server test</button>
+
+<!-- <p style="border: 1px solid red; padding: 1em;">Return fn(): {{ (serverTestService.getServerTestData$() | async) }}</p> -->
+<p style="border: 1px solid red; padding: 1em;">Return var: {{ (serverResponse$ | async)?.test_id }}</p>
