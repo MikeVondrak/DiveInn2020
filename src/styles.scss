@@ -1,36 +1,97 @@
 @import './scss/font-faces';
 @import './scss/colors';
 
-/* Global Styles */
+/** Global Styles **/
 
 // Resets
 * {
   box-sizing: border-box; // include padding and border in width value of elements
 }
+
 html, body {
   height: 100%;
   width: 100%;
+  padding: 0;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
 }
 
 // Typography
 body {
-  font-family: 'Anton', sans-serif;
+  font-family: 'PTSans-Regular', sans-serif;
 
   // test
-  p.ptSans { font-family: 'PTSans-Regular', sans-serif; }
+  p.anton { font-family: 'Anton', sans-serif; }
   p.ptSansBold { font-family: 'PTSans-Bold', sans-serif; }
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Alfa Slab One', serif;
+  font-weight: normal;
+  font-family: 'Bevan', serif;
+  //letter-spacing: 0.05em;
+  text-rendering: geometricPrecision;
 
   // test fonts
-  &.anton { font-family: 'Anton'; }
-  &.bevan { font-family: 'Bevan'; }
-  &.patua { font-family: 'PatuaOne'; }
+  &.alfa { font-family: 'Alfa Slab One', serif; }
+  &.anton { font-family: 'Anton', serif; }
+  &.bevan { font-family: 'Bevan', serif; }
+  &.patua { font-family: 'PatuaOne', serif; }
 }
 
 // Page Defaults
 body {
   background-color: $dive-black;
   color: $dive-white;
+}
+button {
+  $borderWeight: 2px;
+
+  background-color: $dive-red;
+  color: $dive-white;
+  padding: 0.25rem 0.5rem;
+  border: $borderWeight solid $dive-red;
+  border-radius: 0.25rem;
+
+  border-top-color: rgba(255,255,255,0.25);
+  border-left-color: rgba(255,255,255,0.25);
+  border-right-color: rgba(0,0,0,0.25);
+  border-bottom-color: rgba(0,0,0,0.25);
+
+  font-family: 'PTSans-Bold', sans-serif;
+  font-size: 1rem;
+  text-shadow: 0px 0px 5px #000;
+  text-transform: uppercase;
+
+  transition: outline-offset 1s ease-out;
+  
+
+  cursor: pointer;
+  &:focus {     
+    outline: thin dashed;// yellow; 
+    outline-offset: 2px;
+    $offset: 35%;
+    //background-image: linear-gradient(180deg, transparent $offset, rgba(255,255,255,0.45) ($offset + 4%), rgba(255,255,255,0.85) ($offset + 6%), rgba(255,255,255,0.45) ($offset + 8%), transparent ($offset + 12%));
+    //outline: none;
+    // background: #efc700;
+    // border-color: #efc700;
+    //border: $borderWeight dashed yellow;
+  }
+
+  &:hover {
+    border: $borderWeight solid rgba(255,255,255,0.35);
+    border-top-color: rgba(255,255,255,0.4);
+    border-left-color: rgba(255,255,255,0.4);
+    border-right-color: rgba(0,0,0,0.4);
+    border-bottom-color: rgba(0,0,0,0.4);
+  }
+  &:active {
+    border: $borderWeight solid $dive-red;
+    border-top-color: rgba(0,0,0,0.4);
+    border-left-color: rgba(0,0,0,0.4);
+    border-right-color: rgba(0,0,0,0.4);
+    border-bottom-color: rgba(0,0,0,0.4);
+    // &:focus {
+    //   border-color: #efc700;
+    // }
+  }
 }
