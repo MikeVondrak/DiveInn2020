@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+@import './scss/font-faces';
+@import './scss/colors';
+
+/* Global Styles */
+
+// Resets
+* {
+  box-sizing: border-box; // include padding and border in width value of elements
+}
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+// Typography
+body {
+  font-family: 'Anton', sans-serif;
+
+  // test
+  p.ptSans { font-family: 'PTSans-Regular', sans-serif; }
+  p.ptSansBold { font-family: 'PTSans-Bold', sans-serif; }
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Alfa Slab One', serif;
+
+  // test fonts
+  &.anton { font-family: 'Anton'; }
+  &.bevan { font-family: 'Bevan'; }
+  &.patua { font-family: 'PatuaOne'; }
+}
+
+// Page Defaults
+body {
+  background-color: $dive-black;
+  color: $dive-white;
+}
