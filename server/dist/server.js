@@ -11,8 +11,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // const express = require('express'); // old js way of importing
-var express_1 = require("express");
+var express_1 = __importDefault(require("express"));
 var compression_1 = __importDefault(require("compression"));
+var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var path = __importStar(require("path"));
 var server_app_1 = require("./server-app");
 var logger_1 = require("./middleware/logger");
@@ -27,23 +28,27 @@ var angularDist = path.join(__dirname, _angularAppLocation);
 var assets = path.join(__dirname, _angularAssetsLocation);
 var staticPaths = [
     angularDist,
-    assets
+    assets // images, fonts, etc
 ];
 // compile our list of middleware
 var middleWare = [
-    // third party
-    compression_1.default,
-    // custom middleware
+    // Express Framework Built-Ins
+    compression_1.default(),
+    express_1.default.json(),
+    cookie_parser_1.default(),
+    // custom
     logger_1.logger
 ];
 // define controllers for paths
 var controllers = [];
 var default200Response = function (req, res) {
+    console.log('NODE: Router default 200 response');
     // serve default file (index.html) for Angular app
-    res.status(200).sendFile('/', { root: _angularAppLocation });
+    //res.status(200).sendFile('/', {root: _angularAppLocation});
+    res.send('{ "test_id": 99 }');
 };
-var allRoutes = express_1.Router();
-allRoutes.all('*', default200Response);
+var allRoutes = express_1.default.Router();
+allRoutes.get('*', default200Response);
 controllers.push(allRoutes);
 var serverApp = new server_app_1.ServerApp(_port, staticPaths, middleWare, controllers);
 serverApp.beginListening();
@@ -54,8 +59,8 @@ serverApp.beginListening();
  * /server/dist/server.js -> ../../dist/dive-inn -> /dist/dive-inn/
  */
 function debugFileAndDir() {
-    console.log("********************************************************************************");
-    console.log('Running ' + __filename + ' from: ' + __dirname);
+    console.log("\n\n********************************************************************************");
+    console.log('Running:\t\t' + __filename);
     var tmp = path.join(__dirname, _angularAppLocation);
-    console.log('Angular App Path: ' + _angularAppLocation + ', Resolved: ' + tmp);
+    console.log('Angular App Path:\t' + _angularAppLocation + '\nResolved:\t\t' + tmp);
 }
