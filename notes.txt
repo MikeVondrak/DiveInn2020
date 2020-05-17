@@ -6,3 +6,14 @@ Express App Using Typescript
   - class for server app
   https://dev.to/aligoren/developing-an-express-application-using-typescript-3b1
 
+Using Express 4 Router
+  https://scotch.io/tutorials/learn-to-use-the-new-router-in-expressjs-4
+
+------
+
+
+
+Fix "Experimental support for decorators..." warning/error
+  Preferences > Settings > "implicit" > check "Implicit Project Config: Experimental decorators" option
+  https://stackoverflow.com/questions/38271273/experimental-decorators-warning-in-typescript-compilation
+
