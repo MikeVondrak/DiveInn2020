@@ -20,13 +20,13 @@ export class ServerTestComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.serverResponse$ = this.serverTestService.getServerTestData$();
+    this.serverResponse$ = this.serverTestService.getServerConstData$();
   }
   ngOnDestroy(): void {
   }
 
   getAnswer() {
     console.log('**** component getAnswer()');
-    this.serverTestService.getServerTestData$();
+    this.serverTestService.getServerConstData$();
   }
 }

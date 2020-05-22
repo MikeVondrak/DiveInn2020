@@ -1,6 +1,8 @@
 // https://dev.to/aligoren/developing-an-express-application-using-typescript-3b1
 
 import express, { Application, Request, Response, NextFunction, RequestHandler, Router } from 'express';
+import mysql, { ConnectionOptions, ConnectionConfig, Connection, Query, QueryFunction, QueryOptions, MysqlError, FieldInfo, queryCallback } from 'mysql';
+import { TestData, TestJson } from './models/test-data.model';
 
 export class ServerApp {
   private app: Application;
@@ -67,23 +69,50 @@ export class ServerApp {
   }
 
   public connectDb() {
-    var mysql = require('mysql');
-    var connection = mysql.createConnection({
+    //var mysql = require('mysql');
+    let connectionConfig: ConnectionConfig = {
       host: 'localhost',
+      port: 3306,
       user: 'DiveMaster',
       password: 'D1v3M4st3r!!',
-      database: 'dive_inn_test_db'
-    })
-
-    connection.connect();
-
-    connection.query('SELECT 1 + 1 AS solution', (err, rows, fields) => {
-      console.log('connectDb err: ' + err + ' rows: ' + rows + ' fields: ' + fields);
-      if (err) throw err
-
-      console.log('The solution is: ', rows[0].solution);
+      database: 'dive_inn_test_db',
+    };
+    let connection: Connection = mysql.createConnection(connectionConfig);
+    connection.connect(err => {
+      if (err) {
+        throw err;
+      }
+      console.log('Connected to ' + connection.config.database + ' on ' + connection.config.host + ':' + connection.config.port);
+      
+      this.runSimpleQuery(connection);
     });
+  }
 
+  public disconnectDb(connection: Connection) {
     connection.end();
   }
+
+
+  private runSimpleQuery(connection: Connection): Query  {
+    let queryOptions: QueryOptions = {
+      sql: 'SELECT * FROM test_table',
+    };
+    let testData: TestData[] = [];
+    let testDataCallback: queryCallback = (err: MysqlError | null, rows: TestData[], fields: FieldInfo[] | undefined) => {
+      if (err) {
+        throw err;
+      }
+      testData = rows;
+
+      console.log('\nData:\n');
+      console.log(JSON.stringify(testData, null, 4));
+
+      /** @TODO disconnect when app is destroyed */
+      this.disconnectDb(connection);
+    };
+
+    console.log('Querying: ' + queryOptions.sql);
+    return connection.query(queryOptions, testDataCallback);
+  }
+    
 }
