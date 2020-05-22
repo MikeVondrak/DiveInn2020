@@ -1,0 +1,17 @@
+1. Start SQL Server
+  System Tray icon, other?
+2. Log in to Command Line
+2a. Log in with Workbench
+
+
+Log in w/different user
+  Command Prompt >
+    C:\Program Files\MySQL\MySQL Server 8.0\bin> mysql -u<username> -p<password>
+
+Run external script:
+  mysql command line>
+  source D:\_dev\dive-inn-denver\DiveInn2020\db\RecreateTestDatabase.sql
+
+----
+
+Any way to start DB through code?

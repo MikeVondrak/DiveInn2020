@@ -5,6 +5,20 @@ DROP DATABASE IF EXISTS dive_inn_test_db;
 CREATE DATABASE dive_inn_test_db;
 USE dive_inn_test_db;
 
+# Create default user if it doesn't exist
+DROP USER 'DiveMaster'@'localhost';
+CREATE USER 'DiveMaster'@'localhost' IDENTIFIED BY 'D1v3M4st3r!!';
+GRANT ALL PRIVILEGES ON *.* TO 'DiveMaster'@'localhost'; # IDENTIFIED BY 'D1v3M4st3r!!';
+
+# TODO - How TF to do IF statements
+-- IF EXISTS USER 'DiveMaster'@localhost' THEN
+--     \! echo 'exists';
+-- ELSE
+--     \! echo 'not exists';
+-- END IF
+
+# Recreate test table
+
 DROP TABLE IF EXISTS test_table;
 
 CREATE TABLE test_table (
@@ -32,14 +46,4 @@ VALUES
     ('e', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
-/* CREATE TABLE test_table (
-    testId              INT NOT NULL AUTO_INCREMENT,
-    testValue           VARCHAR(100),
-    PRIMARY KEY (`testId`)
-);
-INSERT INTO test_table ( testValue ) VALUES 
-    ( 'test value 1' ),
-    ( 'test value 2' ),
-    ( 'test value 3' ),
-    ( 'test value 4' ); */
 

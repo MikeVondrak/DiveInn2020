@@ -52,8 +52,14 @@ allRoutes.get('*', default200Response);
 
 controllers.push(allRoutes);
 
+
+
 const serverApp = new ServerApp(_port, staticPaths, middleWare, controllers);
+
 serverApp.beginListening();
+
+serverApp.connectDb();
+
 
 
 /**

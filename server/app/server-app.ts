@@ -13,7 +13,7 @@ export class ServerApp {
   ) {
     this.app = express(); // create a new express application instance
     this.port = process.env.PORT ? process.env.PORT : this.port; // process.env.PORT set by Heroku
-    
+
     // first to match route takes precedence,  static > middleware > controllers
     // '/' defaults to 
     this.useStatic(this.staticPathList);
@@ -64,5 +64,26 @@ export class ServerApp {
       console.log('********************************************************************************');
       console.log('Node Express server for "' + this.app.name + '" listening on port: ' + this.port + '\n');
     })
+  }
+
+  public connectDb() {
+    var mysql = require('mysql');
+    var connection = mysql.createConnection({
+      host: 'localhost',
+      user: 'DiveMaster',
+      password: 'D1v3M4st3r!!',
+      database: 'dive_inn_test_db'
+    })
+
+    connection.connect();
+
+    connection.query('SELECT 1 + 1 AS solution', (err, rows, fields) => {
+      console.log('connectDb err: ' + err + ' rows: ' + rows + ' fields: ' + fields);
+      if (err) throw err
+
+      console.log('The solution is: ', rows[0].solution);
+    });
+
+    connection.end();
   }
 }
