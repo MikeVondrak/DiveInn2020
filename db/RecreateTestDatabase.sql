@@ -6,7 +6,7 @@ CREATE DATABASE dive_inn_test_db;
 USE dive_inn_test_db;
 
 # Create default user if it doesn't exist
-DROP USER 'DiveMaster'@'localhost';
+DROP USER IF EXISTS 'DiveMaster'@'localhost';
 CREATE USER 'DiveMaster'@'localhost' IDENTIFIED WITH mysql_native_password BY 'D1v3M4st3r!!';
 GRANT ALL PRIVILEGES ON *.* TO 'DiveMaster'@'localhost'; # IDENTIFIED BY 'D1v3M4st3r!!';
 FLUSH PRIVILEGES;
