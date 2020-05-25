@@ -1,0 +1,14 @@
+:host {
+  display: block;
+
+  .controlsContainer {
+    display: flex;
+    justify-content: space-between;
+
+    select {
+      &:focus {
+        
+      }
+    }
+  }
+}

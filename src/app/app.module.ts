@@ -1,20 +1,24 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServerTestComponent } from './components/server-test/server-test.component';
+import { FontTestComponent } from './components/font-test/font-test.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ServerTestComponent
+    ServerTestComponent,
+    FontTestComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

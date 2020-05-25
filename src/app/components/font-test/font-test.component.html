@@ -1,0 +1,59 @@
+<!-- <h1 [ngStyle]="{'font-family': 'PT Sans'}">Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1> -->
+
+<h1 [ngStyle]="headerStyle">Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1>
+<p [ngStyle]="textStyle">The quick brown ox forked over the jazzy dog mp. ? ! @ # $ % & * ( ) ~ - + = ' " ;</p>
+
+<div class="controlsContainer">
+  <div>
+    <select 
+      [(ngModel)]="headerFont" 
+      (change)="onChange($event)" 
+      (ngModelChange)="onModelChange(controlsEnum.header, $event)"
+    >
+      <option *ngFor="let font of fontOptions"
+        [ngValue]="font"
+      >
+        {{ font.uiText }}
+      </option>
+    </select>
+    <p>Selected Font:</p>
+    <p>{{headerFont.uiText}}</p>
+  </div>
+  <div>
+    <select 
+      [(ngModel)]="textFont" 
+      (change)="onChange($event)" 
+      (ngModelChange)="onModelChange(controlsEnum.text, $event)"
+    >
+      <option *ngFor="let font of fontOptions"
+        [ngValue]="font"
+      >
+        {{ font.uiText }}
+      </option>
+    </select>
+    <p>Selected Font:</p>
+    <p>{{textFont.uiText}}</p>
+  </div>
+  <div>
+    <label for="addFontInput">Add a new font: </label>
+    <input type="text"
+      id="addFontInput"
+      [(ngModel)]="fontNameToAdd"
+      #ctrl="ngModel"
+      required
+    />
+    <p>Input: {{ fontNameToAdd }}</p>
+    <p>Valid: {{ ctrl.valid }}</p>
+  </div>
+</div>
+
+<!-- <p class='gray-lt'> The quick brown ox forked over the jazzy dog mp. ? ! @ # $ % & * ( ) ~ - + = ' " ;</p>
+<h1 class='alfa'>Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1>
+<h1 class='anton'>Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1>
+<h1 class='patua'>Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1>
+<p> The quick brown ox forked over the jazzy dog mp.</p>
+<p class='gray-lt'> The quick brown ox forked over the jazzy dog mp. ? ! @ # $ % & * ( ) ~ - + = ' " ;</p>
+<p class='gray-md'> The quick brown ox forked over the jazzy dog mp.</p>
+<p class='ptSans gray-dk'> The quick brown ox forked over the jazzy dog mp.</p>
+<p class='ptSansBold'> The quick brown ox forked over the jazzy dog mp.</p> -->
+
