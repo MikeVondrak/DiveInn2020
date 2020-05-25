@@ -4,6 +4,8 @@ Fix "Experimental support for decorators..." warning/error
 
 -----
 
+Handling Errors / Loading Indicator with async pipe
+  https://codinglatte.com/posts/angular/angular-async-pipe-handle-errors/
 
 Simple Angular 6 App w/Node and Express 
   - proxy-config
