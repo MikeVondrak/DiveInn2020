@@ -24,18 +24,18 @@ DROP TABLE IF EXISTS test_table;
 
 CREATE TABLE test_table (
     PRIMARY KEY (test_id),
-    test_id          INT             NOT NULL AUTO_INCREMENT,
-    test_char        CHAR(1)         NOT NULL,
-    test_null_char   CHAR(1),
-    test_varchar     VARCHAR(100),
-    test_text        TEXT,
-    test_int         INTEGER,
-    test_double      DOUBLE,
-    test_decimal     DECIMAL(8,2),
-    test_date        DATE,          -- 'YYYY-MM-DD'
-    test_time        TIME,          -- 'HH:MM:SS'
-    test_datetime    DATETIME,      -- 'YYYY-MM-DD HH:MM:SS'
-    test_json        JSON
+    test_id         INT             NOT NULL AUTO_INCREMENT,
+    test_char       CHAR(1)         NOT NULL,
+    test_null_char  CHAR(1),
+    test_varchar    VARCHAR(100),
+    test_text       TEXT,
+    test_int        INTEGER,
+    test_double     DOUBLE,
+    test_decimal    DECIMAL(8,2),
+    test_date       DATE,          -- 'YYYY-MM-DD'
+    test_time       TIME,          -- 'HH:MM:SS'
+    test_datetime   DATETIME,      -- 'YYYY-MM-DD HH:MM:SS'
+    test_json       JSON
 );
 
 INSERT INTO test_table (test_char, test_null_char, test_varchar, test_text, test_int, test_double, test_decimal, test_date, test_time, test_datetime, test_json) 
@@ -47,4 +47,15 @@ VALUES
     ('e', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
-
+DROP TABLE IF EXISTS fonts;
+CREATE TABLE fonts (
+    PRIMARY KEY (font_id),
+    font_id         INT             NOT NULL AUTO_INCREMENT,
+    font_family     VARCHAR(20)     NOT NULL,
+    font_size_rem   DECIMAL(4,3),
+    font_weight     DECIMAL(4,0),
+    letter_spacing  DECIMAL(4,3)
+);
+INSERT INTO fonts (font_family, font_size_rem, font_weight, letter_spacing)
+VALUES
+    ('Alfa Slab One', 3.000, 400, null);
