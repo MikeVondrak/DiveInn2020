@@ -21,3 +21,12 @@ export interface TestData {
   test_datetime?: Date,
   test_json?: TestJson
 }
+
+export interface DrinkSpecial {
+  product_name: string,
+  price: number,
+  day_of_week: Date,
+  repeating: boolean,
+  start_date: Date,
+  end_date: Date
+}
