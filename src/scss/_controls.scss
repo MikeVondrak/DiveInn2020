@@ -1,0 +1,89 @@
+@import './common-imports';
+
+/**
+Shared
+*/
+
+%focusOutline {
+  &:focus {
+    @extend %outline;
+  }
+}
+%outline {
+  outline: thin dashed $dive-white;// yellow; 
+  outline-offset: 2px; 
+}
+
+/**
+Button 
+*/
+button {
+  $borderWeight: 2px;
+
+  background-color: $dive-red;
+  color: $dive-white;
+  padding: 0.25rem 0.5rem;
+  border: $borderWeight solid $dive-red;
+  border-radius: 0.25rem;
+
+  border-top-color: rgba(255,255,255,0.25);
+  border-left-color: rgba(255,255,255,0.25);
+  border-right-color: rgba(0,0,0,0.25);
+  border-bottom-color: rgba(0,0,0,0.25);
+
+  font-family: 'PTSans-Bold', sans-serif;
+  font-size: 1rem;
+  text-shadow: 0px 0px 5px #000;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  @extend %focusOutline;
+  &:hover {
+    border: $borderWeight solid rgba(255,255,255,0.35);
+    border-top-color: rgba(255,255,255,0.4);
+    border-left-color: rgba(255,255,255,0.4);
+    border-right-color: rgba(0,0,0,0.4);
+    border-bottom-color: rgba(0,0,0,0.4);
+  }
+  &:active {
+    border: $borderWeight solid $dive-red;
+    border-top-color: rgba(0,0,0,0.4);
+    border-left-color: rgba(0,0,0,0.4);
+    border-right-color: rgba(0,0,0,0.4);
+    border-bottom-color: rgba(0,0,0,0.4);
+    // &:focus {
+    //   border-color: #efc700;
+    // }
+  }
+} // end button
+
+input {
+  @extend %focusOutline;
+}
+select {
+  @extend %focusOutline;
+}
+input[type=checkbox] {
+  + label {
+    display: inline-block;
+    line-height: 1;
+    padding: 0 2px 2px 20px;
+    margin-left: -20px;
+  }
+  &:focus {
+    outline: none;
+    //outline-color: red;
+    + label {
+      //border: 1px solid red;
+      @extend %outline;
+    }
+  }
+  // &:focus + label {
+  //   @extend %outline;
+  // }
+}
+// input[type=checkbox]:focus + label {
+//   @extend %focusOutline;
+// }
+
