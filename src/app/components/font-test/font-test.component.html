@@ -46,13 +46,13 @@
       (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
       [checked]="textFont.properties.weight === 700"
     />
-    <label for="textBold">Boyg!d</label>
+    <label for="textBold"><span>Bold AT|jpgy</span></label>
     <p>Selected Font:<br>{{textFont.uiText}}</p>
     <p>bold: {{textFont.properties.bold}}<br>weight: {{textFont.properties.weight}}</p>
   </div>
   <div>
     <h4>Add a new font</h4>
-    <label for="addFontInput">Family: </label>
+    <label for="addFontFamily">Family: </label>
     <input type="text"
       id="addFontFamily"
       [(ngModel)]="fontNameToAdd"
@@ -61,7 +61,7 @@
     />
     <p>Input: {{ fontNameToAdd }}</p>
     <p>Valid: {{ addFontFamily.valid }}</p>
-    <label for="addFontInput">Href: </label>
+    <label for="addFontHref">Href: </label>
     <input type="text"
       id="addFontHref"
       [(ngModel)]="fontHrefToAdd"
@@ -69,6 +69,21 @@
     />
     <p>Input: {{ fontNameToAdd }}</p>
     <p>Valid: {{ addFontHref.valid }}</p>
+  </div>
+</div>
+<div class="controlsContainer">
+  <div>
+    <input type="radio"
+      name="testRadio"
+      id="testRadio1"
+    />
+    <label for="testRadio1"><span>Test Radio jpgy</span></label>
+    <br><br>
+    <input type="radio"
+      name="testRadio"
+      id="testRadio2"
+    />
+    <label for="testRadio2"><span>jpgy Test Radio</span></label>
   </div>
 </div>
 

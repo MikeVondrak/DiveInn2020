@@ -1,9 +1,8 @@
 @import './common-imports';
 
 /**
-Shared
+  Shared
 */
-
 %focusOutline {
   &:focus {
     @extend %outline;
@@ -11,11 +10,11 @@ Shared
 }
 %outline {
   outline: thin dashed $dive-white;// yellow; 
-  outline-offset: 2px; 
+  outline-offset: 3px; 
 }
 
 /**
-Button 
+  Button 
 */
 button {
   $borderWeight: 2px;
@@ -52,38 +51,88 @@ button {
     border-left-color: rgba(0,0,0,0.4);
     border-right-color: rgba(0,0,0,0.4);
     border-bottom-color: rgba(0,0,0,0.4);
-    // &:focus {
-    //   border-color: #efc700;
-    // }
   }
 } // end button
 
+/**
+  Input
+*/
 input {
   @extend %focusOutline;
 }
-select {
-  @extend %focusOutline;
-}
-input[type=checkbox] {
+input[type=checkbox], input[type=radio] {
+  @extend .visually-hidden;
+
   + label {
-    display: inline-block;
+    position: relative;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
     line-height: 1;
-    padding: 0 2px 2px 20px;
-    margin-left: -20px;
+
+    &::before {
+      content: '';
+      //position: relative;
+      //display: inline-block;
+      width: 1em;
+      height: 1em;
+      margin-right: 0.5rem;
+      background-color: $dive-white;
+      border: 1px solid $dive-gray-md;
+    }
+    span {
+      margin-bottom: pxToRem(2px);
+      margin-right: pxToRem(3px);
+    }
   }
   &:focus {
     outline: none;
-    //outline-color: red;
     + label {
-      //border: 1px solid red;
       @extend %outline;
     }
   }
-  // &:focus + label {
-  //   @extend %outline;
-  // }
 }
-// input[type=checkbox]:focus + label {
-//   @extend %focusOutline;
-// }
+input[type=checkbox]:checked, input[type=radio]:checked {
+  + label {
+    &::before {
+      background-color: $dive-red;
+    }
+    &::after {
+      content: '*';
+      position: absolute;
+      display: inline-block;
+      top: pxToRem(-5px);
+      left: pxToRem(2px);
+      font-size: 3em;
+    }
+  }
+}
+/**
+  Radio
+*/
+input[type=radio] {
+  + label {
+    &::before {
+      border-radius: 50%;
+    }
+  }
+}
+input[type=radio]:checked {
+  + label {
+    &::after {
+      content: '.';
+      top: pxToRem(-56px);
+      left: pxToRem(1.5px);
+      font-size: 5rem;
+    }
+  }
+}
 
+
+/**
+  Select
+*/
+select {
+  margin-bottom: 1em;
+  @extend %focusOutline;
+}
