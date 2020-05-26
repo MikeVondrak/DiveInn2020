@@ -16,8 +16,16 @@
         {{ font.uiText }}
       </option>
     </select>
-    <p>Selected Font:</p>
-    <p>{{headerFont.uiText}}</p>
+    <br/>
+    <label for="headerBold">Bold: </label>
+    <input type="checkbox"
+      id="headerBold"
+      [(ngModel)]="headerFont.properties.bold"
+      (ngModelChange)="$event ? headerFont.properties.weight = 700 : headerFont.properties.weight = 400"
+      [checked]="headerFont.properties.weight === 700"
+    />
+    <p>Selected Font:<br>{{headerFont.uiText}}</p>
+    <p>bold: {{headerFont.properties.bold}}<br>weight: {{headerFont.properties.weight}}</p>
   </div>
   <div>
     <select 
@@ -31,19 +39,36 @@
         {{ font.uiText }}
       </option>
     </select>
-    <p>Selected Font:</p>
-    <p>{{textFont.uiText}}</p>
+    <br/>
+    <input type="checkbox"
+      id="textBold"
+      [(ngModel)]="textFont.properties.bold"
+      (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
+      [checked]="textFont.properties.weight === 700"
+    />
+    <label for="textBold">Boyg!d</label>
+    <p>Selected Font:<br>{{textFont.uiText}}</p>
+    <p>bold: {{textFont.properties.bold}}<br>weight: {{textFont.properties.weight}}</p>
   </div>
   <div>
-    <label for="addFontInput">Add a new font: </label>
+    <h4>Add a new font</h4>
+    <label for="addFontInput">Family: </label>
     <input type="text"
-      id="addFontInput"
+      id="addFontFamily"
       [(ngModel)]="fontNameToAdd"
-      #ctrl="ngModel"
+      #addFontFamily="ngModel"
       required
     />
     <p>Input: {{ fontNameToAdd }}</p>
-    <p>Valid: {{ ctrl.valid }}</p>
+    <p>Valid: {{ addFontFamily.valid }}</p>
+    <label for="addFontInput">Href: </label>
+    <input type="text"
+      id="addFontHref"
+      [(ngModel)]="fontHrefToAdd"
+      #addFontHref="ngModel"
+    />
+    <p>Input: {{ fontNameToAdd }}</p>
+    <p>Valid: {{ addFontHref.valid }}</p>
   </div>
 </div>
 

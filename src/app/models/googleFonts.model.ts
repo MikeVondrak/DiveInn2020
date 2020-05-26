@@ -1,6 +1,8 @@
-export interface FontOptions {
-  uiText: string;
+
+interface FontProperties {
+  sizeRem?: number;
   weight?: number;
+  bold?: boolean;
   letterSpacingPx?: number;
 }
 
@@ -8,34 +10,33 @@ export interface IGoogleFont {
   uiText?: string;
   family: string;
   hrefId?: string;
-  options?: FontOptions[];
+  properties?: FontProperties;
 }
 
 export class GoogleFont implements IGoogleFont {
   readonly uiText: string;
   readonly family: string;
   readonly hrefId: string;
-  readonly options?: FontOptions[];
+  readonly properties: FontProperties;
   constructor(font: IGoogleFont) {
-    this.uiText = font.uiText ? font.uiText : font.family;
     this.family = font.family;
-    this.hrefId = font.hrefId;
-    if (font.options) {
-      this.options = Object.assign([], font.options);
-    }
+    this.uiText = font.uiText ? font.uiText : font.family;
+    this.hrefId = font.hrefId ? font.hrefId : font.family.split(' ').join('+');
+    this.properties = font.properties ? Object.assign({}, font.properties) : {};
   }
 }
 
 /**
- * Define fonts to be tested here
+ * Include fonts here, will be downloaded via <link> element and added as an option in font dropdowns
  */
 const googleFonts: IGoogleFont[] = [
-  { family: 'Alfa Slab One', hrefId: 'Alfa+Slab+One' },
-  { family: 'Anton', hrefId: 'Anton' },
-  { family: 'Bevan', hrefId: 'Bevan' },
-  { family: 'Patua One', hrefId: 'Patua+One' },
-  { family: 'Piedra', hrefId: 'Piedra' },
-  { family: 'PT Sans', hrefId: 'PT+Sans:wght@400;700', options: [{ uiText: 'PT Sans Bold', weight: 700 }] }, // regualr
+  { family: 'Alfa Slab One' },
+  { family: 'Anton' },
+  { family: 'Bevan' },
+  { family: 'Patua One' },
+  { family: 'Piedra' },
+  { family: 'PT Sans', hrefId: 'PT+Sans' },
+  { family: 'PT Sans', hrefId: 'PT+Sans:wght@700', uiText: 'PT Sans Bold', properties: {  weight: 700 } }
 ];
 
 function generateFonts(googleFonts: IGoogleFont[]): GoogleFont[] {
