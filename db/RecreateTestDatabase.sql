@@ -47,15 +47,34 @@ VALUES
     ('e', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
-DROP TABLE IF EXISTS fonts;
+DROP TABLE IF EXISTS google_fonts;
 CREATE TABLE fonts (
     PRIMARY KEY (font_id),
     font_id         INT             NOT NULL AUTO_INCREMENT,
-    font_family     VARCHAR(20)     NOT NULL,
-    font_size_rem   DECIMAL(4,3),
-    font_weight     DECIMAL(4,0),
-    letter_spacing  DECIMAL(4,3)
+    family          VARCHAR(20)     NOT NULL,
+    href            VARCHAR(20)     NOT NULL,
+    ui_text         DECIMAL(4,3),
+    options         JSON
 );
 INSERT INTO fonts (font_family, font_size_rem, font_weight, letter_spacing)
 VALUES
-    ('Alfa Slab One', 3.000, 400, null);
+    ('Alfa Slab One', 'Alfa+Slab+One', null, null),
+    ('Anton', 'Anton', null, null),
+    ('Bevan', 'Bevan', null, null),
+    ('Patua One', 'Patua+One', null, null),
+    ('Piedra', 'Piedra', null, null),
+    ('PT Sans', 'PT+Sans:wght@400;700', null, {});
+
+
+-- DROP TABLE IF EXISTS fonts;
+-- CREATE TABLE fonts (
+--     PRIMARY KEY (font_id),
+--     font_id         INT             NOT NULL AUTO_INCREMENT,
+--     font_family     VARCHAR(20)     NOT NULL,
+--     font_size_rem   DECIMAL(4,3),
+--     font_weight     DECIMAL(4,0),
+--     letter_spacing  DECIMAL(4,3)
+-- );
+-- INSERT INTO fonts (font_family, font_size_rem, font_weight, letter_spacing)
+-- VALUES
+--     ('Alfa Slab One', 3.000, 400, null);
