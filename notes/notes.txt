@@ -1,0 +1,16 @@
+_____
+Fixes
+
+Fix "Experimental support for decorators..." warning/error
+  Preferences > Settings > "implicit" > check "Implicit Project Config: Experimental decorators" option
+  https://stackoverflow.com/questions/38271273/experimental-decorators-warning-in-typescript-compilation
+
+_____
+Utils
+
+Google Web Fonts Heroku App (has .woff etc)
+  https://google-webfonts-helper.herokuapp.com/fonts/patua-one?subsets=latin
+
+Google Fonts
+  https://fonts.google.com/
+
