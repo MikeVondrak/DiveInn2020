@@ -72,10 +72,8 @@ input[type=checkbox], input[type=radio] {
 
     &::before {
       content: '';
-      //position: relative;
-      //display: inline-block;
-      width: 1em;
-      height: 1em;
+      width: 1rem;
+      height: 1rem;
       margin-right: 0.5rem;
       background-color: $dive-white;
       border: 1px solid $dive-gray-md;
@@ -103,7 +101,7 @@ input[type=checkbox]:checked, input[type=radio]:checked {
       display: inline-block;
       top: pxToRem(-5px);
       left: pxToRem(2px);
-      font-size: 3em;
+      font-size: 3rem;
     }
   }
 }
