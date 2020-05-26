@@ -15,8 +15,11 @@ var express_1 = __importDefault(require("express"));
 var compression_1 = __importDefault(require("compression"));
 var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var path = __importStar(require("path"));
+var operators_1 = require("rxjs/operators");
 var server_app_1 = require("./server-app");
 var logger_1 = require("./middleware/logger");
+var sqlQueries_1 = require("./sqlQueries");
+var routes_1 = require("./routes");
 var _port = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
 // running server app from ./server/app or ./server/dist (for prod)
 var _angularAppLocation = '../../dist/dive-inn'; // output from ng build --prod
@@ -45,12 +48,29 @@ var default200Response = function (req, res) {
     console.log('NODE: Router default 200 response');
     // serve default file (index.html) for Angular app
     //res.status(200).sendFile('/', {root: _angularAppLocation});
-    res.send('{ "test_id": 99 }');
+    res.send('{ "test_id": 200 }');
 };
+var testDataRouter = express_1.default.Router();
+testDataRouter.get(routes_1.routes.api.test, function (req, res) {
+    console.log('testDataRouter');
+    // const qcb: queryCallback = (err, rows, fields) => {
+    //   const data: TestData[] = rows;
+    //   res.send(rows);
+    // }
+    //serverApp.poolQuery<TestData>(sqlQueries.selectTestTable, qcb);
+    serverApp.poolQuery(sqlQueries_1.sqlQueries.selectTestTable)
+        .pipe(operators_1.take(1))
+        .subscribe(function (results) {
+        res.send(results);
+    }, function (err) {
+        console.log('\n!!!!! Failed getting data from: ' + routes_1.routes.api.test + ', selectTestTable\n\t' + err);
+    });
+});
 var allRoutes = express_1.default.Router();
-allRoutes.get('*', default200Response);
+allRoutes.get(routes_1.routes.api.other, default200Response);
+controllers.push(testDataRouter);
 controllers.push(allRoutes);
-var serverApp = new server_app_1.ServerApp(_port, staticPaths, middleWare, controllers);
+var serverApp = new server_app_1.ServerApp(angularDist, _port, staticPaths, middleWare, controllers);
 serverApp.beginListening();
 /**
  * @method debugFileAndDir
