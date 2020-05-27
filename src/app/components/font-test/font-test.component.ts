@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleFont, fonts } from '../../models/googleFonts.model';
+import { GoogleFont, fonts, headerFonts, textFonts } from '../../models/googleFonts.model';
 
 enum ControlsEnum {
   'header',
@@ -20,11 +20,14 @@ export class FontTestComponent implements OnInit {
   public headerStyle: object = {};
   public textStyle: object = {}; // { 'font-family': 'PT Sans' };
   // ngModels
-  public headerFont: GoogleFont = this.fontOptions[0];
+  public headerFont: GoogleFont = headerFonts[0];//this.fontOptions[0];
   public textFont: GoogleFont = this.fontOptions.find(font => font.uiText === 'PT Sans Bold');
   // controls for adding new fonts
   public fontNameToAdd: string;
   public fontHrefToAdd: string;
+
+  public hFonts = headerFonts;
+  public tFonts = textFonts;
 
   constructor() { }
 

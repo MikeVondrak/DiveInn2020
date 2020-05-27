@@ -6,13 +6,14 @@
 <h1 [ngStyle]="headerStyle">ABCDEFGHIJKLMNOPQRSTUVWXYZ</h1>
 <h1 [ngStyle]="headerStyle">abcdefghijklmnopqrstuvwxyz</h1>
 <h1 [ngStyle]="headerStyle">. ? ! / @ # $ % ^ &amp; * ( ) ~ - + = ' " : ; &lt; &gt;</h1>
+<hr>
 <p [ngStyle]="textStyle">The quick brown fox jumped over the lazy dog.</p>
 <p [ngStyle]="textStyle">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
 <p [ngStyle]="textStyle">a b c d e f g h i j k l m n o p q r s t u v w x y z</p>
 <p [ngStyle]="textStyle">ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
 <p [ngStyle]="textStyle">abcdefghijklmnopqrstuvwxyz</p>
 <p [ngStyle]="textStyle">. ? ! / @ # $ % ^ &amp; * ( ) ~ - + = ' " : ; &lt; &gt;</p>
-
+<hr>
 <div class="controlsContainer">
   <div>
     <select 
@@ -20,11 +21,20 @@
       (change)="onChange($event)" 
       (ngModelChange)="onModelChange(controlsEnum.header, $event)"
     >
-      <option *ngFor="let font of fontOptions"
-        [ngValue]="font"
-      >
-        {{ font.uiText }}
-      </option>
+      <optgroup label="Header Fonts">
+        <option *ngFor="let font of hFonts"
+          [ngValue]="font"
+        >
+          {{ font.uiText }}
+        </option>
+      </optgroup>
+      <optgroup label="Text Fonts">
+        <option *ngFor="let font of tFonts"
+          [ngValue]="font"
+        >
+          {{ font.uiText }}
+        </option>
+      </optgroup>
     </select>
     <br/>
     <label for="headerBold">Bold: </label>

@@ -44,3 +44,19 @@ function generateFonts(googleFonts: IGoogleFont[]): GoogleFont[] {
 }
 
 export const fonts: GoogleFont[] = generateFonts(googleFonts);
+
+
+
+const _headerFonts: IGoogleFont[] = [
+  { family: 'Alfa Slab One' },
+  { family: 'Anton' },
+  { family: 'Bevan' },
+  { family: 'Patua One' },
+  { family: 'Piedra' },
+];
+const _textFonts: IGoogleFont[] = [
+  { family: 'PT Sans', hrefId: 'PT+Sans' },
+  { family: 'PT Sans', hrefId: 'PT+Sans:wght@700', uiText: 'PT Sans Bold', properties: {  weight: 700 } }
+];
+export const headerFonts = generateFonts(_headerFonts);
+export const textFonts = generateFonts(_textFonts);
