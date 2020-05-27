@@ -8,10 +8,19 @@
 /** Global Styles **/
 
 // Page Defaults
+html, body {
+  min-height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+}
+
 body {
   background-color: $dive-black;
   color: $dive-white;
   line-height: stripUnit(1px);
 
-  padding: pxToRem(8px 16px 24px 32px);
+  padding: pxToRem(24px);
 }
