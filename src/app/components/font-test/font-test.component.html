@@ -60,7 +60,17 @@
       </option>
     </select>
     <br/>
-    <checkbox [(ngModel)]="boldCheckbox"></checkbox>
+  </div>
+
+
+  <checkbox
+    [(checkedValue)]='textFont.properties.bold'
+    (checkedValueChanged)='customCheckboxChanged($event)'
+  ></checkbox>
+  <p>Bold value: {{textFont.properties.bold}}</p>
+
+
+    <!-- <checkbox [(ngModel)]="boldCheckbox"></checkbox> -->
     <!-- <input type="checkbox"
       id="textBold"
       [(ngModel)]="textFont.properties.bold"
@@ -71,11 +81,14 @@
     <p>Selected Font:<br>{{textFont.uiText}}</p>
     <p>bold: {{textFont.properties.bold}}<br>weight: {{textFont.properties.weight}}</p>
   </div> -->
-  <div>
+
+
+  <!-- <div>
     <h4>Add a new font</h4>
     <label for="addFontFamily">Family: </label>
     <input type="text"
       id="addFontFamily"
+      name='bogusName'
       [(ngModel)]="fontNameToAdd"
       #addFontFamily="ngModel"
       required
@@ -91,7 +104,9 @@
     <p>Input: {{ fontNameToAdd }}</p>
     <p>Valid: {{ addFontHref.valid }}</p>
   </div>
-</div>
+</div> -->
+
+
 <div class="controlsContainer">
   <div>
     <input type="radio"

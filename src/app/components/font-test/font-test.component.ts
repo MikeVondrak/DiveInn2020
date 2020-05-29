@@ -64,4 +64,9 @@ export class FontTestComponent implements OnInit {
   public onChange($event: Event) {
     //debugger;
   }
+
+  public customCheckboxChanged(newVal: boolean) {
+    console.log('customCheckboxChanged: ' + newVal);
+    this.textFont.properties.bold = newVal;
+  }
 }

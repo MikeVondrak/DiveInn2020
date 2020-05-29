@@ -1,20 +1,23 @@
-    <!-- <input type="checkbox"
-      id="textBold"
-      [(ngModel)]="textFont.properties.bold"
-      (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
-      [checked]="textFont.properties.weight === 700"
-    />
-    <label for="textBold"><span>Bold AT|jpgy</span></label>
-    <p>Selected Font:<br>{{textFont.uiText}}</p>
-    <p>bold: {{textFont.properties.bold}}<br>weight: {{textFont.properties.weight}}</p> -->
+<input type="checkbox"
+  [id]="controlID"
+  [(ngModel)]="checkedValue"
+  [checked]="checkedValue"
+
+  (change)="onChange($event)"
+  (ngModelChange)="onNgModelChange($event)"
+/>
+<label for="textBold"><span>Bold AT|jpgy</span></label>
+
+<p>checkedValue:<br>{{checkedValue}}</p>
+
 <!-- <input type="checkbox" id="checkbox" name="isChecked"
       [(ngModel)]="checkBox.checked"
       (ngModelChange)="$event ? checkBox.value = 'on' : checkBox.value = 'off'"
 >
 <label><span>{{ checkBox.value }}</span></label> -->
 
-<div class="checkbox-container">
+<!-- <div class="checkbox-container">
   <input type="checkbox" id="{{ controlID }}"
         [checked]="checked" (change)="onChange($event)" />
   <label for="{{ controlID }}"></label>
-</div>
+</div> -->
