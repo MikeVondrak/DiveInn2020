@@ -31,7 +31,7 @@ export class FontTestComponent implements OnInit {
   public hFonts = headerFonts;
   public tFonts = textFonts;
 
-  public boldCheckbox : boolean;
+  public boldCheckbox : boolean = false;
 
   constructor() { }
 
@@ -61,12 +61,12 @@ export class FontTestComponent implements OnInit {
    * Standard dropdown change event, fires after ngModelChange
    * @param $event DOM event
    */
-  public onChange($event: Event) {
-    //debugger;
-  }
+  // public onChange($event: Event) {
+  //   console.log('font-test - customCheckboxChanged DOM event: ' + $event);
+  // }
 
   public customCheckboxChanged(newVal: boolean) {
-    console.log('customCheckboxChanged: ' + newVal);
-    this.textFont.properties.bold = newVal;
+    console.log('font-test - customCheckboxChanged: ' + this.boldCheckbox + ' -> ' + newVal);
+    this.boldCheckbox = newVal;
   }
 }

@@ -16,7 +16,7 @@
 <hr>
 <div class="controlsContainer">
   <div>
-    <select
+    <!-- <select
       [(ngModel)]="headerFont"
       (change)="onChange($event)"
       (ngModelChange)="onModelChange(controlsEnum.header, $event)"
@@ -45,10 +45,10 @@
       [checked]="headerFont.properties.weight === 700"
     />
     <p>Selected Font:<br>{{headerFont.uiText}}</p>
-    <p>bold: {{headerFont.properties.bold}}<br>weight: {{headerFont.properties.weight}}</p>
+    <p>bold: {{headerFont.properties.bold}}<br>weight: {{headerFont.properties.weight}}</p> -->
   </div>
   <div>
-    <select
+    <!-- <select
       [(ngModel)]="textFont"
       (change)="onChange($event)"
       (ngModelChange)="onModelChange(controlsEnum.text, $event)"
@@ -59,15 +59,15 @@
         {{ font.uiText }}
       </option>
     </select>
-    <br/>
+    <br/> -->
   </div>
 
 
   <checkbox
-    [(checkedValue)]='textFont.properties.bold'
+    [(checkedValue)]='boldCheckbox'
     (checkedValueChanged)='customCheckboxChanged($event)'
   ></checkbox>
-  <p>Bold value: {{textFont.properties.bold}}</p>
+  <p>Bold value: {{boldCheckbox}}</p>
 
 
     <!-- <checkbox [(ngModel)]="boldCheckbox"></checkbox> -->

@@ -1,12 +1,15 @@
-<input type="checkbox"
-  [id]="controlID"
-  [(ngModel)]="checkedValue"
-  [checked]="checkedValue"
 
+  <!-- [checked]="checkedValue" 
   (change)="onChange($event)"
-  (ngModelChange)="onNgModelChange($event)"
+  (ngModelChange)="onNgModelChange($event)" -->
+
+
+<input type="checkbox"
+  id="textBold"
+  [(ngModel)]="checkedValue"
+  
 />
-<label for="textBold"><span>Bold AT|jpgy</span></label>
+<label for="textBold"><span>Custom Checkbox</span></label>
 
 <p>checkedValue:<br>{{checkedValue}}</p>
 
