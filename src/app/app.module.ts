@@ -7,12 +7,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServerTestComponent } from './components/server-test/server-test.component';
 import { FontTestComponent } from './components/font-test/font-test.component';
+import { CheckboxComponent } from './components/shared/checkbox/checkbox.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ServerTestComponent,
-    FontTestComponent
+    FontTestComponent,
+    CheckboxComponent
   ],
   imports: [
     BrowserModule,

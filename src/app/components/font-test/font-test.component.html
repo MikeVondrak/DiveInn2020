@@ -16,9 +16,9 @@
 <hr>
 <div class="controlsContainer">
   <div>
-    <select 
-      [(ngModel)]="headerFont" 
-      (change)="onChange($event)" 
+    <select
+      [(ngModel)]="headerFont"
+      (change)="onChange($event)"
       (ngModelChange)="onModelChange(controlsEnum.header, $event)"
     >
       <optgroup label="Header Fonts">
@@ -48,9 +48,9 @@
     <p>bold: {{headerFont.properties.bold}}<br>weight: {{headerFont.properties.weight}}</p>
   </div>
   <div>
-    <select 
-      [(ngModel)]="textFont" 
-      (change)="onChange($event)" 
+    <select
+      [(ngModel)]="textFont"
+      (change)="onChange($event)"
       (ngModelChange)="onModelChange(controlsEnum.text, $event)"
     >
       <option *ngFor="let font of fontOptions"
@@ -60,16 +60,17 @@
       </option>
     </select>
     <br/>
-    <input type="checkbox"
+    <checkbox [(ngModel)]="boldCheckbox"></checkbox>
+    <!-- <input type="checkbox"
       id="textBold"
       [(ngModel)]="textFont.properties.bold"
       (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
-      [checked]="textFont.properties.weight === 700"
-    />
-    <label for="textBold"><span>Bold AT|jpgy</span></label>
+      [checked]="textFont.properties.weight === 700" -->
+    <!-- /> -->
+    <!-- <label for="textBold"><span>Bold AT|jpgy</span></label>
     <p>Selected Font:<br>{{textFont.uiText}}</p>
     <p>bold: {{textFont.properties.bold}}<br>weight: {{textFont.properties.weight}}</p>
-  </div>
+  </div> -->
   <div>
     <h4>Add a new font</h4>
     <label for="addFontFamily">Family: </label>

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GoogleFont, fonts, headerFonts, textFonts } from '../../models/googleFonts.model';
+import { FormsModule } from '@angular/forms'
+import { CheckboxComponent } from '../shared/checkbox/checkbox.component';
 
 enum ControlsEnum {
   'header',
@@ -13,9 +15,9 @@ enum ControlsEnum {
 })
 export class FontTestComponent implements OnInit {
   // fonts available in dropdowns
-  public readonly fontOptions: GoogleFont[] = Object.assign([], fonts); 
+  public readonly fontOptions: GoogleFont[] = Object.assign([], fonts);
   // make enum values available in template
-  public readonly controlsEnum = ControlsEnum;  
+  public readonly controlsEnum = ControlsEnum;
   // ngStyles
   public headerStyle: object = {};
   public textStyle: object = {}; // { 'font-family': 'PT Sans' };
@@ -28,6 +30,8 @@ export class FontTestComponent implements OnInit {
 
   public hFonts = headerFonts;
   public tFonts = textFonts;
+
+  public boldCheckbox : boolean;
 
   constructor() { }
 
