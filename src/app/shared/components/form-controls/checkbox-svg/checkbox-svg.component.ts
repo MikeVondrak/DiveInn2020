@@ -8,6 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class CheckboxSvgComponent implements OnInit {
 
   @Input() htmlId: string = '';
+  @Input() uiLabel: string = '';
 
   constructor() { }
 
