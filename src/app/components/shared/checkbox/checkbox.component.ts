@@ -1,40 +1,44 @@
-import { Component, OnInit, Renderer2, ElementRef, forwardRef, Input, EventEmitter, Output } from '@angular/core';
-import { NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { Component, OnInit, Renderer2, ElementRef, forwardRef, Input, EventEmitter, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { GoogleFont } from '../../../models/googleFonts.model';
 
 @Component({
   selector: 'checkbox',
   templateUrl: './checkbox.component.html',
-  styleUrls: ['./checkbox.component.scss']
+  styleUrls: ['./checkbox.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxComponent implements OnInit {
 
   @Output() checkedValueChanged = new EventEmitter<boolean>();
 
-  private _checkedValue: boolean = false;
   @Input() get checkedValue() {
     console.log('checkbox getter: ' + this._checkedValue);
     return this._checkedValue;
   }
   set checkedValue(newVal) {
-    console.log('checkbox setter: ' + this._checkedValue);
+    console.log('checkbox setter: ' + this._checkedValue + ' -> ' + newVal);
     this._checkedValue = newVal;
 
     // emit our checkValueChanged event to outside listeners
     this.checkedValueChanged.emit(this._checkedValue);
+    this.cdr.detectChanges();
   }
 
   static idCounter: number = 0;
   controlID: string;
   checked: boolean;
+  private _checkedValue: boolean = false;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {
+  constructor(private renderer: Renderer2, private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
 
     this.controlID = "myCheckbox" + CheckboxComponent.idCounter++;
+    console.log('constructor: ' + this._checkedValue);
   }
 
   // Inputs are available now
   ngOnInit(): void {
+    console.log('onInit: ' + this._checkedValue);
   }
 
   onChange($event: Event) {
