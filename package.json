@@ -13,7 +13,8 @@
     "app-serve": "concurrently \"(cd server && npm run dev)\"  \"npm run start\"",
     "heroku-predeploy": "ng build --prod && cd server && tsc",
     "heroku-postbuild": "echo \"HEROKU POSTBUILD\" && ng build --aot --prod",
-    "db_test_recreate": "winpty mysql -uroot -p db/RecreateTestDatabase.sql"
+    "db_test_recreate": "winpty mysql -uroot -p db/RecreateTestDatabase.sql",
+    "convertColors": "node ./src/utilities/scripts/HexToRgb.js ../../../src/scss/_colors.scss"
   },
   "engines": {
     "node": "12.16.x",
@@ -30,6 +31,7 @@
     "@angular/platform-browser-dynamic": "^9.1.7",
     "@angular/router": "^9.1.7",
     "@types/cookie-parser": "^1.4.2",
+    "@types/snapsvg": "^0.5.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
@@ -37,6 +39,8 @@
     "mysql": "^2.18.1",
     "path": "^0.12.7",
     "rxjs": "^6.5.5",
+    "snapsvg": "^0.5.1",
+    "snapsvg-cjs": "0.0.6",
     "tslib": "^1.13.0",
     "typescript": "~3.8.3",
     "zone.js": "~0.10.2"

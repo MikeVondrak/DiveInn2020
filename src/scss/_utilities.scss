@@ -17,6 +17,11 @@
     $pxValue: stripUnit($pxValue); // remove 'px' unit if present
     $remValues: append($remValues,  ($pxValue / $base) + 0rem);
   }
+
+  // for a single value return the numeric variable instead of a string to allow use in calculations
+  @if length($remValues == 1) {
+    @return nth($remValues, 1);
+  }
   @return $remValues; // #{$remValues};
 }
 
