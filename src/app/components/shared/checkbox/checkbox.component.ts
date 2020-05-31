@@ -1,15 +1,13 @@
 import { Component, OnInit, Renderer2, ElementRef, forwardRef, Input, EventEmitter, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { GoogleFont } from '../../../models/googleFonts.model';
-
-// import { CheckboxItem } from '../../../models/checkboxItem.model';
 
 @Component({
   selector: 'checkbox',
   templateUrl: './checkbox.component.html',
   styleUrls: ['./checkbox.component.scss']
 })
-export class CheckboxComponent implements OnInit { //ControlValueAccessor {
+export class CheckboxComponent implements OnInit {
 
   @Output() checkedValueChanged = new EventEmitter<boolean>();
 
@@ -26,19 +24,6 @@ export class CheckboxComponent implements OnInit { //ControlValueAccessor {
     this.checkedValueChanged.emit(this._checkedValue);
   }
 
-  // checkBox: CheckboxItem;
-  //  = {
-  //   label = 'label',
-  //   value = 'off',
-  //   checked = false,
-  // };
-  // isChecked: boolean = true;
-
-  // this.checkBox.value = ''
-  // setValue() {
-  //   this.checkBox.value = 'on';
-  // }
-
   static idCounter: number = 0;
   controlID: string;
   checked: boolean;
@@ -51,23 +36,6 @@ export class CheckboxComponent implements OnInit { //ControlValueAccessor {
   // Inputs are available now
   ngOnInit(): void {
   }
-
-  // propagateChange = (_: any) => { };
-  // onTouchedCallback: () => {};
-
-  // writeValue(value: any) {
-  //   if ((value !== undefined) && (value !== null)) {
-  //     this.checked = value;
-  //   }
-  // }
-
-  // registerOnChange(fn: any) {
-  //   this.propagateChange = fn;
-  // }
-
-  // registerOnTouched(fn: any) {
-  //   this.onTouchedCallback = fn;
-  // };
 
   onChange($event: Event) {
     console.log('checkbox change event: ' + $event);

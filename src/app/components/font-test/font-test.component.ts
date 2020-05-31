@@ -31,7 +31,7 @@ export class FontTestComponent implements OnInit {
   public hFonts = headerFonts;
   public tFonts = textFonts;
 
-  public boldCheckbox : boolean;
+  // public boldCheckbox : boolean;
 
   constructor() { }
 
@@ -68,5 +68,10 @@ export class FontTestComponent implements OnInit {
   public customCheckboxChanged(newVal: boolean) {
     console.log('customCheckboxChanged: ' + newVal);
     this.textFont.properties.bold = newVal;
+
+    // [(ngModel)]="textFont.properties.bold"
+    // (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
+    // [checked]="textFont.properties.weight === 700"
+
   }
 }
