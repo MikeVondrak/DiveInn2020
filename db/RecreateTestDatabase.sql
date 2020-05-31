@@ -38,8 +38,8 @@ CREATE TABLE test_table (
     test_json       JSON
 );
 
-INSERT INTO test_table (test_char, test_null_char, test_varchar, test_text, test_int, test_double, test_decimal, test_date, test_time, test_datetime, test_json) 
-VALUES  
+INSERT INTO test_table (test_char, test_null_char, test_varchar, test_text, test_int, test_double, test_decimal, test_date, test_time, test_datetime, test_json)
+VALUES
     ('a', NULL, 'abc123', 'text value', 1, 1.0001, 100000.01, '1000-01-01', '00:00:00', '1111-11-11 11:11:11', '{ "name": "testJson", "value": "object" }'),
     ('b', 'n', 'def456', 'text value number 2', 2, 2.0002, 200000.02, '2000-02-02', '02:02:02', '2222-12-22 22:22:22', '["val1", "val2", "val3", "val4"]'),
     ('c', NULL, 'ghi789', 'text value number 3', 3, 3.0003, 300000.03, '3000-03-03', '03:03:03', '3333-12-31 23:59:59', '{ "name": "testJson2", "value": ["val1", "val2", "val3"] }'),
@@ -47,34 +47,39 @@ VALUES
     ('e', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
-DROP TABLE IF EXISTS google_fonts;
-CREATE TABLE fonts (
-    PRIMARY KEY (font_id),
-    font_id         INT             NOT NULL AUTO_INCREMENT,
-    family          VARCHAR(20)     NOT NULL,
-    href            VARCHAR(20)     NOT NULL,
-    ui_text         DECIMAL(4,3),
-    options         JSON
-);
-INSERT INTO fonts (font_family, font_size_rem, font_weight, letter_spacing)
-VALUES
-    ('Alfa Slab One', 'Alfa+Slab+One', null, null),
-    ('Anton', 'Anton', null, null),
-    ('Bevan', 'Bevan', null, null),
-    ('Patua One', 'Patua+One', null, null),
-    ('Piedra', 'Piedra', null, null),
-    ('PT Sans', 'PT+Sans:wght@400;700', null, {});
-
-
--- DROP TABLE IF EXISTS fonts;
+-- DROP TABLE IF EXISTS google_fonts;
 -- CREATE TABLE fonts (
 --     PRIMARY KEY (font_id),
 --     font_id         INT             NOT NULL AUTO_INCREMENT,
---     font_family     VARCHAR(20)     NOT NULL,
---     font_size_rem   DECIMAL(4,3),
---     font_weight     DECIMAL(4,0),
---     letter_spacing  DECIMAL(4,3)
+--     family          VARCHAR(20)     NOT NULL,
+--     href            VARCHAR(20)     NOT NULL,
+--     ui_text         DECIMAL(4,3),
+--     options         JSON
 -- );
 -- INSERT INTO fonts (font_family, font_size_rem, font_weight, letter_spacing)
 -- VALUES
---     ('Alfa Slab One', 3.000, 400, null);
+--     ('Alfa Slab One', 'Alfa+Slab+One', null, null),
+--     ('Anton', 'Anton', null, null),
+--     ('Bevan', 'Bevan', null, null),
+--     ('Patua One', 'Patua+One', null, null),
+--     ('Piedra', 'Piedra', null, null),
+--     ('PT Sans', 'PT+Sans:wght@400;700', null, {});
+
+DROP TABLE IF EXISTS fonts;
+CREATE TABLE fonts (
+    PRIMARY KEY (font_id),
+    font_id         INT             NOT NULL AUTO_INCREMENT,
+    font_family     VARCHAR(20)     NOT NULL,
+    ui_text         VARCHAR(20),
+    href_name,      VARCHAR(20),
+
+);
+INSERT INTO fonts (font_family, ui_text, href_name)
+VALUES
+    ('Alfa Slab One'),
+    ('Anton'),
+    ('Bevan'),
+    ('Patua One'),
+    ('Piedra'),
+    ('PT Sans'),
+    ('PT Sans', 'PT Sans Bold', 'PT+Sans:wght@700');
