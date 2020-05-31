@@ -3,11 +3,17 @@ import express, { RequestHandler, Router, Request, Response } from 'express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-
 import * as path from 'path';
+
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { ServerApp } from './server-app';
 import { logger } from './middleware/logger';
+import { sqlQueries } from './sqlQueries';
+import { routes } from './routes';
+import { TestData } from './models/test-data.model';
+import { queryCallback } from 'mysql';
 
 const _port: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
 
@@ -40,20 +46,47 @@ const middleWare: RequestHandler[] = [
 // define controllers for paths
 const controllers: Router[] = [];
 
-const default200Response = (req: Request, res: Response) => {
+const default200Response: RequestHandler = (req: Request, res: Response) => {
   console.log('NODE: Router default 200 response');
   // serve default file (index.html) for Angular app
   //res.status(200).sendFile('/', {root: _angularAppLocation});
-  res.send('{ "test_id": 99 }');
+  res.send('{ "test_id": 200 }');
 }
 
-const allRoutes = express.Router();
-allRoutes.get('*', default200Response);
+const testDataRouter = express.Router();
+testDataRouter.get(routes.api.test, (req: Request, res: Response) => {
+  console.log('testDataRouter');
+  
+  // const qcb: queryCallback = (err, rows, fields) => {
+  //   const data: TestData[] = rows;
+  //   res.send(rows);
+  // }
+  //serverApp.poolQuery<TestData>(sqlQueries.selectTestTable, qcb);
 
+  serverApp.poolQuery<TestData>(sqlQueries.selectTestTable)
+    .pipe(take(1))
+    .subscribe(
+      (results: TestData[]) => {
+        res.send(results);
+      },
+      (err) => {
+        console.log('\n!!!!! Failed getting data from: ' + routes.api.test + ', selectTestTable\n\t' + err);
+      }
+    );
+});
+
+
+const allRoutes = express.Router();
+allRoutes.get(routes.api.other, default200Response);
+
+controllers.push(testDataRouter);
 controllers.push(allRoutes);
 
-const serverApp = new ServerApp(_port, staticPaths, middleWare, controllers);
+
+const serverApp = new ServerApp(angularDist, _port, staticPaths, middleWare, controllers);
 serverApp.beginListening();
+
+
 
 
 /**

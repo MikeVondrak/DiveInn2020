@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { ServerTestData } from './server-test.model';
 import { tap } from 'rxjs/operators';
 
+import { routes } from '../../../../server/app/routes';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,11 +14,9 @@ export class ServerTestService {
   constructor(private http: HttpClient) { }
 
   public getServerTestData$(): Observable<ServerTestData> {
+
     console.log('**** service getServerTestData()');
-    let r = this.http.get<ServerTestData>('/api/server-test').pipe(
-      tap((d) => console.log("data from tap:  " + JSON.stringify(d, null, 4)))
-    ); 
-    r.subscribe(data => console.log('response: ' + JSON.stringify(data, null, 4)));
-    return r;
+    return this.http.get<ServerTestData>(routes.api._root + routes.api.test);
   }
+
 }

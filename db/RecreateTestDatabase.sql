@@ -5,22 +5,37 @@ DROP DATABASE IF EXISTS dive_inn_test_db;
 CREATE DATABASE dive_inn_test_db;
 USE dive_inn_test_db;
 
+# Create default user if it doesn't exist
+DROP USER IF EXISTS 'DiveMaster'@'localhost';
+CREATE USER 'DiveMaster'@'localhost' IDENTIFIED WITH mysql_native_password BY 'D1v3M4st3r!!';
+GRANT ALL PRIVILEGES ON *.* TO 'DiveMaster'@'localhost'; # IDENTIFIED BY 'D1v3M4st3r!!';
+FLUSH PRIVILEGES;
+
+# TODO - How TF to do IF statements
+-- IF EXISTS USER 'DiveMaster'@localhost' THEN
+--     \! echo 'exists';
+-- ELSE
+--     \! echo 'not exists';
+-- END IF
+
+# Recreate test table
+
 DROP TABLE IF EXISTS test_table;
 
 CREATE TABLE test_table (
     PRIMARY KEY (test_id),
-    test_id          INT             NOT NULL AUTO_INCREMENT,
-    test_char        CHAR(1)         NOT NULL,
-    test_null_char   CHAR(1),
-    test_varchar     VARCHAR(100),
-    test_text        TEXT,
-    test_int         INTEGER,
-    test_double      DOUBLE,
-    test_decimal     DECIMAL(8,2),
-    test_date        DATE,          -- 'YYYY-MM-DD'
-    test_time        TIME,          -- 'HH:MM:SS'
-    test_datetime    DATETIME,      -- 'YYYY-MM-DD HH:MM:SS'
-    test_json        JSON
+    test_id         INT             NOT NULL AUTO_INCREMENT,
+    test_char       CHAR(1)         NOT NULL,
+    test_null_char  CHAR(1),
+    test_varchar    VARCHAR(100),
+    test_text       TEXT,
+    test_int        INTEGER,
+    test_double     DOUBLE,
+    test_decimal    DECIMAL(8,2),
+    test_date       DATE,          -- 'YYYY-MM-DD'
+    test_time       TIME,          -- 'HH:MM:SS'
+    test_datetime   DATETIME,      -- 'YYYY-MM-DD HH:MM:SS'
+    test_json       JSON
 );
 
 INSERT INTO test_table (test_char, test_null_char, test_varchar, test_text, test_int, test_double, test_decimal, test_date, test_time, test_datetime, test_json) 
@@ -32,14 +47,34 @@ VALUES
     ('e', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
-/* CREATE TABLE test_table (
-    testId              INT NOT NULL AUTO_INCREMENT,
-    testValue           VARCHAR(100),
-    PRIMARY KEY (`testId`)
+DROP TABLE IF EXISTS google_fonts;
+CREATE TABLE fonts (
+    PRIMARY KEY (font_id),
+    font_id         INT             NOT NULL AUTO_INCREMENT,
+    family          VARCHAR(20)     NOT NULL,
+    href            VARCHAR(20)     NOT NULL,
+    ui_text         DECIMAL(4,3),
+    options         JSON
 );
-INSERT INTO test_table ( testValue ) VALUES 
-    ( 'test value 1' ),
-    ( 'test value 2' ),
-    ( 'test value 3' ),
-    ( 'test value 4' ); */
+INSERT INTO fonts (font_family, font_size_rem, font_weight, letter_spacing)
+VALUES
+    ('Alfa Slab One', 'Alfa+Slab+One', null, null),
+    ('Anton', 'Anton', null, null),
+    ('Bevan', 'Bevan', null, null),
+    ('Patua One', 'Patua+One', null, null),
+    ('Piedra', 'Piedra', null, null),
+    ('PT Sans', 'PT+Sans:wght@400;700', null, {});
 
+
+-- DROP TABLE IF EXISTS fonts;
+-- CREATE TABLE fonts (
+--     PRIMARY KEY (font_id),
+--     font_id         INT             NOT NULL AUTO_INCREMENT,
+--     font_family     VARCHAR(20)     NOT NULL,
+--     font_size_rem   DECIMAL(4,3),
+--     font_weight     DECIMAL(4,0),
+--     letter_spacing  DECIMAL(4,3)
+-- );
+-- INSERT INTO fonts (font_family, font_size_rem, font_weight, letter_spacing)
+-- VALUES
+--     ('Alfa Slab One', 3.000, 400, null);

@@ -1,0 +1,135 @@
+<!-- <h1 [ngStyle]="{'font-family': 'PT Sans'}">Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1> -->
+
+<h1 [ngStyle]="headerStyle">Dive Inn - What's Inside</h1>
+<h1 [ngStyle]="headerStyle">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</h1>
+<h1 [ngStyle]="headerStyle">a b c d e f g h i j k l m n o p q r s t u v w x y z</h1>
+<h1 [ngStyle]="headerStyle">ABCDEFGHIJKLMNOPQRSTUVWXYZ</h1>
+<h1 [ngStyle]="headerStyle">abcdefghijklmnopqrstuvwxyz</h1>
+<h1 [ngStyle]="headerStyle">. ? ! / @ # $ % ^ &amp; * ( ) ~ - + = ' " : ; &lt; &gt;</h1>
+<hr>
+<p [ngStyle]="textStyle">The quick brown fox jumped over the lazy dog.</p>
+<p [ngStyle]="textStyle">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
+<p [ngStyle]="textStyle">a b c d e f g h i j k l m n o p q r s t u v w x y z</p>
+<p [ngStyle]="textStyle">ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+<p [ngStyle]="textStyle">abcdefghijklmnopqrstuvwxyz</p>
+<p [ngStyle]="textStyle">. ? ! / @ # $ % ^ &amp; * ( ) ~ - + = ' " : ; &lt; &gt;</p>
+<hr>
+<div class="controlsContainer">
+  <div>
+    <select
+      [(ngModel)]="headerFont"
+      (change)="onChange($event)"
+      (ngModelChange)="onModelChange(controlsEnum.header, $event)"
+    >
+      <optgroup label="Header Fonts">
+        <option *ngFor="let font of hFonts"
+          [ngValue]="font"
+        >
+          {{ font.uiText }}
+        </option>
+      </optgroup>
+      <optgroup label="Text Fonts">
+        <option *ngFor="let font of tFonts"
+          [ngValue]="font"
+        >
+          {{ font.uiText }}
+        </option>
+      </optgroup>
+    </select>
+    <br/>
+    <label for="headerBold">Bold: </label>
+    <input type="checkbox"
+      id="headerBold"
+      [(ngModel)]="headerFont.properties.bold"
+      (ngModelChange)="$event ? headerFont.properties.weight = 700 : headerFont.properties.weight = 400"
+      [checked]="headerFont.properties.weight === 700"
+    />
+    <p>Selected Font:<br>{{headerFont.uiText}}</p>
+    <p>bold: {{headerFont.properties.bold}}<br>weight: {{headerFont.properties.weight}}</p>
+  </div>
+  <div>
+    <select
+      [(ngModel)]="textFont"
+      (change)="onChange($event)"
+      (ngModelChange)="onModelChange(controlsEnum.text, $event)"
+    >
+      <option *ngFor="let font of fontOptions"
+        [ngValue]="font"
+      >
+        {{ font.uiText }}
+      </option>
+    </select>
+    <br/>
+  </div>
+
+
+  <checkbox
+    [(checkedValue)]='textFont.properties.bold'
+    (checkedValueChanged)='customCheckboxChanged($event)'
+  ></checkbox>
+  <p>Bold value: {{textFont.properties.bold}}</p>
+
+
+    <!-- <checkbox [(ngModel)]="boldCheckbox"></checkbox> -->
+    <!-- <input type="checkbox"
+      id="textBold"
+      [(ngModel)]="textFont.properties.bold"
+      (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
+      [checked]="textFont.properties.weight === 700" -->
+    <!-- /> -->
+    <!-- <label for="textBold"><span>Bold AT|jpgy</span></label>
+    <p>Selected Font:<br>{{textFont.uiText}}</p>
+    <p>bold: {{textFont.properties.bold}}<br>weight: {{textFont.properties.weight}}</p>
+  </div> -->
+
+
+  <div>
+    <h4>Add a new font</h4>
+    <label for="addFontFamily">Family: </label>
+    <input type="text"
+      id="addFontFamily"
+      name='bogusName'
+      [(ngModel)]="fontNameToAdd"
+      #addFontFamily="ngModel"
+      required
+    />
+    <p>Input: {{ fontNameToAdd }}</p>
+    <p>Valid: {{ addFontFamily.valid }}</p>
+    <label for="addFontHref">Href: </label>
+    <input type="text"
+      id="addFontHref"
+      [(ngModel)]="fontHrefToAdd"
+      #addFontHref="ngModel"
+    />
+    <p>Input: {{ fontNameToAdd }}</p>
+    <p>Valid: {{ addFontHref.valid }}</p>
+  </div>
+</div>
+
+
+<div class="controlsContainer">
+  <div>
+    <input type="radio"
+      name="testRadio"
+      id="testRadio1"
+    />
+    <label for="testRadio1"><span>Test Radio jpgy</span></label>
+    <br><br>
+    <input type="radio"
+      name="testRadio"
+      id="testRadio2"
+    />
+    <label for="testRadio2"><span>jpgy Test Radio</span></label>
+  </div>
+</div>
+
+<!-- <p class='gray-lt'> The quick brown ox forked over the jazzy dog mp. ? ! @ # $ % & * ( ) ~ - + = ' " ;</p>
+<h1 class='alfa'>Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1>
+<h1 class='anton'>Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1>
+<h1 class='patua'>Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1>
+<p> The quick brown ox forked over the jazzy dog mp.</p>
+<p class='gray-lt'> The quick brown ox forked over the jazzy dog mp. ? ! @ # $ % & * ( ) ~ - + = ' " ;</p>
+<p class='gray-md'> The quick brown ox forked over the jazzy dog mp.</p>
+<p class='ptSans gray-dk'> The quick brown ox forked over the jazzy dog mp.</p>
+<p class='ptSansBold'> The quick brown ox forked over the jazzy dog mp.</p> -->
+

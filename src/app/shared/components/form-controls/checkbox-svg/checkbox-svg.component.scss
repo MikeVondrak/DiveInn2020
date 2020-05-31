@@ -1,0 +1,12 @@
+@import '~src/scss/common-imports';
+
+:host {
+  display: block;
+
+  input [type=checkbox] {
+    @extend .hidden
+  }
+  label {
+    color: red;
+  }
+}
