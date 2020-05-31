@@ -61,9 +61,9 @@ export class FontTestComponent implements OnInit {
    * Standard dropdown change event, fires after ngModelChange
    * @param $event DOM event
    */
-  // public onChange($event: Event) {
-  //   console.log('font-test - customCheckboxChanged DOM event: ' + $event);
-  // }
+  public onChange($event: Event) {
+    console.log('font-test - customCheckboxChanged DOM event: ' + $event);
+  }
 
   public customCheckboxChanged(newVal: boolean) {
     console.log('customCheckboxChanged: ' + newVal);

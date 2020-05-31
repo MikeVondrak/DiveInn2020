@@ -17,7 +17,7 @@ import { CheckboxSvgComponent } from './shared/components/form-controls/checkbox
     AppComponent,
     ServerTestComponent,
     FontTestComponent,
-    CheckboxComponent
+    CheckboxComponent,
     AnimatedCubeComponent,
     AnimatedCheckmarkSvgComponent,
     CheckboxSvgComponent
