@@ -17,8 +17,7 @@
 <div class="controlsContainer">
   <div>
     <select
-      [(ngModel)]="headerFont"
-      (change)="onChange($event)"
+      [ngModel]="headerFont"
       (ngModelChange)="onModelChange(controlsEnum.header, $event)"
     >
       <optgroup label="Header Fonts">
@@ -47,10 +46,10 @@
     <p>Selected Font:<br>{{headerFont.uiText}}</p>
     <p>bold: {{headerFont.properties.bold}}<br>weight: {{headerFont.properties.weight}}</p>
   </div>
+
   <div>
     <select
-      [(ngModel)]="textFont"
-      (change)="onChange($event)"
+      [ngModel]="textFont"
       (ngModelChange)="onModelChange(controlsEnum.text, $event)"
     >
       <option *ngFor="let font of fontOptions"
@@ -60,15 +59,20 @@
       </option>
     </select>
     <br/>
+    <p>Selected Font:<br>{{textFont.uiText}}</p>
+    <p>bold: {{textFont.properties.bold}}
+    <br>weight: {{textFont.properties.weight}}</p>
   </div>
 
 
-  <checkbox
-    [(checkedValue)]='textFont.properties.bold'
-    (checkedValueChanged)='customCheckboxChanged($event)'
-  ></checkbox>
-  <p>Bold value: {{textFont.properties.bold}}</p>
-
+  <div>
+    <checkbox
+      uiLabel='Bold'
+      [(checkedValue)]='checkedValue'
+    ></checkbox>
+    <p>Bold value: {{textFont.properties.bold}}</p>
+    <p>Weight value: {{textFont.properties.weight}}</p>
+  </div>
 
     <!-- <checkbox [(ngModel)]="boldCheckbox"></checkbox> -->
     <!-- <input type="checkbox"
@@ -123,13 +127,4 @@
   </div>
 </div>
 
-<!-- <p class='gray-lt'> The quick brown ox forked over the jazzy dog mp. ? ! @ # $ % & * ( ) ~ - + = ' " ;</p>
-<h1 class='alfa'>Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1>
-<h1 class='anton'>Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1>
-<h1 class='patua'>Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1>
-<p> The quick brown ox forked over the jazzy dog mp.</p>
-<p class='gray-lt'> The quick brown ox forked over the jazzy dog mp. ? ! @ # $ % & * ( ) ~ - + = ' " ;</p>
-<p class='gray-md'> The quick brown ox forked over the jazzy dog mp.</p>
-<p class='ptSans gray-dk'> The quick brown ox forked over the jazzy dog mp.</p>
-<p class='ptSansBold'> The quick brown ox forked over the jazzy dog mp.</p> -->
 

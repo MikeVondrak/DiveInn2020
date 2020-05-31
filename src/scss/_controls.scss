@@ -9,12 +9,12 @@
   }
 }
 %outline {
-  outline: thin dashed $dive-white;// yellow; 
-  outline-offset: 3px; 
+  outline: thin dashed $dive-white;// yellow;
+  outline-offset: 3px;
 }
 
 /**
-  Button 
+  Button
 */
 button {
   $borderWeight: 2px;
@@ -79,7 +79,7 @@ input[type=checkbox], input[type=radio] {
       border: 1px solid $dive-gray-md;
     }
     span {
-      margin-bottom: pxToRem(2px);
+      margin-bottom: pxToRem(0px);
       margin-right: pxToRem(3px);
     }
   }

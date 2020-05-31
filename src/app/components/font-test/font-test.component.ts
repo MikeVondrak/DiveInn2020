@@ -1,17 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleFont, fonts, headerFonts, textFonts } from '../../models/googleFonts.model';
-import { FormsModule } from '@angular/forms'
+import {
+  GoogleFont,
+  fonts,
+  headerFonts,
+  textFonts,
+} from '../../models/googleFonts.model';
+import { FormsModule } from '@angular/forms';
 import { CheckboxComponent } from '../shared/checkbox/checkbox.component';
 
 enum ControlsEnum {
   'header',
-  'text'
+  'text',
 }
 
 @Component({
   selector: 'app-font-test',
   templateUrl: './font-test.component.html',
-  styleUrls: ['./font-test.component.scss']
+  styleUrls: ['./font-test.component.scss'],
 })
 export class FontTestComponent implements OnInit {
   // fonts available in dropdowns
@@ -22,8 +27,10 @@ export class FontTestComponent implements OnInit {
   public headerStyle: object = {};
   public textStyle: object = {}; // { 'font-family': 'PT Sans' };
   // ngModels
-  public headerFont: GoogleFont = headerFonts[0];//this.fontOptions[0];
-  public textFont: GoogleFont = this.fontOptions.find(font => font.uiText === 'PT Sans Bold');
+  public headerFont: GoogleFont = headerFonts[0]; //this.fontOptions[0];
+  public textFont: GoogleFont = this.fontOptions.find(
+    (font) => font.uiText === 'PT Sans Bold'
+  );
   // controls for adding new fonts
   public fontNameToAdd: string;
   public fontHrefToAdd: string;
@@ -33,7 +40,7 @@ export class FontTestComponent implements OnInit {
 
   // public boldCheckbox : boolean;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     this.onModelChange(ControlsEnum.header);
@@ -47,13 +54,23 @@ export class FontTestComponent implements OnInit {
    * @param $newVal New font selected
    */
   public onModelChange(controlId: ControlsEnum, $newVal?: GoogleFont) {
-    switch (controlId) {
-      case ControlsEnum.header:
-        this.headerStyle = { 'font-family': this.headerFont.family };
-        break;
-      case ControlsEnum.text:
-        this.textStyle = { 'font-family': this.textFont.family };
-        break;
+    if ($newVal) {
+      switch (controlId) {
+        case ControlsEnum.header:
+          //this.headerStyle = { 'font-family': this.headerFont.family };
+          this.headerStyle = this.buildStyleObject(
+            this.headerStyle,
+            $newVal.family
+          );
+          break;
+        case ControlsEnum.text:
+          //this.textStyle = { 'font-family': this.textFont.family };
+          this.textStyle = this.buildStyleObject(
+            this.textStyle,
+            $newVal.family
+          );
+          break;
+      }
     }
   }
 
@@ -61,17 +78,53 @@ export class FontTestComponent implements OnInit {
    * Standard dropdown change event, fires after ngModelChange
    * @param $event DOM event
    */
-  public onChange($event: Event) {
-    console.log('font-test - customCheckboxChanged DOM event: ' + $event);
+  // public onChange($event: Event) {
+  //   console.log('font-test - customCheckboxChanged DOM event: ' + $event);
+  // }
+
+  // public customCheckboxChanged(newVal: boolean) {
+  //   console.log('customCheckboxChanged: ' + newVal);
+  //   this.textFont.properties.bold = newVal;
+  // [(ngModel)]="textFont.properties.bold"
+  // (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
+  // [checked]="textFont.properties.weight === 700"
+  //}
+
+  private _checkedValue: boolean = false;
+
+  get checkedValue() {
+    return this._checkedValue;
   }
 
-  public customCheckboxChanged(newVal: boolean) {
-    console.log('customCheckboxChanged: ' + newVal);
-    this.textFont.properties.bold = newVal;
+  set checkedValue(newVal) {
+    setTimeout(() => {
+      this._checkedValue = newVal;
+      newVal
+        ? (this.textFont.properties.weight = 700)
+        : (this.textFont.properties.weight = 400);
+      this.textFont.properties.bold = newVal;
 
-    // [(ngModel)]="textFont.properties.bold"
-    // (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
-    // [checked]="textFont.properties.weight === 700"
+      this.textStyle = this.buildStyleObject(
+        this.textStyle,
+        undefined,
+        this.textFont.properties.weight
+      );
+    });
+  }
 
+  /**
+   * Create a style object to pass into ngStyle binding
+   * @TODO refactor to pass in any number and type of properties for styles
+   */
+  private buildStyleObject(
+    styleObject: object,
+    fontFamily?: string,
+    fontWeight?: number
+  ): object {
+    let newStyle = {
+      'font-family': fontFamily ? fontFamily : styleObject['font-family'],
+      'font-weight': fontWeight ? fontWeight : styleObject['font-weight'],
+    };
+    return newStyle;
   }
 }
