@@ -21,7 +21,7 @@
       (ngModelChange)="onModelChange(controlsEnum.header, $event)"
     >
       <optgroup label="Header Fonts">
-        <option *ngFor="let font of hFonts"
+        <option *ngFor="let font of fontList$ | async"
           [ngValue]="font"
         >
           {{ font.uiText }}

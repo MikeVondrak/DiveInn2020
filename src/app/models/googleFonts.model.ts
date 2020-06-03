@@ -19,6 +19,9 @@ export class GoogleFont implements IGoogleFont {
   readonly hrefId: string;
   readonly properties: FontProperties;
   constructor(font: IGoogleFont) {
+    if (!font.family) {
+      throw new Error('font.family must exist and not be an empty string in constructor argument for GoogleFont');
+    }
     this.family = font.family;
     this.uiText = font.uiText ? font.uiText : font.family;
     this.hrefId = font.hrefId ? font.hrefId : font.family.split(' ').join('+');

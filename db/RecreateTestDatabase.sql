@@ -72,7 +72,6 @@ CREATE TABLE fonts (
     font_family     VARCHAR(20)     NOT NULL,
     ui_text         VARCHAR(20),
     href_name       VARCHAR(20)
-
 );
 INSERT INTO fonts (font_family, ui_text, href_name)
 VALUES
@@ -83,3 +82,10 @@ VALUES
     ('Piedra', null, null),
     ('PT Sans', null, null),
     ('PT Sans', 'PT Sans Bold', 'PT+Sans:wght@700');
+
+DROP TABLE IF EXISTS header_fonts;
+CREATE TABLE fonts (
+    PRIMARY KEY (font_id),
+    font_id         INT             NOT NULL AUTO_INCREMENT,
+    foreign key fonts
+);

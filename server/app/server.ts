@@ -1,19 +1,25 @@
 // const express = require('express'); // old js way of importing
+// express and middleware
 import express, { RequestHandler, Router, Request, Response } from 'express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import * as path from 'path';
 
+// framework
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
+// our backend
 import { ServerApp } from './server-app';
 import { logger } from './middleware/logger';
 import { sqlQueries } from './sqlQueries';
 import { routes } from './routes';
-import { TestData } from './models/test-data.model';
 import { queryCallback } from 'mysql';
+
+import { TestData } from './models/test-data.model';
+import { GoogleFont } from './models/fonts.model';
+
 
 const _port: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
 
@@ -54,9 +60,24 @@ const default200Response: RequestHandler = (req: Request, res: Response) => {
 }
 
 const testDataRouter = express.Router();
-testDataRouter.get(routes.api.test, (req: Request, res: Response) => {
+testDataRouter.get(routes.api.font, (req: Request, res: Response) => {
+  console.log('fontsRouter');
+  serverApp.poolQuery<GoogleFont>(sqlQueries.selectFontsTable)
+    .pipe(take(1))
+    .subscribe(
+      (results: GoogleFont[]) => {
+        res.send(results);
+      },
+      (err) => {
+        console.log('\n!!!!! Failed getting data from: ' + routes.api.font + ', selectFontsTable\n\t' + err);
+      }
+    );
+});
+
+const fontsRouter = express.Router();
+fontsRouter.get(routes.api.test, (req: Request, res: Response) => {
   console.log('testDataRouter');
-  
+
   // const qcb: queryCallback = (err, rows, fields) => {
   //   const data: TestData[] = rows;
   //   res.send(rows);

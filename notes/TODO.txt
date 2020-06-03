@@ -1,0 +1,29 @@
+1. Categories of fonts (2 tables with foreign keys)
+2. Google API
+  - service to get all the fonts
+  - data cached (only make the call once per session) -- use NgRx(??)
+  - list of checkboxes, paginated, listing all the fonts
+      selecting checkbox adds font to db
+      or button to add
+      searchable
+
+  - UI controls for passing a font back
+    google data
+    our extra data
+      bold(??)
+      font is header or text
+
+  - UI to show selected fonts, button to remove(?)
+
+  - blacklist fonts so they don't show up in all fonts selection
+    separate table (?) or flag on font object (?)
+
+
+
+
+
+  -------
+  1. figure out why intellisense sucks
+  2. look into GraphQL
+  3. NgRx
+  4. User login / authentication
