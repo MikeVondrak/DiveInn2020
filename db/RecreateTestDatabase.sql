@@ -83,9 +83,29 @@ VALUES
     ('PT Sans', null, null),
     ('PT Sans', 'PT Sans Bold', 'PT+Sans:wght@700');
 
+
 DROP TABLE IF EXISTS header_fonts;
-CREATE TABLE fonts (
-    PRIMARY KEY (font_id),
-    font_id         INT             NOT NULL AUTO_INCREMENT,
-    foreign key fonts
+CREATE TABLE header_fonts (
+    PRIMARY KEY (header_font_id),
+    header_font_id          INT     NOT NULL AUTO_INCREMENT,
+    fk_fonts_font_id        INT     NOT NULL,
+    FOREIGN KEY (fk_fonts_font_id) 
+        REFERENCES fonts(font_id)
+        ON DELETE CASCADE
 );
+INSERT INTO header_fonts (fk_fonts_font_id)
+VALUES
+    (1), (2), (3), (4), (5);
+
+DROP TABLE IF EXISTS text_fonts;
+CREATE TABLE text_fonts (
+    PRIMARY KEY (text_font_id),
+    text_font_id            INT     NOT NULL AUTO_INCREMENT,
+    fk_fonts_font_id        INT     NOT NULL,
+    FOREIGN KEY (fk_fonts_font_id) 
+        REFERENCES fonts(font_id)
+        ON DELETE CASCADE
+);
+INSERT INTO text_fonts (fk_fonts_font_id)
+VALUES
+    (6), (7);
