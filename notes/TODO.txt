@@ -1,5 +1,10 @@
 1. Categories of fonts (2 tables with foreign keys)
+  - DONE
+
 2. Google API
+  key:  AIzaSyCqZ3dPYustmQUajzIhYu7MJeJ_ePHPnyk    /   DiveInnFontTest
+  append the query parameter key=yourAPIKey to all request URLs
+
   - service to get all the fonts
   - data cached (only make the call once per session) -- use NgRx(??)
   - list of checkboxes, paginated, listing all the fonts
@@ -27,3 +32,6 @@
   2. look into GraphQL
   3. NgRx
   4. User login / authentication
+  5. figure out how/where to store credentials
+    db
+    google API

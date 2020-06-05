@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  GoogleFont,
+  UiFont,
   fonts,
   headerFonts,
   textFonts,
-} from '../../models/googleFonts.model';
+} from '../../models/ui-font.model';
 import { FormsModule } from '@angular/forms';
 import { CheckboxComponent } from '../shared/checkbox/checkbox.component';
 import { FontService } from '../../services/api/font/font.service';
@@ -23,7 +23,7 @@ enum ControlsEnum {
 export class FontTestComponent implements OnInit {
 
   // fonts available in dropdowns
-  public readonly fontOptions: GoogleFont[] = Object.assign([], fonts);
+  public readonly fontOptions: UiFont[] = Object.assign([], fonts);
 
   // make enum values available in template
   public readonly controlsEnum = ControlsEnum;
@@ -31,8 +31,8 @@ export class FontTestComponent implements OnInit {
   public headerStyle: object = {};
   public textStyle: object = {}; // { 'font-family': 'PT Sans' };
   // ngModels
-  public headerFont: GoogleFont = headerFonts[0]; //this.fontOptions[0];
-  public textFont: GoogleFont = this.fontOptions.find(
+  public headerFont: UiFont = headerFonts[0]; //this.fontOptions[0];
+  public textFont: UiFont = this.fontOptions.find(
     (font) => font.uiText === 'PT Sans Bold'
   );
   // controls for adding new fonts
@@ -42,7 +42,7 @@ export class FontTestComponent implements OnInit {
   public hFonts = headerFonts;
   public tFonts = textFonts;
 
-  public fontList$: Observable<GoogleFont[]>;
+  public fontList$: Observable<UiFont[]>;
 
   // public boldCheckbox : boolean;
 
@@ -61,7 +61,7 @@ export class FontTestComponent implements OnInit {
    * @param controlId Enum value to distinguish initiating control
    * @param $newVal New font selected
    */
-  public onModelChange(controlId: ControlsEnum, $newVal?: GoogleFont) {
+  public onModelChange(controlId: ControlsEnum, $newVal?: UiFont) {
     if ($newVal) {
       switch (controlId) {
         case ControlsEnum.header:

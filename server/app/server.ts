@@ -18,7 +18,7 @@ import { routes } from './routes';
 import { queryCallback } from 'mysql';
 
 import { TestData } from './models/test-data.model';
-import { GoogleFont } from './models/fonts.model';
+import { UiFont } from './models/fonts.model';
 
 
 const _port: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
@@ -62,10 +62,10 @@ const default200Response: RequestHandler = (req: Request, res: Response) => {
 const testDataRouter = express.Router();
 testDataRouter.get(routes.api.font, (req: Request, res: Response) => {
   console.log('fontsRouter');
-  serverApp.poolQuery<GoogleFont>(sqlQueries.selectFontsTable)
+  serverApp.poolQuery<UiFont>(sqlQueries.selectFontsTable)
     .pipe(take(1))
     .subscribe(
-      (results: GoogleFont[]) => {
+      (results: UiFont[]) => {
         res.send(results);
       },
       (err) => {

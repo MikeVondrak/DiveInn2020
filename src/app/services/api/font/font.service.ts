@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 // shared from backend
 import { routes } from '../../../../../server/app/routes';
 
-import { GoogleFont, IGoogleFont } from '../../../models/googleFonts.model';
+import { UiFont, IUiFont } from '../../../models/ui-font.model';
 import { Font } from './font.model';
 import { map } from 'rxjs/operators';
 
@@ -16,29 +16,29 @@ export class FontService {
 
   constructor(private http: HttpClient) { }
 
-  public getFonts$(): Observable<GoogleFont[]> {
+  public getFonts$(): Observable<UiFont[]> {
 
     console.log('**** API service getFonts()');
     const results: Observable<Font[]> = this.http.get<Font[]>(routes.api._root + routes.api.font);
 
-    const googleFontArray: Observable<GoogleFont[]>
+    const uifontArray: Observable<UiFont[]>
       = results.pipe(
         map( (fontArray: Font[]) => {
           return fontArray.map( (font: Font) => {
-            const googleFont: IGoogleFont = {
+            const uifont: IUiFont = {
               family: font.font_family,
               uiText: font.ui_text,
               hrefId: font.href_id,
               //properties: font.properties, @TODO need to add properties to table and BE/FE API models
             }
-            return new GoogleFont(googleFont);
+            return new UiFont(uifont);
           });
         })
     );
-    return googleFontArray;
+    return uifontArray;
   }
 
-  public addFont(font: GoogleFont) {
+  public addFont(font: UiFont) {
     // TODO
   }
 }

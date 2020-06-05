@@ -32,7 +32,7 @@ export class UiFont implements IUiFont {
 /**
  * Include fonts here, will be downloaded via <link> element and added as an option in font dropdowns
  */
-const ui-fonts: IUiFont[] = [
+const uiFonts: IUiFont[] = [
   { family: 'Alfa Slab One' },
   { family: 'Anton' },
   { family: 'Bevan' },
@@ -42,13 +42,11 @@ const ui-fonts: IUiFont[] = [
   { family: 'PT Sans', hrefId: 'PT+Sans:wght@700', uiText: 'PT Sans Bold', properties: {  weight: 700 } }
 ];
 
-function generateFonts(ui-fonts: IUiFont[]): UiFont[] {
-  return ui-fonts.map(font => new UiFont(font));
+function generateFonts(fonts: IUiFont[]): UiFont[] {
+  return fonts.map(font => new UiFont(font));
 }
 
-export const fonts: UiFont[] = generateFonts(ui-fonts);
-
-
+export const fonts: UiFont[] = generateFonts(uiFonts);
 
 const _headerFonts: IUiFont[] = [
   { family: 'Alfa Slab One' },

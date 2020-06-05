@@ -1,6 +1,6 @@
 import { Component, OnInit, Renderer2, ElementRef, forwardRef, Input, EventEmitter, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
-import { GoogleFont } from '../../../models/googleFonts.model';
+import { UiFont } from '../../../models/ui-fonts.model';
 
 @Component({
   selector: 'checkbox',
