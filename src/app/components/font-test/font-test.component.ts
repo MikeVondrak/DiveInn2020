@@ -8,7 +8,10 @@ import {
 import { FormsModule } from '@angular/forms';
 import { CheckboxComponent } from '../shared/checkbox/checkbox.component';
 import { FontService } from '../../services/api/font/font.service';
+import { FontsApiService } from '../../services/external/google/fonts-api.service';
 import { Observable } from 'rxjs';
+import { GoogleFontsApiSort, GoogleFontsApi } from '../../services/external/google/fonts-api.model';
+import { take } from 'rxjs/operators';
 
 enum ControlsEnum {
   'header',
@@ -43,16 +46,52 @@ export class FontTestComponent implements OnInit {
   public tFonts = textFonts;
 
   public fontList$: Observable<UiFont[]>;
+  public googleFontList: GoogleFontsApi[];
 
   // public boldCheckbox : boolean;
 
-  constructor(private fontService: FontService) {}
+  constructor(private fontService: FontService, private fontsApiService: FontsApiService) {}
 
   ngOnInit(): void {
     this.onModelChange(ControlsEnum.header);
     this.onModelChange(ControlsEnum.text);
 
     this.fontList$ = this.fontService.getFonts$();
+
+    this.fontsApiService.getFonts$('popularity')
+      .pipe(take(1))
+      .subscribe(fonts => {
+        this.googleFontList = fonts;
+        for (let i=0; i<1; i++) {
+          console.log(JSON.stringify(this.googleFontList[i], null, 4));
+        }
+      });
+
+    this.fontsApiService.getFonts$('trending')
+      .pipe(take(1))
+      .subscribe(fonts => {
+        this.googleFontList = fonts;
+        for (let i=0; i<1; i++) {
+          console.log(JSON.stringify(this.googleFontList[i], null, 4));
+        }
+      });
+
+    this.fontsApiService.getFonts$('trending')
+      .pipe(take(1))
+      .subscribe(fonts => {
+        this.googleFontList = fonts;
+        for (let i=0; i<1; i++) {
+          console.log(JSON.stringify(this.googleFontList[i], null, 4));
+        }
+      });
+    this.fontsApiService.getFonts$('popularity')
+      .pipe(take(1))
+      .subscribe(fonts => {
+        this.googleFontList = fonts;
+        for (let i=0; i<1; i++) {
+          console.log(JSON.stringify(this.googleFontList[i], null, 4));
+        }
+      });
   }
 
   /**

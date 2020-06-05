@@ -35,3 +35,23 @@
   5. figure out how/where to store credentials
     db
     google API
+
+
+
+------
+Cache X number of sort methods
+  Popularity, trending
+  try sorting ourselves for alpha, style (category)
+
+Dropdown / radio buttons of sort options
+
+List of fonts, paginated
+  some way to select how many fonts per page
+
+Buttons(?) for add to favorites or blacklist
+
+
+Style option checkmarks ?
+  italic ? bold ?
+
+
