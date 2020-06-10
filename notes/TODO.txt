@@ -28,6 +28,8 @@
 
 
   -------
+  0. rename fontsRouter/testDataRouter
+  0a. remove magic strings from font.service
   1. figure out why intellisense sucks
   2. look into GraphQL
   3. NgRx
