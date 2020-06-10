@@ -32,15 +32,15 @@ export class FontManagerService {
     private headUriService: HeadUriLoaderService,
     private logger: LoggerService
   ) {
-    this.logger.enableLogger(true);
+    // this.logger.enableLogger(true);
   }
 
   public init() {
 
-    this.logger.log('Test');
-    this.logger.log('', undefined, { label: 'Get Font Categories', action: 'start' });
-    this.logger.log('', { 'Categories Size': this.googleFontCategories.size, 'another var': 100 });
-    
+    // this.logger.log('Test');
+    // this.logger.log('', undefined, { label: 'Get Font Categories', action: 'start' });
+    // this.logger.log('', { 'Categories Size': this.googleFontCategories.size, 'another var': 100 });
+
     this.getAllGoogleFonts();
   }
 
@@ -50,8 +50,8 @@ export class FontManagerService {
         .pipe(take(1))
         .subscribe(fonts => {
           this.allFonts = fonts;
-          debugger;
-          this.logger.log('', undefined, { label: 'getFonts$', action: 'stop' });
+          // debugger;
+          // this.logger.log('', undefined, { label: 'getFonts$', action: 'stop' });
           this.parseFontsForCategories();
         });
     }
@@ -63,8 +63,8 @@ export class FontManagerService {
       this.googleFontCategories.add(font.category)
     });
 
-    this.logger.log('', [{ 'Categories Size': this.googleFontCategories.size, Categories: this.googleFontCategories }]);
-    this.logger.log('', null, { label: 'Get Font Categories', action: 'stop' });
+    // this.logger.log('', [{ 'Categories Size': this.googleFontCategories.size, Categories: this.googleFontCategories }]);
+    // this.logger.log('', null, { label: 'Get Font Categories', action: 'stop' });
   }
 
   private getSelectableFonts() {

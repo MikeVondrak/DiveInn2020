@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FontManagerService } from '../../services/font-marnager/font-manager.service';
+import { FontManagerService } from '../../services/font-manager/font-manager.service';
 
 @Component({
   selector: 'app-font-configuration',

@@ -23,7 +23,7 @@ export class FontApiService {
 
     const uifontArray: Observable<UiFont[]>
       = results.pipe(
-        map( (fontArray: Font[]) => {
+        map((fontArray: Font[]) => {
           return fontArray.map( (font: Font) => {
             const uifont: IUiFont = {
               family: font.font_family,
@@ -36,6 +36,15 @@ export class FontApiService {
         })
     );
     return uifontArray;
+  }
+
+  public getFontFamilyFavorites(): Observable<string[]> {
+    return this.http.get<string[]>(routes.api._root + routes.api.font + '?fontdata=family');
+
+  }
+
+  public getFontFamilyBlacklist(): Observable<string[]> {
+
   }
 
   public addFont(font: UiFont) {

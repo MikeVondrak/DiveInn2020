@@ -59,41 +59,45 @@ const default200Response: RequestHandler = (req: Request, res: Response) => {
   res.send('{ "test_id": 200 }');
 }
 
-const testDataRouter = express.Router();
-testDataRouter.get(routes.api.font, (req: Request, res: Response) => {
-  console.log('fontsRouter');
-  serverApp.poolQuery<UiFont>(sqlQueries.selectFontsTable)
+
+function makePoolQuery<returnType>(route: string, query: string, res: Response) {
+  serverApp.poolQuery<returnType>(query)
     .pipe(take(1))
     .subscribe(
-      (results: UiFont[]) => {
+      (results: returnType[]) => {
         res.send(results);
       },
       (err) => {
-        console.log('\n!!!!! Failed getting data from: ' + routes.api.font + ', selectFontsTable\n\t' + err);
+        console.log('\n!!!!! Failed getting data from: ' + route + ', selectFontsTable\n\t' + err);
       }
     );
+}
+
+const testDataRouter = express.Router();
+testDataRouter.get(routes.api.font, (req: Request, res: Response) => {
+  console.log('fontsRouter');
+  if (req.query && Object.keys(req.query).length > 0) {
+    const queryParam = Object.keys(req.query)[0];
+    switch (queryParam) {
+      case 'fontdata': {
+        const fontdataValue = req.query[queryParam];
+        switch (fontdataValue) {
+          case 'family': makePoolQuery(routes.api.font, sqlQueries.selectFontsFontFamily, res); break;
+          default: throw new Error('Invalid fontdata value: ' + fontdataValue);
+        }
+      } break;
+      default: throw new Error('Invalid query param: ' + queryParam);
+    }
+  } else {
+    makePoolQuery(routes.api.font, sqlQueries.selectFontsTable, res);
+  }
 });
 
 const fontsRouter = express.Router();
 fontsRouter.get(routes.api.test, (req: Request, res: Response) => {
   console.log('testDataRouter');
-
-  // const qcb: queryCallback = (err, rows, fields) => {
-  //   const data: TestData[] = rows;
-  //   res.send(rows);
-  // }
-  //serverApp.poolQuery<TestData>(sqlQueries.selectTestTable, qcb);
-
-  serverApp.poolQuery<TestData>(sqlQueries.selectTestTable)
-    .pipe(take(1))
-    .subscribe(
-      (results: TestData[]) => {
-        res.send(results);
-      },
-      (err) => {
-        console.log('\n!!!!! Failed getting data from: ' + routes.api.test + ', selectTestTable\n\t' + err);
-      }
-    );
+  sqlQueries.selectTestTable
+  makePoolQuery(routes.api.test, sqlQueries.selectTestTable, res);
 });
 
 
@@ -101,6 +105,7 @@ const allRoutes = express.Router();
 allRoutes.get(routes.api.other, default200Response);
 
 controllers.push(testDataRouter);
+controllers.push(fontsRouter);
 controllers.push(allRoutes);
 
 

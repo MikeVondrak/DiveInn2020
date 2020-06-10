@@ -3,8 +3,8 @@
 export const routes = {
   api: {
     _root: '/api',
-    test: '/test-data',
     font: '/font',
+    test: '/test-data',
     other: '/other'
   },
   error: {
