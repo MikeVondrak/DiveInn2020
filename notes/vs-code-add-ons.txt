@@ -14,6 +14,7 @@ Extensions
 
   Indent Rainbow
   Bracket Pair Colorizer
+
   Bookmarks
 
   SVG Viewer

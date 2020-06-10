@@ -5,7 +5,6 @@ import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
 import { GoogleFontsApi, GoogleFontsApiSort, GoogleFontsApiResponse} from './google-fonts-api.model';
 import { shareReplay, pluck } from 'rxjs/operators';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -16,9 +15,6 @@ export class GoogleFontsApiService {
   private readonly SORT_PARAM: string = '&sort=';
   private readonly URL = this.BASE_URL + this.API_KEY + this.SORT_PARAM;
   private readonly CACHE_SIZE: 1;
-
-  // private cachePopularity: Observable<GoogleFontsApi[]>;
-  // private cacheTrending: Observable<GoogleFontsApi[]>;
 
   /**
    * map of sharedReplay Observables to store caches of different sort methods
@@ -37,26 +33,10 @@ export class GoogleFontsApiService {
    * @returns Observable of fonts array
    */
   public getFonts$(sort: GoogleFontsApiSort = 'popularity', clearCache: boolean = false): Observable<GoogleFontsApi[]> {
-
-    //console.log('***** GoogleFontsApiService.getFonts$: ' + sort + ', clearCache: ' + clearCache);
     //console.time('getFonts$');
 
     const url = this.URL + sort;
     return this.getGoogleFontsData$(sort, url, clearCache);
-
-    // switch (sort) {
-    //   case 'popularity':
-    //     console.log('getting cachePopularity');
-    //     this.cachePopularity = this.getCachedData(this.cachePopularity, clearCache, url);
-    //     return this.cachePopularity;
-
-    //   case 'trending':
-    //     console.log('getting cacheTrending');
-    //     this.cacheTrending = this.getCachedData(this.cacheTrending, clearCache, url);
-    //     return this.cacheTrending;
-
-    //   default: throw new Error('Invalid sort option provided: ' + sort);
-    // }
   }
 
   /**
@@ -84,24 +64,4 @@ export class GoogleFontsApiService {
     }
     return cache$;
   }
-
-  /**
-   * Get cached data, initializing it from the API if necessary
-   * @param cache cache to operate on
-   * @param clearCache [=false] boolean to force API request
-   * @param url url for API request
-   */
-  // private getCachedData(cache: Observable<GoogleFontsApi[]>, clearCache: boolean = false, url: string) {
-  //   if (!cache || clearCache) {
-  //     console.log('!!!!! Google Webfonts API request !!!!!');
-  //     cache = this.http.get<GoogleFontsApiResponse>(url)
-  //       .pipe(
-  //         map(apiResponse => apiResponse.items)
-  //       );
-  //   } else {
-  //     console.log('----- Google Webfonts API returning cached data');
-  //   }
-  //   debugger;
-  //   return cache;
-  // }
 }
