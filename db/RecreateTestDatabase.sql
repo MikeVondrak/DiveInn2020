@@ -47,6 +47,20 @@ VALUES
     ('e', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
+DROP TABLE IF EXISTS font_type;
+CREATE TABLE font_type (
+    PRIMARY KEY (font_type_id),
+    font_type_id    INT             NOT NULL AUTO_INCREMENT,
+    type            VARCHAR(20)     NOT NULL
+);
+INSERT INTO font_type (type)
+VALUES
+    ('page_title'),
+    ('main_nav'),
+    ('section_title'),
+    ('section_header'),
+    ('section_text');
+
 -- DROP TABLE IF EXISTS google_fonts;
 -- CREATE TABLE fonts (
 --     PRIMARY KEY (font_id),
@@ -84,28 +98,46 @@ VALUES
     ('PT Sans', 'PT Sans Bold', 'PT+Sans:wght@700');
 
 
-DROP TABLE IF EXISTS header_fonts;
-CREATE TABLE header_fonts (
-    PRIMARY KEY (header_font_id),
-    header_font_id          INT     NOT NULL AUTO_INCREMENT,
-    fk_fonts_font_id        INT     NOT NULL,
-    FOREIGN KEY (fk_fonts_font_id) 
-        REFERENCES fonts(font_id)
-        ON DELETE CASCADE
-);
-INSERT INTO header_fonts (fk_fonts_font_id)
-VALUES
-    (1), (2), (3), (4), (5);
+-- DROP TABLE IF EXISTS header_fonts;
+-- CREATE TABLE header_fonts (
+--     PRIMARY KEY (header_font_id),
+--     header_font_id          INT     NOT NULL AUTO_INCREMENT,
+--     fk_fonts_font_id        INT     NOT NULL,
+--     FOREIGN KEY (fk_fonts_font_id) 
+--         REFERENCES fonts(font_id)
+--         ON DELETE CASCADE
+-- );
+-- INSERT INTO header_fonts (fk_fonts_font_id)
+-- VALUES
+--     (1), (2), (3), (4), (5);
 
-DROP TABLE IF EXISTS text_fonts;
-CREATE TABLE text_fonts (
-    PRIMARY KEY (text_font_id),
-    text_font_id            INT     NOT NULL AUTO_INCREMENT,
-    fk_fonts_font_id        INT     NOT NULL,
+-- DROP TABLE IF EXISTS text_fonts;
+-- CREATE TABLE text_fonts (
+--     PRIMARY KEY (text_font_id),
+--     text_font_id            INT     NOT NULL AUTO_INCREMENT,
+--     fk_fonts_font_id        INT     NOT NULL,
+--     FOREIGN KEY (fk_fonts_font_id) 
+--         REFERENCES fonts(font_id)
+--         ON DELETE CASCADE
+-- );
+-- INSERT INTO text_fonts (fk_fonts_font_id)
+-- VALUES
+--     (6), (7);
+
+
+DROP TABLE IF EXISTS font_setting;
+CREATE TABLE font_setting (
+    PRIMARY KEY (font_setting_id),
+    font_setting_id             INT     NOT NULL AUTO_INCREMENT,
+    fk_font_type_font_type_id   INT     NOT NULL,   
+    FOREIGN KEY (fk_font_type_font_type_id) 
+        REFERENCES font_type(font_type_id)
+        ON DELETE CASCADE,
+    fk_fonts_font_id            INT     NOT NULL,   
     FOREIGN KEY (fk_fonts_font_id) 
         REFERENCES fonts(font_id)
         ON DELETE CASCADE
 );
-INSERT INTO text_fonts (fk_fonts_font_id)
+INSERT INTO font_setting (fk_font_type_font_type_id, fk_fonts_font_id)
 VALUES
-    (6), (7);
+    (1, 1), (2, 1), (3, 2), (4, 2), (5, 6);

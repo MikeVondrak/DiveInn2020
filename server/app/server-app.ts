@@ -1,7 +1,7 @@
 // https://dev.to/aligoren/developing-an-express-application-using-typescript-3b1
 
 import express, { Application, Request, Response, NextFunction, RequestHandler, Router } from 'express';
-import mysql, { ConnectionOptions, ConnectionConfig, Connection, Query, QueryFunction, QueryOptions, MysqlError, FieldInfo, queryCallback, Pool, PoolConfig } from 'mysql';
+import mysql, { ConnectionConfig, Connection, QueryOptions, MysqlError, FieldInfo, queryCallback, Pool, PoolConfig } from 'mysql';
 import { TestData, TestJson } from './models/test-data.model';
 import { routes } from './routes';
 import { Observable, Observer } from 'rxjs';
@@ -28,7 +28,7 @@ export class ServerApp {
     this.port = process.env.PORT ? process.env.PORT : this.port; // process.env.PORT set by Heroku
     this.pool = this.createPool(this.dbConfig);
 
-    // first to match route takes precedence,  static > middleware > controllers  
+    // first to match route takes precedence,  static > middleware > controllers
     // '/' defaults to index.html from Express settings
     this.useStatic(this.staticPathList);
     this.useMiddleware(this.middleWareList);
@@ -47,7 +47,7 @@ export class ServerApp {
   private useStatic(paths: string[]) {
     paths.forEach(path => {
       this.app.use(express.static(path));
-      //this.app.use('/static', express.static(path)); // specify a mount path
+      // this.app.use('/static', express.static(path)); // specify a mount path
     });
   }
 
@@ -67,7 +67,7 @@ export class ServerApp {
    */
   private useControllers(routers: Router[]) {
     routers.forEach(router => {
-      //this.app.use(routes.api.root, router);
+      // this.app.use(routes.api.root, router);
       this.app.use(routes.api._root, router);
     });
   }
@@ -77,8 +77,8 @@ export class ServerApp {
    * @TODO proper 404 etc error handling
    */
   private setCatchAllRoutes() {
-    this.app.all(routes.error._404, (req, res) => {      
-      //res.status(200).sendFile('/', {root: angularAppLocation});
+    this.app.all(routes.error._404, (req, res) => {
+      // res.status(200).sendFile('/', {root: angularAppLocation});
       res.status(404).send('Route Not Found');
     });
   }
@@ -90,7 +90,7 @@ export class ServerApp {
     this.app.listen(this.port, () => {
       console.log('********************************************************************************');
       console.log('Node Express server for "' + this.app.name + '" listening on port: ' + this.port + '\n');
-    })
+    });
   }
 
   private createPool(dbConfig: ConnectionConfig, poolSize: number = 100): Pool {
@@ -103,27 +103,27 @@ export class ServerApp {
 
   /**
    * Query using pool, automatically aquires and releases connection to db
-   * @template T
+   * @template T Type of Observable to return
    * @param sqlQuery SQL query string
    * @returns Observable of array of provided type, containing query results
    */
-  //public poolQuery<T>(sqlQuery: string, callback: queryCallback): void {
+  // public poolQuery<T>(sqlQuery: string, callback: queryCallback): void {
   public poolQuery<T>(sqlQuery: string): Observable<T[]> {
 
     const queryResult$ = (observer: Observer<T[]>) => {
-      
+
       const queryOptions: QueryOptions = {
         sql: sqlQuery,
       };
-      
+
       const responseCallback: queryCallback = (err: MysqlError | null, rows: T[], fields: FieldInfo[] | undefined) => {
         if (err) {
           observer.error(err);
-        } 
+        }
         observer.next(rows);
         observer.complete();
       };
-      
+
       this.pool.query(queryOptions, responseCallback);
     };
 

@@ -7,10 +7,10 @@ import {
 } from '../../models/ui-font.model';
 import { FormsModule } from '@angular/forms';
 import { CheckboxComponent } from '../shared/checkbox/checkbox.component';
-import { FontService } from '../../services/api/font/font.service';
-import { FontsApiService } from '../../services/external/google/fonts-api.service';
+import { FontApiService } from '../../services/api/font/font.service';
+import { GoogleFontsApiService } from '../../services/external/google/google-fonts-api.service';
 import { Observable } from 'rxjs';
-import { GoogleFontsApiSort, GoogleFontsApi } from '../../services/external/google/fonts-api.model';
+import { GoogleFontsApiSort, GoogleFontsApi } from '../../services/external/google/google-fonts-api.model';
 import { take } from 'rxjs/operators';
 
 enum ControlsEnum {
@@ -34,7 +34,7 @@ export class FontTestComponent implements OnInit {
   public headerStyle: object = {};
   public textStyle: object = {}; // { 'font-family': 'PT Sans' };
   // ngModels
-  public headerFont: UiFont = headerFonts[0]; //this.fontOptions[0];
+  public headerFont: UiFont = headerFonts[0];
   public textFont: UiFont = this.fontOptions.find(
     (font) => font.uiText === 'PT Sans Bold'
   );
@@ -50,7 +50,7 @@ export class FontTestComponent implements OnInit {
 
   // public boldCheckbox : boolean;
 
-  constructor(private fontService: FontService, private fontsApiService: FontsApiService) {}
+  constructor(private fontService: FontApiService, private fontsApiService: GoogleFontsApiService) {}
 
   ngOnInit(): void {
     this.onModelChange(ControlsEnum.header);
@@ -58,40 +58,42 @@ export class FontTestComponent implements OnInit {
 
     this.fontList$ = this.fontService.getFonts$();
 
+    //console.time('font-test getFonts$');
     this.fontsApiService.getFonts$('popularity')
       .pipe(take(1))
-      .subscribe(fonts => {
-        this.googleFontList = fonts;
-        for (let i=0; i<1; i++) {
-          console.log(JSON.stringify(this.googleFontList[i], null, 4));
-        }
+      .subscribe(f => {
+        this.googleFontList = f;
+        // for (let i = 0; i < 1; i++) {
+        //   console.log(JSON.stringify(this.googleFontList[i], null, 4));
+        //   console.timeEnd('font-test getFonts$');
+        // }
       });
 
-    this.fontsApiService.getFonts$('trending')
-      .pipe(take(1))
-      .subscribe(fonts => {
-        this.googleFontList = fonts;
-        for (let i=0; i<1; i++) {
-          console.log(JSON.stringify(this.googleFontList[i], null, 4));
-        }
-      });
+    // this.fontsApiService.getFonts$('trending')
+    //   .pipe(take(1))
+    //   .subscribe(fonts => {
+    //     this.googleFontList = fonts;
+    //     for (let i=0; i<1; i++) {
+    //       console.log(JSON.stringify(this.googleFontList[i], null, 4));
+    //     }
+    //   });
 
-    this.fontsApiService.getFonts$('trending')
-      .pipe(take(1))
-      .subscribe(fonts => {
-        this.googleFontList = fonts;
-        for (let i=0; i<1; i++) {
-          console.log(JSON.stringify(this.googleFontList[i], null, 4));
-        }
-      });
-    this.fontsApiService.getFonts$('popularity')
-      .pipe(take(1))
-      .subscribe(fonts => {
-        this.googleFontList = fonts;
-        for (let i=0; i<1; i++) {
-          console.log(JSON.stringify(this.googleFontList[i], null, 4));
-        }
-      });
+    // this.fontsApiService.getFonts$('trending')
+    //   .pipe(take(1))
+    //   .subscribe(fonts => {
+    //     this.googleFontList = fonts;
+    //     for (let i=0; i<1; i++) {
+    //       console.log(JSON.stringify(this.googleFontList[i], null, 4));
+    //     }
+    //   });
+    // this.fontsApiService.getFonts$('popularity')
+    //   .pipe(take(1))
+    //   .subscribe(fonts => {
+    //     this.googleFontList = fonts;
+    //     for (let i=0; i<1; i++) {
+    //       console.log(JSON.stringify(this.googleFontList[i], null, 4));
+    //     }
+    //   });
   }
 
   /**
@@ -168,7 +170,7 @@ export class FontTestComponent implements OnInit {
     fontFamily?: string,
     fontWeight?: number
   ): object {
-    let newStyle = {
+    const newStyle = {
       'font-family': fontFamily ? fontFamily : styleObject['font-family'],
       'font-weight': fontWeight ? fontWeight : styleObject['font-weight'],
     };

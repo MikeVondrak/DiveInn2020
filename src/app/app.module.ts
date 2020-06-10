@@ -11,6 +11,7 @@ import { CheckboxComponent } from './components/shared/checkbox/checkbox.compone
 import { AnimatedCubeComponent } from './shared/components/animated-cube/animated-cube.component';
 import { AnimatedCheckmarkSvgComponent } from './shared/components/animated-checkmark-svg/animated-checkmark-svg.component';
 import { CheckboxSvgComponent } from './shared/components/form-controls/checkbox-svg/checkbox-svg.component';
+import { FontConfigurationComponent } from './components/font-configuration/font-configuration.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CheckboxSvgComponent } from './shared/components/form-controls/checkbox
     CheckboxComponent,
     AnimatedCubeComponent,
     AnimatedCheckmarkSvgComponent,
-    CheckboxSvgComponent
+    CheckboxSvgComponent,
+    FontConfigurationComponent
   ],
   imports: [
     BrowserModule,

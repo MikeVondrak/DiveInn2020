@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class FontService {
+export class FontApiService {
 
   constructor(private http: HttpClient) { }
 
@@ -29,7 +29,7 @@ export class FontService {
               family: font.font_family,
               uiText: font.ui_text,
               hrefId: font.href_id,
-              //properties: font.properties, @TODO need to add properties to table and BE/FE API models
+              // properties: font.properties, @TODO need to add properties to table and BE/FE API models
             }
             return new UiFont(uifont);
           });
