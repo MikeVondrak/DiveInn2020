@@ -1,6 +1,8 @@
 // const express = require('express'); // old js way of importing
 // express and middleware
 import express, { RequestHandler, Router, Request, Response } from 'express';
+//import * as express from 'express';
+//import { RequestHandler, Router, Request, Response } from 'express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
@@ -21,18 +23,18 @@ import { TestData } from './models/test-data.model';
 import { UiFont } from './models/fonts.model';
 
 
-const _port: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
+const PORT: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
 
 // running server app from ./server/app or ./server/dist (for prod)
-const _angularAppLocation: string = '../../dist/dive-inn'; // output from ng build --prod
-const _angularAssetsLocation: string = '../../src/assets'; /** @TODO more consistent locations / file structure */
+const ANGULAR_APP_LOCATION = '../../dist/dive-inn'; // output from ng build --prod
+const ANGULAR_ASSETS_LOCATION = '../../src/assets'; /** @TODO more consistent locations / file structure */
 
 debugFileAndDir();
 
 // list of paths for statically served content
 // __dirname provided by Express, location app is running from
-const angularDist = path.join(__dirname, _angularAppLocation);
-const assets = path.join(__dirname, _angularAssetsLocation);
+const angularDist = path.join(__dirname, ANGULAR_APP_LOCATION);
+const assets = path.join(__dirname, ANGULAR_ASSETS_LOCATION);
 const staticPaths: string[] = [
   angularDist, // published files from Angular --prod build
   assets // images, fonts, etc
@@ -55,9 +57,9 @@ const controllers: Router[] = [];
 const default200Response: RequestHandler = (req: Request, res: Response) => {
   console.log('NODE: Router default 200 response');
   // serve default file (index.html) for Angular app
-  //res.status(200).sendFile('/', {root: _angularAppLocation});
+  // res.status(200).sendFile('/', {root: ANGULAR_APP_LOCATION});
   res.send('{ "test_id": 200 }');
-}
+};
 
 
 function makePoolQuery<returnType>(route: string, query: string, res: Response) {
@@ -68,24 +70,24 @@ function makePoolQuery<returnType>(route: string, query: string, res: Response) 
         res.send(results);
       },
       (err) => {
-        console.log('\n!!!!! Failed getting data from: ' + route + ', selectFontsTable\n\t' + err);
+        console.log('\n!!!!! Failed getting data from: ' + route + '\n\t' + err);
       }
     );
 }
 
-const testDataRouter = express.Router();
-testDataRouter.get(routes.api.font, (req: Request, res: Response) => {
+const fontsRouter = express.Router();
+fontsRouter.get(routes.api.font, (req: Request, res: Response) => {
   console.log('fontsRouter');
   if (req.query && Object.keys(req.query).length > 0) {
     const queryParam = Object.keys(req.query)[0];
     switch (queryParam) {
-      case 'fontdata': {
+      case 'fontdata':
         const fontdataValue = req.query[queryParam];
         switch (fontdataValue) {
           case 'family': makePoolQuery(routes.api.font, sqlQueries.selectFontsFontFamily, res); break;
           default: throw new Error('Invalid fontdata value: ' + fontdataValue);
         }
-      } break;
+        break;
       default: throw new Error('Invalid query param: ' + queryParam);
     }
   } else {
@@ -93,10 +95,9 @@ testDataRouter.get(routes.api.font, (req: Request, res: Response) => {
   }
 });
 
-const fontsRouter = express.Router();
-fontsRouter.get(routes.api.test, (req: Request, res: Response) => {
+const testDataRouter = express.Router();
+testDataRouter.get(routes.api.test, (req: Request, res: Response) => {
   console.log('testDataRouter');
-  sqlQueries.selectTestTable
   makePoolQuery(routes.api.test, sqlQueries.selectTestTable, res);
 });
 
@@ -109,7 +110,7 @@ controllers.push(fontsRouter);
 controllers.push(allRoutes);
 
 
-const serverApp = new ServerApp(angularDist, _port, staticPaths, middleWare, controllers);
+const serverApp = new ServerApp(angularDist, PORT, staticPaths, middleWare, controllers);
 serverApp.beginListening();
 
 
@@ -122,9 +123,9 @@ serverApp.beginListening();
  * /server/dist/server.js -> ../../dist/dive-inn -> /dist/dive-inn/
  */
 function debugFileAndDir() {
-  console.log("\n\n********************************************************************************");
+  console.log('\n\na********************************************************************************');
   console.log('Running:\t\t' + __filename);
-  let tmp = path.join(__dirname, _angularAppLocation);
-  console.log('Angular App Path:\t' + _angularAppLocation + '\nResolved:\t\t' + tmp);
+  const tmp = path.join(__dirname, ANGULAR_APP_LOCATION);
+  console.log('Angular App Path:\t' + ANGULAR_APP_LOCATION + '\nResolved:\t\t' + tmp);
 }
 

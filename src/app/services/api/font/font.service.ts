@@ -43,9 +43,9 @@ export class FontApiService {
 
   }
 
-  public getFontFamilyBlacklist(): Observable<string[]> {
+  // public getFontFamilyBlacklist(): Observable<string[]> {
 
-  }
+  // }
 
   public addFont(font: UiFont) {
     // TODO
