@@ -16,7 +16,7 @@ export class FontApiService {
 
   constructor(private http: HttpClient) { }
 
-  public getFonts$(): Observable<UiFont[]> {
+  public getAllFonts$(): Observable<UiFont[]> {
 
     console.log('**** API service getFonts()');
     const results: Observable<Font[]> = this.http.get<Font[]>(routes.api._root + routes.api.font);
@@ -38,14 +38,14 @@ export class FontApiService {
     return uifontArray;
   }
 
-  public getFontFamilyFavorites(): Observable<string[]> {
-    return this.http.get<string[]>(routes.api._root + routes.api.font + '?fontdata=family');
+  public getFontFamilySelectable(): Observable<string[]> {
+    return this.http.get<string[]>(routes.api._root + routes.api.font._root + routes.api.font._queryParam.family);
 
   }
 
-  // public getFontFamilyBlacklist(): Observable<string[]> {
+  public getFontFamilyBlacklist(): Observable<string[]> {
 
-  // }
+  }
 
   public addFont(font: UiFont) {
     // TODO

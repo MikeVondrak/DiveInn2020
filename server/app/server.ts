@@ -20,7 +20,7 @@ import { routes } from './routes';
 import { queryCallback } from 'mysql';
 
 import { TestData } from './models/test-data.model';
-import { UiFont } from './models/fonts.model';
+import { Font } from './models/font.model';
 
 
 const PORT: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
@@ -76,7 +76,7 @@ function makePoolQuery<returnType>(route: string, query: string, res: Response) 
 }
 
 const fontsRouter = express.Router();
-fontsRouter.get(routes.api.font, (req: Request, res: Response) => {
+fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
   console.log('fontsRouter');
   if (req.query && Object.keys(req.query).length > 0) {
     const queryParam = Object.keys(req.query)[0];
@@ -84,21 +84,21 @@ fontsRouter.get(routes.api.font, (req: Request, res: Response) => {
       case 'fontdata':
         const fontdataValue = req.query[queryParam];
         switch (fontdataValue) {
-          case 'family': makePoolQuery(routes.api.font, sqlQueries.selectFontsFontFamily, res); break;
+          case 'family': makePoolQuery<string[]>(routes.api.font._root, sqlQueries.selectFontsFontFamily, res); break;
           default: throw new Error('Invalid fontdata value: ' + fontdataValue);
         }
         break;
       default: throw new Error('Invalid query param: ' + queryParam);
     }
   } else {
-    makePoolQuery(routes.api.font, sqlQueries.selectFontsTable, res);
+    makePoolQuery<Font>(routes.api.font._root, sqlQueries.selectFontsTable, res);
   }
 });
 
 const testDataRouter = express.Router();
 testDataRouter.get(routes.api.test, (req: Request, res: Response) => {
   console.log('testDataRouter');
-  makePoolQuery(routes.api.test, sqlQueries.selectTestTable, res);
+  makePoolQuery<TestData>(routes.api.test, sqlQueries.selectTestTable, res);
 });
 
 
@@ -112,8 +112,6 @@ controllers.push(allRoutes);
 
 const serverApp = new ServerApp(angularDist, PORT, staticPaths, middleWare, controllers);
 serverApp.beginListening();
-
-
 
 
 /**

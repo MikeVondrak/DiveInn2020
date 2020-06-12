@@ -3,7 +3,12 @@
 export const routes = {
   api: {
     _root: '/api',
-    font: '/font',
+    font: {
+      _root: '/font',
+      _queryParam: {
+        family: '?fontdata=family'
+      }
+    },
     test: '/test-data',
     other: '/other'
   },

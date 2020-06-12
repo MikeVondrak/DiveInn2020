@@ -19,9 +19,7 @@ FLUSH PRIVILEGES;
 -- END IF
 
 # Recreate test table
-
 DROP TABLE IF EXISTS test_table;
-
 CREATE TABLE test_table (
     PRIMARY KEY (test_id),
     test_id         INT             NOT NULL AUTO_INCREMENT,
@@ -47,11 +45,12 @@ VALUES
     ('e', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
+# TType of objects the font will be applied to, e.g. main_nav for setting the main navigation sign posts font
 DROP TABLE IF EXISTS font_type;
 CREATE TABLE font_type (
-    PRIMARY KEY (font_type_id),
-    font_type_id    INT             NOT NULL AUTO_INCREMENT,
-    type            VARCHAR(20)     NOT NULL
+    PRIMARY KEY (id),
+    id      INT             NOT NULL AUTO_INCREMENT,
+    type    VARCHAR(20)     NOT NULL
 );
 INSERT INTO font_type (type)
 VALUES
@@ -61,83 +60,77 @@ VALUES
     ('section_header'),
     ('section_text');
 
--- DROP TABLE IF EXISTS google_fonts;
--- CREATE TABLE fonts (
---     PRIMARY KEY (font_id),
---     font_id         INT             NOT NULL AUTO_INCREMENT,
---     family          VARCHAR(20)     NOT NULL,
---     href            VARCHAR(20)     NOT NULL,
---     ui_text         DECIMAL(4,3),
---     options         JSON
--- );
--- INSERT INTO fonts (font_family, font_size_rem, font_weight, letter_spacing)
--- VALUES
---     ('Alfa Slab One', 'Alfa+Slab+One', null, null),
---     ('Anton', 'Anton', null, null),
---     ('Bevan', 'Bevan', null, null),
---     ('Patua One', 'Patua+One', null, null),
---     ('Piedra', 'Piedra', null, null),
---     ('PT Sans', 'PT+Sans:wght@400;700', null, {});
 
-DROP TABLE IF EXISTS fonts;
-CREATE TABLE fonts (
-    PRIMARY KEY (font_id),
-    font_id         INT             NOT NULL AUTO_INCREMENT,
-    font_family     VARCHAR(20)     NOT NULL,
-    ui_text         VARCHAR(20),
-    href_name       VARCHAR(20)
+# Category that a font is suggested for, e.g. arial-ish fonts for text, to apply categories within dropdowns
+DROP TABLE IF EXISTS font_category;
+CREATE TABLE font_category (
+    PRIMARY KEY (id),
+    id          INT             NOT NULL AUTO_INCREMENT,
+    category    VARCHAR(20)     NOT NULL
 );
-INSERT INTO fonts (font_family, ui_text, href_name)
+INSERT INTO font_category (category)
 VALUES
-    ('Alfa Slab One', null, null),
-    ('Anton', null, null),
-    ('Bevan', null, null),
-    ('Patua One', null, null),
-    ('Piedra', null, null),
-    ('PT Sans', null, null),
-    ('PT Sans', 'PT Sans Bold', 'PT+Sans:wght@700');
+    ('header'), ('text'), ('nav'), ('title');
 
 
--- DROP TABLE IF EXISTS header_fonts;
--- CREATE TABLE header_fonts (
---     PRIMARY KEY (header_font_id),
---     header_font_id          INT     NOT NULL AUTO_INCREMENT,
---     fk_fonts_font_id        INT     NOT NULL,
---     FOREIGN KEY (fk_fonts_font_id) 
---         REFERENCES fonts(font_id)
---         ON DELETE CASCADE
--- );
--- INSERT INTO header_fonts (fk_fonts_font_id)
--- VALUES
---     (1), (2), (3), (4), (5);
-
--- DROP TABLE IF EXISTS text_fonts;
--- CREATE TABLE text_fonts (
---     PRIMARY KEY (text_font_id),
---     text_font_id            INT     NOT NULL AUTO_INCREMENT,
---     fk_fonts_font_id        INT     NOT NULL,
---     FOREIGN KEY (fk_fonts_font_id) 
---         REFERENCES fonts(font_id)
---         ON DELETE CASCADE
--- );
--- INSERT INTO text_fonts (fk_fonts_font_id)
--- VALUES
---     (6), (7);
+# Create font weight table
+DROP TABLE IF EXISTS font_weight;
+CREATE TABLE font_weight (
+    PRIMARY KEY (id),
+    id          INT             NOT NULL AUTO_INCREMENT,
+    weight      VARCHAR(20)     NOT NULL
+);
+INSERT INTO font_weight (weight)
+VALUES
+    ('100'), ('200'), ('300'), ('400'), ('500'), ('600'), ('700'), ('800'), ('900'), ('normal'), ('bold');
 
 
-DROP TABLE IF EXISTS font_setting;
-CREATE TABLE font_setting (
-    PRIMARY KEY (font_setting_id),
-    font_setting_id             INT     NOT NULL AUTO_INCREMENT,
-    fk_font_type_font_type_id   INT     NOT NULL,   
-    FOREIGN KEY (fk_font_type_font_type_id) 
-        REFERENCES font_type(font_type_id)
+# Create font table
+DROP TABLE IF EXISTS font;
+CREATE TABLE font (
+    PRIMARY KEY (id),
+    id          INT             NOT NULL AUTO_INCREMENT,
+    family              VARCHAR(20)     NOT NULL,
+    label               VARCHAR(20),
+    href                VARCHAR(20),
+    italic              BOOLEAN         NOT NULL,
+    fk_font_weight_id   INT,
+    FOREIGN KEY (fk_font_weight_id)
+        REFERENCES font_weight(id)
+        ON DELETE SET NULL,
+    fk_font_category_id    INT,
+    FOREIGN KEY (fk_font_category_id)
+        REFERENCES font_category(id)
+        ON DELETE SET NULL
+);
+INSERT INTO font (family, label, href, italic, fk_font_weight_id, fk_font_category_id)
+VALUES
+    ('Alfa Slab One', null, null, false, 10, 1),
+    ('Anton', null, null, false, 10, 1),
+    ('Bevan', null, null, false, 10, 1),
+    ('Patua One', null, null, false, 10, 1),
+    ('Piedra', null, null, false, 10, 1),
+    ('PT Sans', null, null, false, 10, 2),
+    ('PT Sans', 'PT Sans Bold', 'PT+Sans:wght@700', false, 11, 2);
+
+
+# create font_set table that maps a font and font_type to a font_set row, 
+# multiple font_set rows with the same set_id comprise a "font set" that can be applied to the mock site
+DROP TABLE IF EXISTS font_set;
+CREATE TABLE font_set (
+    PRIMARY KEY (id),
+    id                  INT         NOT NULL AUTO_INCREMENT,
+    set_id              SMALLINT,
+    fk_font_type_id     INT,
+    FOREIGN KEY (fk_font_type_id) 
+        REFERENCES font_type(id)
         ON DELETE CASCADE,
-    fk_fonts_font_id            INT     NOT NULL,   
-    FOREIGN KEY (fk_fonts_font_id) 
-        REFERENCES fonts(font_id)
+    fk_font_id          INT,
+    FOREIGN KEY (fk_font_id) 
+        REFERENCES font(id)
         ON DELETE CASCADE
 );
-INSERT INTO font_setting (fk_font_type_font_type_id, fk_fonts_font_id)
+INSERT INTO font_set (set_id, fk_font_type_id, fk_font_id)
 VALUES
-    (1, 1), (2, 1), (3, 2), (4, 2), (5, 6);
+    (1, 1, 1), (1, 2, 1), (1, 3, 2), (1, 4, 2), (1, 5, 6),
+    (2, 1, 2), (2, 2, 3), (2, 3, 3), (2, 4, 2), (2, 5, 7);
