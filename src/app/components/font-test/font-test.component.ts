@@ -56,7 +56,7 @@ export class FontTestComponent implements OnInit {
     this.onModelChange(ControlsEnum.header);
     this.onModelChange(ControlsEnum.text);
 
-    this.fontList$ = this.fontService.getFonts$();
+    this.fontList$ = this.fontService.getAllFonts$();
 
     //console.time('font-test getFonts$');
     this.fontsApiService.getFonts$('popularity')
@@ -148,15 +148,15 @@ export class FontTestComponent implements OnInit {
   set checkedValue(newVal) {
     setTimeout(() => {
       this._checkedValue = newVal;
-      newVal
-        ? (this.textFont.properties.weight = 700)
-        : (this.textFont.properties.weight = 400);
-      this.textFont.properties.bold = newVal;
+      // newVal
+      //   ? (this.textFont.properties.weight = 700)
+      //   : (this.textFont.properties.weight = 400);
+      // this.textFont.properties.bold = newVal;
 
       this.textStyle = this.buildStyleObject(
         this.textStyle,
         undefined,
-        this.textFont.properties.weight
+        this._checkedValue ? '700' : '400'
       );
     });
   }
@@ -168,7 +168,7 @@ export class FontTestComponent implements OnInit {
   private buildStyleObject(
     styleObject: object,
     fontFamily?: string,
-    fontWeight?: number
+    fontWeight?: string
   ): object {
     const newStyle = {
       'font-family': fontFamily ? fontFamily : styleObject['font-family'],

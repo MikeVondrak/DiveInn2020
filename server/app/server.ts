@@ -121,7 +121,7 @@ serverApp.beginListening();
  * /server/dist/server.js -> ../../dist/dive-inn -> /dist/dive-inn/
  */
 function debugFileAndDir() {
-  console.log('\n\na********************************************************************************');
+  console.log('\n\n********************************************************************************');
   console.log('Running:\t\t' + __filename);
   const tmp = path.join(__dirname, ANGULAR_APP_LOCATION);
   console.log('Angular App Path:\t' + ANGULAR_APP_LOCATION + '\nResolved:\t\t' + tmp);

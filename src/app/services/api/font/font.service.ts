@@ -10,42 +10,55 @@ import { Font } from './font.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FontApiService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
+  /**
+   * Return all Font objects from font table
+   */
   public getAllFonts$(): Observable<UiFont[]> {
-
     console.log('**** API service getFonts()');
-    const results: Observable<Font[]> = this.http.get<Font[]>(routes.api._root + routes.api.font);
+    const results: Observable<Font[]> = this.http.get<Font[]>(
+      routes.api._root + routes.api.font._root
+    );
 
-    const uifontArray: Observable<UiFont[]>
-      = results.pipe(
-        map((fontArray: Font[]) => {
-          return fontArray.map( (font: Font) => {
-            const uifont: IUiFont = {
-              family: font.font_family,
-              uiText: font.ui_text,
-              hrefId: font.href_id,
-              // properties: font.properties, @TODO need to add properties to table and BE/FE API models
-            }
-            return new UiFont(uifont);
-          });
-        })
+    const uifontArray: Observable<UiFont[]> = results.pipe(
+      map((fontArray: Font[]) => {
+        return fontArray.map((font: Font) => {
+          const uifont: IUiFont = {
+            family: font.family,
+            uiText: font.label,
+            hrefId: font.href,
+            properties: {
+              id: font.id,
+              weight: font.weight,
+              italic: font.italic,
+              category: font.category,
+            },
+          };
+          return new UiFont(uifont);
+        });
+      })
     );
     return uifontArray;
   }
 
+  /**
+   * Return all Font family values from font table
+   */
   public getFontFamilySelectable(): Observable<string[]> {
-    return this.http.get<string[]>(routes.api._root + routes.api.font._root + routes.api.font._queryParam.family);
-
+    return this.http.get<string[]>(
+      routes.api._root +
+        routes.api.font._root +
+        routes.api.font._queryParam.family
+    );
   }
 
-  public getFontFamilyBlacklist(): Observable<string[]> {
-
-  }
+  // public getFontFamilyBlacklist(): Observable<string[]> {
+  //   return //
+  // }
 
   public addFont(font: UiFont) {
     // TODO

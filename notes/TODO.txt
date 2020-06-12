@@ -28,7 +28,7 @@
 
 
   -------
-  0a. remove magic strings from font.service
+  0. rename Font service to FontApi, model etc
   1. figure out why intellisense sucks
   2. look into GraphQL
   3. NgRx

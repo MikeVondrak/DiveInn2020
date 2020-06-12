@@ -1,9 +1,15 @@
+import { FontWeight } from '../services/api/font/font.model';
 
-interface FontProperties {
-  sizeRem?: number;
-  weight?: number;
-  bold?: boolean;
-  letterSpacingPx?: number;
+export interface FontProperties {
+  // sizeRem?: number;
+  id?: number;
+  weight?: FontWeight;
+  weightAble?: boolean;
+  italic?: boolean;
+  italicAble?: boolean;
+  category?: string;
+  // bold?: boolean;
+  // letterSpacingPx?: number;
 }
 
 export interface IUiFont {
@@ -39,7 +45,7 @@ const uiFonts: IUiFont[] = [
   { family: 'Patua One' },
   { family: 'Piedra' },
   { family: 'PT Sans', hrefId: 'PT+Sans' },
-  { family: 'PT Sans', hrefId: 'PT+Sans:wght@700', uiText: 'PT Sans Bold', properties: {  weight: 700 } }
+  { family: 'PT Sans', hrefId: 'PT+Sans:wght@700', uiText: 'PT Sans Bold', properties: {  weight: '700' } }
 ];
 
 function generateFonts(fonts: IUiFont[]): UiFont[] {
@@ -57,7 +63,7 @@ const _headerFonts: IUiFont[] = [
 ];
 const _textFonts: IUiFont[] = [
   { family: 'PT Sans', hrefId: 'PT+Sans' },
-  { family: 'PT Sans', hrefId: 'PT+Sans:wght@700', uiText: 'PT Sans Bold', properties: {  weight: 700 } }
+  { family: 'PT Sans', hrefId: 'PT+Sans:wght@700', uiText: 'PT Sans Bold', properties: {  weight: '700' } }
 ];
 export const headerFonts = generateFonts(_headerFonts);
 export const textFonts = generateFonts(_textFonts);
