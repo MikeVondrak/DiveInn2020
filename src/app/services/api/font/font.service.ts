@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 // shared from backend
-import { routes } from '../../../../../server/app/routes';
+import { routes, FontGroupEnum } from '../../../../../server/app/routes';
 
 import { UiFont, IUiFont } from '../../../models/ui-font.model';
 import { Font, FontWeight } from './font.model';
@@ -49,17 +49,21 @@ export class FontApiService {
   /**
    * Return all Font family values from font table
    */
-  public getFontFamilySelectable$(): Observable<string[]> {
-    return this.http.get<string[]>(
+  public getFontFamilySelectable$(): Observable<UiFont[]> {
+    return this.http.get<UiFont[]>(
       routes.api._root +
-        routes.api.font._root +
-        routes.api.font._queryParam.family
+      routes.api.font._root + '/' +
+      FontGroupEnum.SELECTABLE
     );
   }
 
-  // public getFontFamilyBlacklist(): Observable<string[]> {
-  //   return //
-  // }
+  public getFontFamilyBlacklisted$(): Observable<UiFont[]> {
+    return this.http.get<UiFont[]>(
+      routes.api._root +
+        routes.api.font._root + '/' +
+        FontGroupEnum.BLACKLISTED
+    );
+  }
 
   public addFont(font: UiFont) {
     // TODO

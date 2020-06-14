@@ -12,6 +12,7 @@ import { AnimatedCubeComponent } from './shared/components/animated-cube/animate
 import { AnimatedCheckmarkSvgComponent } from './shared/components/animated-checkmark-svg/animated-checkmark-svg.component';
 import { CheckboxSvgComponent } from './shared/components/form-controls/checkbox-svg/checkbox-svg.component';
 import { FontConfigurationComponent } from './components/font-configuration/font-configuration.component';
+import { FontListDisplayComponent } from './shared/components/font-list-display/font-list-display.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FontConfigurationComponent } from './components/font-configuration/font
     AnimatedCubeComponent,
     AnimatedCheckmarkSvgComponent,
     CheckboxSvgComponent,
-    FontConfigurationComponent
+    FontConfigurationComponent,
+    FontListDisplayComponent
   ],
   imports: [
     BrowserModule,

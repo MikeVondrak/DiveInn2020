@@ -32,22 +32,6 @@ export class UiFont implements IUiFont {
   }
   public equal(right: UiFont): boolean {
     return this.compareObjProps(this, right);
-    // // tslint:disable-next-line: forin
-    // for (const objProp in this) {
-    //   if (!right.hasOwnProperty(objProp)) {
-    //     return false;
-    //   }
-    //   if (typeof this[objProp] === 'object') {
-    //     let innerObj = this[objProp];
-    //     // tslint:disable-next-line: forin
-    //     for (const innerObjProp in innerObj) {
-    //       debugger;
-    //     }
-    //   } else if (this[objProp] !== right[objProp as keyof UiFont]) {
-    //     return false;
-    //   }
-    // }
-    // return true;
   }
   private compareObjProps(obj1: any, obj2: any) {
     for (const objProp in obj1) {
@@ -75,9 +59,19 @@ export class UiFont implements IUiFont {
       // if property is an object check all properties in it recursively
       } else if (typeof containee[objProp] === 'object') {
         if (objProp === 'variants') {
-          if (!container[objProp].has(containee[objProp])) {
-            return false;
-          }
+          const containerVariants = container[objProp];
+          const containeeVariants = containee[objProp];
+          const containeeVariantsKeys = containeeVariants.keys();
+          // Google font must have variant defined by DB font to be valid
+          //debugger;
+          let containeeVariantKey = containeeVariantsKeys.next();
+          // for each value of the variants map of containee, check that container has the same key
+          while (containeeVariantKey.value && !containeeVariantsKeys.done) {
+            if (!containerVariants.has(containeeVariantKey.value)) {
+              return false;
+            }
+            containeeVariantKey = containeeVariantsKeys.next();
+          };
         }
         else if (!this.containsObjProps(container[objProp], containee[objProp])) {
           return false;
@@ -88,6 +82,7 @@ export class UiFont implements IUiFont {
           case 'uiText': /* uiText from db won't necessarily match Google Font */ break;
           case 'id': /* only used for db, doesn't need to match */ break;
           case 'category': /* only used for db, doesn't need to match */ break;
+          case 'hrefId': /* hrefId can be different on db */ break;
           default:
             if (container[objProp] !== containee[objProp]) {
               return false;

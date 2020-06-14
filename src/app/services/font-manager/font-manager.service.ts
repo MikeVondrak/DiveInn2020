@@ -7,6 +7,7 @@ import { take, map } from 'rxjs/operators';
 import { LoggerService } from '../logger/logger.service';
 import { UiFont, IUiFont } from '../../models/ui-font.model';
 import { FontVariants, FontWeight } from '../api/font/font.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +21,9 @@ export class FontManagerService {
   private allFonts: UiFont[] = [];
 
   private validCategoryFonts: UiFont[] = [];
-  private blacklistedFonts: UiFont[] = [];
+  public blacklistedFonts: UiFont[] = [];
   private availableFonts: UiFont[] = [];
-  private selectableFonts: UiFont[] = [];
+  public selectableFonts: UiFont[] = [];
   private fontsToDownload: UiFont[] = [];
 
   private timeStart;
@@ -65,14 +66,18 @@ export class FontManagerService {
               return new UiFont(iUiFont);
             });
           })
-      ).subscribe(() => {
-        this.parseFontsForCategories();
-        this.getSelectableFonts();
-        this.getBlacklistedFonts();
-      });
+        ).subscribe(() => {
+          this.parseFontsForCategories();
+          this.getSelectableFonts();
+          this.getBlacklistedFonts();
+        });
     }
   }
 
+  /**
+   * Crete a FontWeight-boolean map of whether font weight is italic-able
+   * @param googleFont Font to parse variants of
+   */
   private parseVariants(googleFont: GoogleFontsApi): FontVariants {
     // variants in format:
     //  100, 100italic, 200, 300, regular, italic, 500, 500italic... 900, 900italic
@@ -86,7 +91,7 @@ export class FontManagerService {
       // if variant is 'italic' set italicAble for 'regular' weight
       // else variant is weight
       const weight = index > 0 ? variant.substring(0, index) :
-                      index === 0 ? 'regular' : variant;
+        index === 0 ? 'regular' : variant;
 
       resultsMap.set(weight as FontWeight, italicAble);
 
@@ -99,6 +104,9 @@ export class FontManagerService {
     return variants;
   }
 
+  /**
+   * Create a Set of unique categories from list of all Google Fonts
+   */
   private parseFontsForCategories() {
     // add category of each font to Set to retrieve unique category values
     this.allFonts.forEach(font => {
@@ -108,26 +116,39 @@ export class FontManagerService {
     // this.logger.log('', null, { label: 'Get Font Categories', action: 'stop' });
   }
 
-  private getSelectableFonts() {
-    // const selectableFontsFromDb$ = this.fontsApiService.getFontFamilySelectable$();
-    const selectableFontsFromDb$ = this.fontsApiService.getAllFonts$();
-    selectableFontsFromDb$.subscribe(selectableFontsFromDb => {
+  /**
+   * Get the fonts what will be available for selection (e.g. from Fonts dropdown)
+   */
+  public getSelectableFonts() {
+    const selectableFontsFromDb$ = this.fontsApiService.getFontFamilySelectable$();
+    this.getFontsWithUrlParameter(selectableFontsFromDb$, this.selectableFonts);
+  }
+
+  public getBlacklistedFonts() {
+    const blacklistedFontsFromDb$ = this.fontsApiService.getFontFamilyBlacklisted$();
+    this.getFontsWithUrlParameter(blacklistedFontsFromDb$, this.blacklistedFonts);
+  }
+
+  private getFontsWithUrlParameter(fontsApi$: Observable<UiFont[]>, fontApiResults: UiFont[]) {
+    fontsApi$.subscribe(fontsFromDb => {
       // iterate over selectable fonts from db (small array) and verify they exist in allFonts array built from Google fonts (large array)
-      selectableFontsFromDb.forEach(selectableFontFromDb => {
-        const selectableFont = this.allFonts.find(font => font.family === selectableFontFromDb.family);
-        debugger;
-        let aaaaaa = selectableFont.contains(selectableFontFromDb);
-        debugger;
-        if (selectableFont) {
-          this.selectableFonts.push(selectableFont);
+      fontsFromDb.forEach(fontFromDb => {
+        const fontFromAllFonts = this.allFonts.find(font => font.family === fontFromDb.family);
+        if (fontFromAllFonts) {
+          if (fontFromAllFonts.contains(fontFromDb)) {
+            fontApiResults.push(fontFromDb);
+          } else {
+            console.log('WARNING: Font from DB not found in All Fonts array: '
+              + fontFromDb.family, + ', ' + fontFromDb.uiText);
+          }
         } else {
-          console.log('WARNING: Font from DB not found in All Fonts array: ' + selectableFontFromDb.family);
+          console.log('WARNING: Font from DB not found in All Fonts array: '
+            + fontFromDb.family + ', ' + fontFromDb.uiText);
         }
       });
+      console.log('***** Selectable Fonts: ');
+      fontApiResults.forEach(f => console.log(f.family + ', ' + f.properties.id));
     });
   }
 
-  private getBlacklistedFonts() {
-
-  }
 }

@@ -13,7 +13,7 @@ import { take } from 'rxjs/operators';
 import { ServerApp } from './server-app';
 import { logger } from './middleware/logger';
 import { sqlQueries } from './sqlQueries';
-import { routes } from './routes';
+import { routes, FontGroupEnum } from './routes';
 import { queryCallback } from 'mysql';
 
 import { TestData } from './models/test-data.model';
@@ -65,6 +65,7 @@ const default200Response: RequestHandler = (req: Request, res: Response) => {
  * @param res Response object from Express Router
  */
 function makePoolQuery<returnType>(route: string, query: string, res: Response) {
+  console.log('**** makePoolQuery: route= ' + route + ', query= ' + query);
   serverApp.poolQuery<returnType>(query)
     .pipe(take(1))
     .subscribe(
@@ -79,8 +80,7 @@ function makePoolQuery<returnType>(route: string, query: string, res: Response) 
 
 const fontsRouter = express.Router();
 fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
-  console.log('Express - fontsRouter');
-
+  console.log('Express: ' + routes.api.font._root);
   // handle routes where request has query parameters included
   if (req.query && Object.keys(req.query).length > 0) {
 
@@ -103,6 +103,31 @@ fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
 
   } else {
     makePoolQuery<DbFont>(routes.api.font._root, sqlQueries.selectFontsTable, res);
+  }
+});
+
+const fontGroupRoute = routes.api.font._root + '/:' + routes.api.font._urlParam.fontGroup;
+console.log('FONTS ROUTER: ' + fontGroupRoute);
+fontsRouter.get(fontGroupRoute, (req: Request, res: Response) => {
+  // const route = routes.api.font._root + routes.api.font._urlParam.fontGroup;
+  let fontGroupQuery = '';
+  // .../font/:font-group = .../font/selectable or .../font/blacklisted
+  let r = routes.api.font._urlParam.fontGroup;
+  console.log('Express: ' + fontGroupRoute + ', params: ' +
+    JSON.stringify(req.params, null, 4) + '\nreq.params: ' + routes.api.font._urlParam.fontGroup);
+   // handle routes with url param
+  if (req.params && req.params[routes.api.font._urlParam.fontGroup]) {
+    const urlParam = routes.api.font._urlParam.fontGroup;
+    const fontGroup = req.params[urlParam];
+    switch (fontGroup) {
+      case FontGroupEnum.SELECTABLE: fontGroupQuery = sqlQueries.selectFontsSeletable; break;
+      case FontGroupEnum.BLACKLISTED: fontGroupQuery = sqlQueries.selectFontsBlacklisted; break;
+      default: {
+        console.log('Error: invalid value for parameter "' + urlParam + '": ' + fontGroup);
+        throw new Error('Error: invalid route: ' + fontGroup);
+      }
+    }
+    makePoolQuery<DbFont>(fontGroupRoute, fontGroupQuery, res);
   }
 });
 
