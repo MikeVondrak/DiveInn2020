@@ -15,6 +15,7 @@ export class FontListDisplayComponent implements OnInit {
   constructor(private fontManagerService: FontManagerService) { }
 
   ngOnInit(): void {
+
     }
 
   showSelectableFonts() {

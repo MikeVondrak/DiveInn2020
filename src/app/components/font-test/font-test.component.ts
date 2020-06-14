@@ -12,6 +12,7 @@ import { GoogleFontsApiService } from '../../services/external/google/google-fon
 import { Observable } from 'rxjs';
 import { GoogleFontsApiSort, GoogleFontsApi } from '../../services/external/google/google-fonts-api.model';
 import { take } from 'rxjs/operators';
+import { FontManagerService } from '../../services/font-manager/font-manager.service';
 
 enum ControlsEnum {
   'header',
@@ -48,9 +49,15 @@ export class FontTestComponent implements OnInit {
   public fontList$: Observable<UiFont[]>;
   public googleFontList: GoogleFontsApi[];
 
+  public fontsSelectable: UiFont[];
+  public fontsBlacklisted: UiFont[];
+
   // public boldCheckbox : boolean;
 
-  constructor(private fontService: FontApiService, private fontsApiService: GoogleFontsApiService) {}
+  constructor(
+    private fontService: FontApiService,
+    private fontsApiService: GoogleFontsApiService,
+    private fontManagerService: FontManagerService,) {}
 
   ngOnInit(): void {
     this.onModelChange(ControlsEnum.header);

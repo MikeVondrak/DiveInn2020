@@ -1,7 +1,9 @@
 <button (click)="showSelectableFonts()">show selectable fonts</button>
 
 <div>
-  <ul  *ngFor="let font of selectableFonts">
-    {{font.family}}
+  <ul>
+    <li *ngFor="let font of selectableFonts">
+      {{font.family}}
+    </li>
   </ul>
 </div>
