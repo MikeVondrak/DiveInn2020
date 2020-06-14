@@ -18,7 +18,7 @@ export class FontManagerService {
 
   private blacklistedCategories: string[];
 
-  private allFonts: UiFont[] = [];
+  public allFonts: UiFont[] = [];
 
   private validCategoryFonts: UiFont[] = [];
   public blacklistedFonts: UiFont[] = [];
@@ -127,6 +127,7 @@ export class FontManagerService {
   public getBlacklistedFonts() {
     const blacklistedFontsFromDb$ = this.fontsApiService.getFontFamilyBlacklisted$();
     this.getFontsWithUrlParameter(blacklistedFontsFromDb$, this.blacklistedFonts);
+
   }
 
   private getFontsWithUrlParameter(fontsApi$: Observable<UiFont[]>, fontApiResults: UiFont[]) {

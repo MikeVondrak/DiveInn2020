@@ -1,1 +1,7 @@
-<p>font-list-display works!</p>
+<button (click)="showSelectableFonts()">show selectable fonts</button>
+
+<div>
+  <ul  *ngFor="let font of selectableFonts">
+    {{font.family}}
+  </ul>
+</div>
