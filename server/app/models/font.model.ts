@@ -1,4 +1,4 @@
-export interface Font {
+export interface DbFont {
   font_id: number;
   font_family: string;
   href_id?: string | null;

@@ -1,15 +1,12 @@
 // const express = require('express'); // old js way of importing
+
 // express and middleware
 import express, { RequestHandler, Router, Request, Response } from 'express';
-//import * as express from 'express';
-//import { RequestHandler, Router, Request, Response } from 'express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
 import * as path from 'path';
 
 // framework
-import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 // our backend
@@ -20,7 +17,7 @@ import { routes } from './routes';
 import { queryCallback } from 'mysql';
 
 import { TestData } from './models/test-data.model';
-import { Font } from './models/font.model';
+import { DbFont } from './models/font.model';
 
 
 const PORT: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
@@ -61,7 +58,12 @@ const default200Response: RequestHandler = (req: Request, res: Response) => {
   res.send('{ "test_id": 200 }');
 };
 
-
+/**
+ * Makes a typed request to poolQuery and returns array of results via Express Response
+ * @param route API route to handle
+ * @param query SQL query to make
+ * @param res Response object from Express Router
+ */
 function makePoolQuery<returnType>(route: string, query: string, res: Response) {
   serverApp.poolQuery<returnType>(query)
     .pipe(take(1))
@@ -70,28 +72,37 @@ function makePoolQuery<returnType>(route: string, query: string, res: Response) 
         res.send(results);
       },
       (err) => {
-        console.log('\n!!!!! Failed getting data from: ' + route + '\n\t' + err);
+        console.log('\n!!!!! Express - Failed getting data from: ' + route + '\n\t' + err);
       }
     );
 }
 
 const fontsRouter = express.Router();
 fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
-  console.log('fontsRouter');
+  console.log('Express - fontsRouter');
+
+  // handle routes where request has query parameters included
   if (req.query && Object.keys(req.query).length > 0) {
+
     const queryParam = Object.keys(req.query)[0];
     switch (queryParam) {
+
       case 'fontdata':
         const fontdataValue = req.query[queryParam];
         switch (fontdataValue) {
-          case 'family': makePoolQuery<string[]>(routes.api.font._root, sqlQueries.selectFontsFontFamily, res); break;
+
+          case 'family':
+            makePoolQuery<string[]>(routes.api.font._root, sqlQueries.selectFontsFontFamily, res);
+            break;
+
           default: throw new Error('Invalid fontdata value: ' + fontdataValue);
         }
         break;
       default: throw new Error('Invalid query param: ' + queryParam);
     }
+
   } else {
-    makePoolQuery<Font>(routes.api.font._root, sqlQueries.selectFontsTable, res);
+    makePoolQuery<DbFont>(routes.api.font._root, sqlQueries.selectFontsTable, res);
   }
 });
 
@@ -115,7 +126,6 @@ serverApp.beginListening();
 
 
 /**
- * @method debugFileAndDir
  * __dirname = location where node script is currently executing
  * use path.join to resolve relative path ('../') in _appLocation
  * /server/dist/server.js -> ../../dist/dive-inn -> /dist/dive-inn/

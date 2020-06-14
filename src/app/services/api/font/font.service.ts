@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { routes } from '../../../../../server/app/routes';
 
 import { UiFont, IUiFont } from '../../../models/ui-font.model';
-import { Font } from './font.model';
+import { Font, FontWeight } from './font.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -33,8 +33,9 @@ export class FontApiService {
             hrefId: font.href,
             properties: {
               id: font.id,
-              weight: font.weight,
-              italic: font.italic,
+              //weight: font.weight,
+              //italic: font.italic,
+              variants: new Map<FontWeight, boolean>([[font.weight, font.italic]]),
               category: font.category,
             },
           };
@@ -48,7 +49,7 @@ export class FontApiService {
   /**
    * Return all Font family values from font table
    */
-  public getFontFamilySelectable(): Observable<string[]> {
+  public getFontFamilySelectable$(): Observable<string[]> {
     return this.http.get<string[]>(
       routes.api._root +
         routes.api.font._root +

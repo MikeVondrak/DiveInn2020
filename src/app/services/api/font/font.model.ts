@@ -1,5 +1,9 @@
-export type FontWeight = '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900' | 'normal' | 'bold';
+export type FontWeight = '100' | '200' | '300' | 'regular' | '500' | '600' | '700' | '800' | '900';
 export type FontCategory = 'header' | 'text' | 'nav' | 'title';
+
+// export type FontVariant = { [key in FontWeight]: boolean };
+// export type FontVariant = Record<FontWeight, boolean>;
+export type FontVariants = Map<FontWeight, boolean>;
 
 // match what the backend is returning for the fonts API
 export interface Font {
@@ -9,5 +13,6 @@ export interface Font {
   href?: string | null;
   italic: boolean;
   weight: FontWeight;
+  variants: FontVariants;
   category: FontCategory;
 }

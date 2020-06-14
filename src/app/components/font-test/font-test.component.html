@@ -36,14 +36,14 @@
       </optgroup>
     </select>
     <br/>
-    <label for="headerBold">Bold: </label>
+    <!-- <label for="headerBold">Bold: </label>
     <input type="checkbox"
       id="headerBold"
-      (ngModelChange)="$event ? headerFont.properties.weight = '700' : headerFont.properties.weight = '400'"
+      (ngModelChange)="$event ? headerFont.properties.weight = '700' : headerFont.properties.weight = 'regular'"
       [checked]="headerFont.properties.weight === '700'"
-    />
+    /> -->
     <p>Selected Font:<br>{{headerFont.uiText}}</p>
-    <p>weight: {{headerFont.properties.weight}}</p>
+    <!-- <p>weight: {{headerFont.properties.weight}}</p> -->
   </div>
 
   <div>
@@ -59,7 +59,7 @@
     </select>
     <br/>
     <p>Selected Font:<br>{{textFont.uiText}}</p>
-    <p>weight: {{textFont.properties.weight}}</p>
+    <!-- <p>weight: {{textFont.properties.weight}}</p> -->
   </div>
 
 
@@ -68,7 +68,7 @@
       uiLabel='Bold'
       [(checkedValue)]='checkedValue'
     ></checkbox>
-    <p>Weight value: {{textFont.properties.weight}}</p>
+    <!-- <p>Weight value: {{textFont.properties.weight}}</p> -->
   </div>
 
     <!-- <checkbox [(ngModel)]="boldCheckbox"></checkbox> -->

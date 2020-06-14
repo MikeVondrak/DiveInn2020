@@ -82,7 +82,7 @@ CREATE TABLE font_weight (
 );
 INSERT INTO font_weight (weight)
 VALUES
-    ('100'), ('200'), ('300'), ('400'), ('500'), ('600'), ('700'), ('800'), ('900'), ('normal'), ('bold');
+    ('100'), ('200'), ('300'), ('regular'), ('500'), ('600'), ('700'), ('800'), ('900');
 
 
 # Create font table
@@ -91,8 +91,8 @@ CREATE TABLE font (
     PRIMARY KEY (id),
     id          INT             NOT NULL AUTO_INCREMENT,
     family              VARCHAR(20)     NOT NULL,
-    label               VARCHAR(20),
-    href                VARCHAR(20),
+    label               VARCHAR(50),
+    href                VARCHAR(50),
     italic              BOOLEAN         NOT NULL,
     fk_font_weight_id   INT,
     FOREIGN KEY (fk_font_weight_id)
@@ -105,15 +105,16 @@ CREATE TABLE font (
 );
 INSERT INTO font (family, label, href, italic, fk_font_weight_id, fk_font_category_id)
 VALUES
-    ('Alfa Slab One', null, null, false, 10, 1),
-    ('Anton', null, null, false, 10, 1),
-    ('Bevan', null, null, false, 10, 1),
-    ('Patua One', null, null, false, 10, 1),
-    ('Piedra', null, null, false, 10, 1),
-    ('PT Sans', null, null, false, 10, 2),
-    ('PT Sans', 'PT Sans Bold', 'PT+Sans:wght@700', false, 11, 2);
-
-
+    ('Alfa Slab One', null, null, false, 4, 1),
+    ('Anton', null, null, false, 4, 1),
+    ('Bevan', null, null, false, 4, 1),
+    ('Patua One', null, null, false, 4, 1),
+    ('Piedra', null, null, false, 4, 1),
+    ('PT Sans', null, null, false, 4, 2),
+    ('PT BAD FONT Sans', null, null, false, 4, 2),
+    ('PT Sans', 'PT Sans Bold', 'PT+Sans:wght@700', false, 7, 2),
+    ('PT Sans', 'PT Sans Italic', 'PT+Sans:ital@1', true, 4, 2),
+    ('PT Sans', 'PT Sans Invalid Weight', 'PT+Sans:wght@200', false, 2, 2);
 
 
 # create font_set table that maps a font and font_type to a font_set row, 
