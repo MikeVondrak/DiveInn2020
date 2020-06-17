@@ -120,12 +120,12 @@ export class FontManagerService {
    * Get the fonts what will be available for selection (e.g. from Fonts dropdown)
    */
   public getSelectableFonts() {
-    const selectableFontsFromDb$ = this.fontsApiService.getFontFamilySelectable$();
+    const selectableFontsFromDb$ = this.fontsApiService.getFontSelectable$();
     this.getFontsWithUrlParameter(selectableFontsFromDb$, this.selectableFonts);
   }
 
   public getBlacklistedFonts() {
-    const blacklistedFontsFromDb$ = this.fontsApiService.getFontFamilyBlacklisted$();
+    const blacklistedFontsFromDb$ = this.fontsApiService.getFontBlacklisted$();
     this.getFontsWithUrlParameter(blacklistedFontsFromDb$, this.blacklistedFonts);
 
   }
@@ -135,6 +135,7 @@ export class FontManagerService {
       // iterate over selectable fonts from db (small array) and verify they exist in allFonts array built from Google fonts (large array)
       fontsFromDb.forEach(fontFromDb => {
         const fontFromAllFonts = this.allFonts.find(font => font.family === fontFromDb.family);
+        debugger;
         if (fontFromAllFonts) {
           if (fontFromAllFonts.contains(fontFromDb)) {
             fontApiResults.push(fontFromDb);
@@ -147,7 +148,7 @@ export class FontManagerService {
             + fontFromDb.family + ', ' + fontFromDb.uiText);
         }
       });
-      console.log('***** Selectable Fonts: ');
+      console.log('***** getFontsWithUrlParameter: ');
       fontApiResults.forEach(f => console.log(f.family + ', ' + f.properties.id));
     });
   }

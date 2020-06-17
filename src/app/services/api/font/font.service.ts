@@ -24,7 +24,57 @@ export class FontApiService {
       routes.api._root + routes.api.font._root
     );
 
-    const uifontArray: Observable<UiFont[]> = results.pipe(
+    return this.mapDbFontToUiFont(results);
+
+    // const uifontArray: Observable<UiFont[]> = results.pipe(
+    //   map((fontArray: Font[]) => {
+    //     return fontArray.map((font: Font) => {
+    //       const uifont: IUiFont = {
+    //         family: font.family,
+    //         uiText: font.label,
+    //         hrefId: font.href,
+    //         properties: {
+    //           id: font.id,
+    //           variants: new Map<FontWeight, boolean>([[font.weight, font.italic]]),
+    //           category: font.category,
+    //         },
+    //       };
+    //       debugger;
+    //       return new UiFont(uifont);
+    //     });
+    //   })
+    // );
+    // return uifontArray;
+  }
+
+  /**
+   * Return all Font family values from font table
+   */
+  public getFontSelectable$(): Observable<UiFont[]> {
+    const results = this.http.get<Font[]>(
+      routes.api._root +
+      routes.api.font._root + '/' +
+      FontGroupEnum.SELECTABLE
+    );
+    return this.mapDbFontToUiFont(results);
+  }
+
+  public getFontBlacklisted$(): Observable<UiFont[]> {
+    const results = this.http.get<Font[]>(
+      routes.api._root +
+        routes.api.font._root + '/' +
+        FontGroupEnum.BLACKLISTED
+    );
+    return this.mapDbFontToUiFont(results);
+  }
+
+  public addFont(font: UiFont) {
+    // TODO
+  }
+
+
+  private mapDbFontToUiFont(results: Observable<Font[]>): Observable<UiFont[]> {    
+    const uiFontArray: Observable<UiFont[]> = results.pipe(
       map((fontArray: Font[]) => {
         return fontArray.map((font: Font) => {
           const uifont: IUiFont = {
@@ -33,8 +83,6 @@ export class FontApiService {
             hrefId: font.href,
             properties: {
               id: font.id,
-              //weight: font.weight,
-              //italic: font.italic,
               variants: new Map<FontWeight, boolean>([[font.weight, font.italic]]),
               category: font.category,
             },
@@ -43,29 +91,6 @@ export class FontApiService {
         });
       })
     );
-    return uifontArray;
-  }
-
-  /**
-   * Return all Font family values from font table
-   */
-  public getFontFamilySelectable$(): Observable<UiFont[]> {
-    return this.http.get<UiFont[]>(
-      routes.api._root +
-      routes.api.font._root + '/' +
-      FontGroupEnum.SELECTABLE
-    );
-  }
-
-  public getFontFamilyBlacklisted$(): Observable<UiFont[]> {
-    return this.http.get<UiFont[]>(
-      routes.api._root +
-        routes.api.font._root + '/' +
-        FontGroupEnum.BLACKLISTED
-    );
-  }
-
-  public addFont(font: UiFont) {
-    // TODO
+    return uiFontArray;
   }
 }

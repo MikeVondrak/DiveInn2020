@@ -57,7 +57,7 @@ export class FontTestComponent implements OnInit {
   constructor(
     private fontService: FontApiService,
     private fontsApiService: GoogleFontsApiService,
-    private fontManagerService: FontManagerService,) {}
+    public fontManagerService: FontManagerService,) {}
 
   ngOnInit(): void {
     this.onModelChange(ControlsEnum.header);

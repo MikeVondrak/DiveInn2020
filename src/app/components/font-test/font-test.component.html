@@ -122,6 +122,13 @@
     />
     <label for="testRadio2"><span>jpgy Test Radio</span></label>
   </div>
-</div>
+</div><br>
+Selectable Fonts:
+<br>
+-----------------
+<app-font-list-display [fontList]="fontManagerService.selectableFonts"></app-font-list-display>
 
-<app-font-list-display fontGroup = "selectable"></app-font-list-display>
+Blacklisted Fonts:
+<br>
+-----------------
+<app-font-list-display [fontList]="fontManagerService.blacklistedFonts"></app-font-list-display>

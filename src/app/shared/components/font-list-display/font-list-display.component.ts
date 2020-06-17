@@ -1,27 +1,32 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { UiFont } from '../../../models/ui-font.model';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { UiFont, IUiFont } from '../../../models/ui-font.model';
 import { FontManagerService } from '../../../services/font-manager/font-manager.service';
 
 @Component({
   selector: 'app-font-list-display',
   templateUrl: './font-list-display.component.html',
-  styleUrls: ['./font-list-display.component.scss']
+  styleUrls: ['./font-list-display.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FontListDisplayComponent implements OnInit {
 
-  @Input() fontGroup: string;
-  public selectableFonts: UiFont[] = [];
+  @Input() fontList: UiFont[] = [];
 
-  constructor(private fontManagerService: FontManagerService) { }
+  constructor(private cdr: ChangeDetectorRef, private fontMgr: FontManagerService) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
 
-    }
-
-  showSelectableFonts() {
-    for(let i=0;i<10;i++) {
-      this.selectableFonts.push(this.fontManagerService.allFonts[i]);
-    }
+  public onClick() {
+    const ifont: IUiFont = {
+      family: 'f',
+      hrefId: 'h',
+      uiText: 'u',
+      properties: {},
+    };
+    const f = new UiFont(ifont);
+    this.fontList = [f];
+    this.cdr.detectChanges();
+    this.fontList = this.fontMgr.selectableFonts;
+    this.cdr.detectChanges();
   }
-
 }

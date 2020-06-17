@@ -1,9 +1,8 @@
-<button (click)="showSelectableFonts()">show selectable fonts</button>
-
 <div>
   <ul>
-    <li *ngFor="let font of selectableFonts">
+    <li *ngFor="let font of fontList">
       {{font.family}}
     </li>
   </ul>
 </div>
+<button (click)="onClick()">Detect Changes</button>

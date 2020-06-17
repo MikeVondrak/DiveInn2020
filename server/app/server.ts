@@ -65,7 +65,7 @@ const default200Response: RequestHandler = (req: Request, res: Response) => {
  * @param res Response object from Express Router
  */
 function makePoolQuery<returnType>(route: string, query: string, res: Response) {
-  console.log('**** makePoolQuery: route= ' + route + ', query= ' + query);
+  // console.log('**** makePoolQuery: route= ' + route + ', query= ' + query);
   serverApp.poolQuery<returnType>(query)
     .pipe(take(1))
     .subscribe(
@@ -80,7 +80,7 @@ function makePoolQuery<returnType>(route: string, query: string, res: Response) 
 
 const fontsRouter = express.Router();
 fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
-  console.log('Express: ' + routes.api.font._root);
+  // console.log('Express: ' + routes.api.font._root);
   // handle routes where request has query parameters included
   if (req.query && Object.keys(req.query).length > 0) {
 
@@ -113,8 +113,8 @@ fontsRouter.get(fontGroupRoute, (req: Request, res: Response) => {
   let fontGroupQuery = '';
   // .../font/:font-group = .../font/selectable or .../font/blacklisted
   let r = routes.api.font._urlParam.fontGroup;
-  console.log('Express: ' + fontGroupRoute + ', params: ' +
-    JSON.stringify(req.params, null, 4) + '\nreq.params: ' + routes.api.font._urlParam.fontGroup);
+  // console.log('Express: ' + fontGroupRoute + ', params: ' +
+  //  JSON.stringify(req.params, null, 4) + '\nreq.params: ' + routes.api.font._urlParam.fontGroup);
    // handle routes with url param
   if (req.params && req.params[routes.api.font._urlParam.fontGroup]) {
     const urlParam = routes.api.font._urlParam.fontGroup;
