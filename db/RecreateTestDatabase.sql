@@ -128,7 +128,7 @@ CREATE TABLE selectable_font (
 );
 INSERT INTO selectable_font (fk_font_id)
 VALUES
-    (1), (2), (3), (4), (5), (6), (7), (8);
+    (1), (3), (4), (6), (7), (8);
 
 
 DROP TABLE IF EXISTS blacklisted_font;
@@ -142,7 +142,7 @@ CREATE TABLE blacklisted_font (
 );
 INSERT INTO blacklisted_font (fk_font_id)
 VALUES
-    (9), (10);
+    (2), (5);
 
 # create font_set table that maps a font and font_type to a font_set row, 
 # multiple font_set rows with the same set_id comprise a "font set" that can be applied to the mock site

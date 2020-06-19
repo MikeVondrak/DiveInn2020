@@ -4,14 +4,14 @@ TODO
 * REAMDE.md files - markdown (text) files describing key components/services
 
 FontManagerService
-* Remove subscriptions from service, only pass observables to all components
+* Remove subscriptions from service, only pass observables to all components - DONE
 * Filter fonts by category before using in lists
   - need category API method
 
 Font Lists
   display list of:
-    1. selectable
-    2. blacklisted
+    1. selectable - DONE
+    2. blacklisted - DONE
     3. available
 
 POST a new font to the db

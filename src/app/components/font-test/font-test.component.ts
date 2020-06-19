@@ -54,12 +54,19 @@ export class FontTestComponent implements OnInit {
 
   // public boldCheckbox : boolean;
 
+  public selectableFonts$: Observable<UiFont[]> = this.fontManagerService.getSelectableFonts$();
+  public blacklistedFonts$: Observable<UiFont[]> = this.fontManagerService.getBlacklistedFonts$();
+  public availableFonts$: Observable<UiFont[]> = this.fontManagerService.getAvailableFonts$();
+  public availableFonts: UiFont[] = [];
+
   constructor(
     private fontService: FontApiService,
     private fontsApiService: GoogleFontsApiService,
     public fontManagerService: FontManagerService,) {}
 
   ngOnInit(): void {
+
+
     this.onModelChange(ControlsEnum.header);
     this.onModelChange(ControlsEnum.text);
 

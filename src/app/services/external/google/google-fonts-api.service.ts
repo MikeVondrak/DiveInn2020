@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, ReplaySubject, of } from 'rxjs';
 
 import { GoogleFontsApi, GoogleFontsApiSort, GoogleFontsApiResponse} from './google-fonts-api.model';
 import { shareReplay, pluck } from 'rxjs/operators';

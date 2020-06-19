@@ -30,7 +30,7 @@ export class UiFont implements IUiFont {
     this.hrefId = font.hrefId ? font.hrefId : font.family.split(' ').join('+');
     this.properties = font.properties ? Object.assign({}, font.properties) : {};
   }
-  public equal(right: UiFont): boolean {
+  public equals(right: UiFont): boolean {
     return this.compareObjProps(this, right);
   }
   private compareObjProps(obj1: any, obj2: any) {

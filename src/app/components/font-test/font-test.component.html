@@ -126,9 +126,17 @@
 Selectable Fonts:
 <br>
 -----------------
-<app-font-list-display [fontList]="fontManagerService.selectableFonts"></app-font-list-display>
+<app-font-list-display [fontList]="selectableFonts$ | async"></app-font-list-display>
 
 Blacklisted Fonts:
 <br>
 -----------------
-<app-font-list-display [fontList]="fontManagerService.blacklistedFonts"></app-font-list-display>
+<app-font-list-display [fontList]="blacklistedFonts$ | async"></app-font-list-display>
+
+
+
+<ul>
+  <li *ngFor="let b of fontManagerService.blacklistedFonts">
+    {{ b.family }}
+  </li>
+</ul>

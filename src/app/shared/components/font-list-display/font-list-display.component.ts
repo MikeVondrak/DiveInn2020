@@ -16,17 +16,4 @@ export class FontListDisplayComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  public onClick() {
-    const ifont: IUiFont = {
-      family: 'f',
-      hrefId: 'h',
-      uiText: 'u',
-      properties: {},
-    };
-    const f = new UiFont(ifont);
-    this.fontList = [f];
-    this.cdr.detectChanges();
-    this.fontList = this.fontMgr.selectableFonts;
-    this.cdr.detectChanges();
-  }
 }
