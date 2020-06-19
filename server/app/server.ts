@@ -115,7 +115,7 @@ fontsRouter.get(fontGroupRoute, (req: Request, res: Response) => {
   let r = routes.api.font._urlParam.fontGroup;
   // console.log('Express: ' + fontGroupRoute + ', params: ' +
   //  JSON.stringify(req.params, null, 4) + '\nreq.params: ' + routes.api.font._urlParam.fontGroup);
-   // handle routes with url param
+  // handle routes with url param
   if (req.params && req.params[routes.api.font._urlParam.fontGroup]) {
     const urlParam = routes.api.font._urlParam.fontGroup;
     const fontGroup = req.params[urlParam];
@@ -136,7 +136,6 @@ testDataRouter.get(routes.api.test, (req: Request, res: Response) => {
   console.log('testDataRouter');
   makePoolQuery<TestData>(routes.api.test, sqlQueries.selectTestTable, res);
 });
-
 
 const allRoutes = express.Router();
 allRoutes.get(routes.api.other, default200Response);

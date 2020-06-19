@@ -53,8 +53,8 @@ export class FontApiService {
   public getFontSelectable$(): Observable<UiFont[]> {
     const results = this.http.get<Font[]>(
       routes.api._root +
-      routes.api.font._root + '/' +
-      FontGroupEnum.SELECTABLE
+        routes.api.font._root + '/' +
+        FontGroupEnum.SELECTABLE
     );
     return this.mapDbFontToUiFont(results);
   }
@@ -73,11 +73,12 @@ export class FontApiService {
   }
 
 
-  private mapDbFontToUiFont(results: Observable<Font[]>): Observable<UiFont[]> {    
+  private mapDbFontToUiFont(results: Observable<Font[]>): Observable<UiFont[]> {
+    console.log('font.api mapDbToUi');
     const uiFontArray: Observable<UiFont[]> = results.pipe(
       map((fontArray: Font[]) => {
         return fontArray.map((font: Font) => {
-          const uifont: IUiFont = {
+          const uiFont: IUiFont = {
             family: font.family,
             uiText: font.label,
             hrefId: font.href,
@@ -87,7 +88,9 @@ export class FontApiService {
               category: font.category,
             },
           };
-          return new UiFont(uifont);
+          console.log('font.api mapDbToUi font: ');
+          console.log(uiFont);
+          return new UiFont(uiFont);
         });
       })
     );

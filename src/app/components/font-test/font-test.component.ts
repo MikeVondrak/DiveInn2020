@@ -7,7 +7,7 @@ import {
 } from '../../models/ui-font.model';
 import { FormsModule } from '@angular/forms';
 import { CheckboxComponent } from '../shared/checkbox/checkbox.component';
-import { FontApiService } from '../../services/api/font/font.service';
+import { FontApiService } from '../../services/api/font/font.api.service';
 import { GoogleFontsApiService } from '../../services/external/google/google-fonts-api.service';
 import { Observable } from 'rxjs';
 import { GoogleFontsApiSort, GoogleFontsApi } from '../../services/external/google/google-fonts-api.model';

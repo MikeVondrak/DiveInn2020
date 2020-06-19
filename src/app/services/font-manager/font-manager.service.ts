@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { GoogleFontsApiService } from '../external/google/google-fonts-api.service';
 import { GoogleFontsApi } from '../external/google/google-fonts-api.model';
-import { FontApiService } from '../api/font/font.service';
+import { FontApiService } from '../api/font/font.api.service';
 import { HeadUriLoaderService } from '../head-uri-loader/head-uri-loader.service';
-import { take, map } from 'rxjs/operators';
+import { take, map, tap } from 'rxjs/operators';
 import { LoggerService } from '../logger/logger.service';
 import { UiFont, IUiFont } from '../../models/ui-font.model';
 import { FontVariants, FontWeight } from '../api/font/font.model';
@@ -120,22 +120,24 @@ export class FontManagerService {
    * Get the fonts what will be available for selection (e.g. from Fonts dropdown)
    */
   public getSelectableFonts() {
+    console.log('1**** getSelectableFonts');
     const selectableFontsFromDb$ = this.fontsApiService.getFontSelectable$();
-    this.getFontsWithUrlParameter(selectableFontsFromDb$, this.selectableFonts);
+    this.getFontsWithUrlParameter(selectableFontsFromDb$, this.selectableFonts, 1);
   }
 
   public getBlacklistedFonts() {
-    const blacklistedFontsFromDb$ = this.fontsApiService.getFontBlacklisted$();
-    this.getFontsWithUrlParameter(blacklistedFontsFromDb$, this.blacklistedFonts);
+    console.log('2**** getBlacklistedFonts');
+    const blacklistedFontsFromDb$: Observable<UiFont[]> = this.fontsApiService.getFontBlacklisted$();
+    blacklistedFontsFromDb$.pipe(tap(f => console.log('blacklisted font: ' + f)));
+    this.getFontsWithUrlParameter(blacklistedFontsFromDb$, this.blacklistedFonts, 2);
 
   }
 
-  private getFontsWithUrlParameter(fontsApi$: Observable<UiFont[]>, fontApiResults: UiFont[]) {
+  private getFontsWithUrlParameter(fontsApi$: Observable<UiFont[]>, fontApiResults: UiFont[], i: number) {
     fontsApi$.subscribe(fontsFromDb => {
       // iterate over selectable fonts from db (small array) and verify they exist in allFonts array built from Google fonts (large array)
       fontsFromDb.forEach(fontFromDb => {
         const fontFromAllFonts = this.allFonts.find(font => font.family === fontFromDb.family);
-        debugger;
         if (fontFromAllFonts) {
           if (fontFromAllFonts.contains(fontFromDb)) {
             fontApiResults.push(fontFromDb);
@@ -148,7 +150,7 @@ export class FontManagerService {
             + fontFromDb.family + ', ' + fontFromDb.uiText);
         }
       });
-      console.log('***** getFontsWithUrlParameter: ');
+      console.log('***** getFontsWithUrlParameter ' + i + ': ');
       fontApiResults.forEach(f => console.log(f.family + ', ' + f.properties.id));
     });
   }

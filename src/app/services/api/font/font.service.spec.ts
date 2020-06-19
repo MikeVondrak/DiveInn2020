@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FontApiService } from './font.service';
+import { FontApiService } from './font.api.service';
 
 describe('FontApiService', () => {
   let service: FontApiService;
