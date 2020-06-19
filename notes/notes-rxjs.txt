@@ -1,6 +1,9 @@
 _____
 RxJs
 
+Partition - split data into 2 groups
+  https://www.learnrxjs.io/learn-rxjs/operators/transformation/partition
+
 Hot vs Cold Observables (Multicast vs multiple subscriptions performance cost)
   https://stackoverflow.com/questions/32190445/hot-and-cold-observables-are-there-hot-and-cold-operators/34669444#34669444
 

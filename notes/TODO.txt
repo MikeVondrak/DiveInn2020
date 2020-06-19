@@ -1,48 +1,47 @@
-1. Categories of fonts (2 tables with foreign keys)
-  - DONE
+___________________________________
+TODO
 
-2. Google API
-  key:  AIzaSyCqZ3dPYustmQUajzIhYu7MJeJ_ePHPnyk    /   DiveInnFontTest
-  append the query parameter key=yourAPIKey to all request URLs
+* REAMDE.md files - markdown (text) files describing key components/services
 
-  - service to get all the fonts
-  - data cached (only make the call once per session) -- use NgRx(??)
-  - list of checkboxes, paginated, listing all the fonts
-      selecting checkbox adds font to db
-      or button to add
-      searchable
+FontManagerService
+* Remove subscriptions from service, only pass observables to all components
+* Filter fonts by category before using in lists
+  - need category API method
 
-  - UI controls for passing a font back
-    google data
-    our extra data
-      bold(??)
-      font is header or text
+Font Lists
+  display list of:
+    1. selectable
+    2. blacklisted
+    3. available
 
-  - UI to show selected fonts, button to remove(?)
+POST a new font to the db
+  - logic to check if font already exists
+  - Express router for POST
 
-  - blacklist fonts so they don't show up in all fonts selection
-    separate table (?) or flag on font object (?)
-
-
+UI to show selected fonts, button to remove(?)
+  - blacklist fonts so they don't show up in available fonts selection
+    separate table (Y) or 
+  ! flag on font object - rather than a separate table just have another value on font
 
 
+__________________________________
+Mike Tasks
+-----
+0. rename Font service to FontApi, model etc
 
-  -------
-  0. rename Font service to FontApi, model etc
-  1. figure out why intellisense sucks
-  2. look into GraphQL
-  3. NgRx
-  4. User login / authentication
-  5. figure out how/where to store credentials
+__________________________________
+Long Term
+-------
+1. figure out why intellisense sucks
+2. look into GraphQL
+3. NgRx
+  - caching Google Fonts data
+4. User login / authentication
+5. figure out how/where to store credentials
     db
     google API
 
-
-
 ------
-Cache X number of sort methods
-  Popularity, trending
-  try sorting ourselves for alpha, style (category)
 
 Dropdown / radio buttons of sort options
 
@@ -56,3 +55,20 @@ Style option checkmarks ?
   italic ? bold ?
 
 
+______________________________________________________________________________________________________
+DONE
+
+Cache X number of sort methods
+  Popularity, trending - DONE
+  try sorting ourselves for alpha, style (category)
+    - data processing times are likely insignificant
+
+1. Categories of fonts (2 tables with foreign keys) - DONE
+
+* Google API
+  append the query parameter key=yourAPIKey to all request URLs
+
+  - service to get all the fonts
+    * GoogleFontsApiService
+  - data cached (only make the call once per session) -- use NgRx(??)
+  
