@@ -8,7 +8,14 @@ FontManagerService
 * Filter fonts by category before using in lists
   - need category API method
 
+
+New Pages
+  * Font Selection
+  * Font Configuration
+  * Font Demo
+
 Font Lists
+  * create a new page for Font Selection
   display list of:
     1. selectable - DONE
     2. blacklisted - DONE
@@ -28,6 +35,13 @@ __________________________________
 Mike Tasks
 -----
 0. rename Font service to FontApi, model etc
+1. Cleanup FontManagerService
+  - Cleanup ui-font.model.ts / font-test.component 
+    - remove old const objects etc
+    - restructure object?
+      - conversions from Google Font, to Google Font URI, db font
+2. fix logger or remove comments
+3. try using shared interface for API FE/BE
 
 __________________________________
 Long Term

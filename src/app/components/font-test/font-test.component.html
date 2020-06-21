@@ -14,7 +14,7 @@
 <p [ngStyle]="textStyle">abcdefghijklmnopqrstuvwxyz</p>
 <p [ngStyle]="textStyle">. ? ! / @ # $ % ^ &amp; * ( ) ~ - + = ' " : ; &lt; &gt;</p>
 <hr>
-<div class="controlsContainer">
+<!-- <div class="controlsContainer">
   <div>
     <select
       [ngModel]="headerFont"
@@ -41,12 +41,12 @@
       id="headerBold"
       (ngModelChange)="$event ? headerFont.properties.weight = '700' : headerFont.properties.weight = 'regular'"
       [checked]="headerFont.properties.weight === '700'"
-    /> -->
+    /> --
     <p>Selected Font:<br>{{headerFont.uiText}}</p>
-    <!-- <p>weight: {{headerFont.properties.weight}}</p> -->
-  </div>
+    <!-- <p>weight: {{headerFont.properties.weight}}</p> --
+  </div> -->
 
-  <div>
+  <!-- <div>
     <select
       [ngModel]="textFont"
       (ngModelChange)="onModelChange(controlsEnum.text, $event)"
@@ -59,7 +59,7 @@
     </select>
     <br/>
     <p>Selected Font:<br>{{textFont.uiText}}</p>
-    <!-- <p>weight: {{textFont.properties.weight}}</p> -->
+    <!-- <p>weight: {{textFont.properties.weight}}</p> --
   </div>
 
 
@@ -68,23 +68,23 @@
       uiLabel='Bold'
       [(checkedValue)]='checkedValue'
     ></checkbox>
-    <!-- <p>Weight value: {{textFont.properties.weight}}</p> -->
-  </div>
+    <!-- <p>Weight value: {{textFont.properties.weight}}</p> --
+  </div> --
 
-    <!-- <checkbox [(ngModel)]="boldCheckbox"></checkbox> -->
+    <!-- <checkbox [(ngModel)]="boldCheckbox"></checkbox> --
     <!-- <input type="checkbox"
       id="textBold"
       [(ngModel)]="textFont.properties.bold"
       (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
-      [checked]="textFont.properties.weight === 700" -->
-    <!-- /> -->
+      [checked]="textFont.properties.weight === 700" --
+    <!-- /> --
     <!-- <label for="textBold"><span>Bold AT|jpgy</span></label>
     <p>Selected Font:<br>{{textFont.uiText}}</p>
     <p>bold: {{textFont.properties.bold}}<br>weight: {{textFont.properties.weight}}</p>
   </div> -->
 
 
-  <div>
+  <!-- <div>
     <h4>Add a new font</h4>
     <label for="addFontFamily">Family: </label>
     <input type="text"
@@ -105,10 +105,9 @@
     <p>Input: {{ fontNameToAdd }}</p>
     <p>Valid: {{ addFontHref.valid }}</p>
   </div>
-</div>
+</div> -->
 
-
-<div class="controlsContainer">
+<!-- <div class="controlsContainer">
   <div>
     <input type="radio"
       name="testRadio"
@@ -122,21 +121,22 @@
     />
     <label for="testRadio2"><span>jpgy Test Radio</span></label>
   </div>
-</div><br>
+</div> -->
+
+<br>
 Selectable Fonts:
 <br>
 -----------------
 <app-font-list-display [fontList]="selectableFonts$ | async"></app-font-list-display>
-
+<br><br>
 Blacklisted Fonts:
 <br>
 -----------------
 <app-font-list-display [fontList]="blacklistedFonts$ | async"></app-font-list-display>
+<br><br>
+Available Fonts:
+<br>
+-----------------
+<app-font-list-display [fontList]="top100Fonts$ | async"></app-font-list-display>
 
 
-
-<ul>
-  <li *ngFor="let b of fontManagerService.blacklistedFonts">
-    {{ b.family }}
-  </li>
-</ul>

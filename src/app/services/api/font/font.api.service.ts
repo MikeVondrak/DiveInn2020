@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { routes, FontGroupEnum } from '../../../../../server/app/routes';
 
 import { UiFont, IUiFont } from '../../../models/ui-font.model';
-import { Font, FontWeight } from './font.model';
+import { FontApi, FontWeight } from './font.api.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -19,53 +19,34 @@ export class FontApiService {
    * Return all Font objects from font table
    */
   public getAllFonts$(): Observable<UiFont[]> {
-    console.log('**** API service getFonts()');
-    const results: Observable<Font[]> = this.http.get<Font[]>(
-      routes.api._root + routes.api.font._root
+    const dbFonts: Observable<FontApi[]>
+      = this.http.get<FontApi[]>(
+          routes.api._root + routes.api.font._root
     );
-
-    return this.mapDbFontToUiFont(results);
-
-    // const uifontArray: Observable<UiFont[]> = results.pipe(
-    //   map((fontArray: Font[]) => {
-    //     return fontArray.map((font: Font) => {
-    //       const uifont: IUiFont = {
-    //         family: font.family,
-    //         uiText: font.label,
-    //         hrefId: font.href,
-    //         properties: {
-    //           id: font.id,
-    //           variants: new Map<FontWeight, boolean>([[font.weight, font.italic]]),
-    //           category: font.category,
-    //         },
-    //       };
-    //       debugger;
-    //       return new UiFont(uifont);
-    //     });
-    //   })
-    // );
-    // return uifontArray;
+    return this.mapDbFontToUiFont(dbFonts);
   }
 
   /**
    * Return all Font family values from font table
    */
   public getFontSelectable$(): Observable<UiFont[]> {
-    const results = this.http.get<Font[]>(
-      routes.api._root +
-        routes.api.font._root + '/' +
-        FontGroupEnum.SELECTABLE
+    const dbFonts: Observable<FontApi[]>
+      = this.http.get<FontApi[]>(
+          routes.api._root +
+          routes.api.font._root + '/' +
+          FontGroupEnum.SELECTABLE
     );
-    return this.mapDbFontToUiFont(results);
+    return this.mapDbFontToUiFont(dbFonts);
   }
 
   public getFontBlacklisted$(): Observable<UiFont[]> {
-    const results = this.http.get<Font[]>(
-      routes.api._root +
-        routes.api.font._root + '/' +
-        FontGroupEnum.BLACKLISTED
+    const dbFonts: Observable<FontApi[]>
+      = this.http.get<FontApi[]>(
+          routes.api._root +
+          routes.api.font._root + '/' +
+          FontGroupEnum.BLACKLISTED
     );
-    return this.mapDbFontToUiFont(results);
+    return this.mapDbFontToUiFont(dbFonts);
   }
 
   public addFont(font: UiFont) {
@@ -73,11 +54,15 @@ export class FontApiService {
   }
 
 
-  private mapDbFontToUiFont(results: Observable<Font[]>): Observable<UiFont[]> {
+  /**
+   * Map db results to UiFont
+   * @param dbFonts fonts from db table
+   */
+  private mapDbFontToUiFont(dbFonts: Observable<FontApi[]>): Observable<UiFont[]> {
     console.log('font.api mapDbToUi');
-    const uiFontArray: Observable<UiFont[]> = results.pipe(
-      map((fontArray: Font[]) => {
-        return fontArray.map((font: Font) => {
+    const uiFontArray: Observable<UiFont[]> = dbFonts.pipe(
+      map((fontArray: FontApi[]) => {
+        return fontArray.map((font: FontApi) => {
           const uiFont: IUiFont = {
             family: font.family,
             uiText: font.label,

@@ -3,12 +3,18 @@ import { GoogleFontsApiService } from '../external/google/google-fonts-api.servi
 import { GoogleFontsApi } from '../external/google/google-fonts-api.model';
 import { FontApiService } from '../api/font/font.api.service';
 import { HeadUriLoaderService } from '../head-uri-loader/head-uri-loader.service';
-import { take, map, tap, filter, reduce } from 'rxjs/operators';
+import { take, map, tap, filter, reduce, every } from 'rxjs/operators';
 import { LoggerService } from '../logger/logger.service';
 import { UiFont, IUiFont } from '../../models/ui-font.model';
-import { FontVariants, FontWeight } from '../api/font/font.model';
+import { FontVariants, FontWeight } from '../api/font/font.api.model';
 import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
 
+enum GoogleFontsDataStateEnum {
+  UNLOADED,
+  LOADING,
+  LOADED,
+  ERROR
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -19,12 +25,24 @@ export class FontManagerService {
   private blacklistedCategories: string[];
 
   public allFonts: UiFont[] = [];
+  private allFonts$: Observable<UiFont[]>;
 
   private validCategoryFonts: UiFont[] = [];
-  public blacklistedFonts: UiFont[] = [];
+  private blacklistedFonts: UiFont[] = [];
   private availableFonts: UiFont[] = [];
-  public selectableFonts: UiFont[] = [];
+  private selectableFonts: UiFont[] = [];
   private fontsToDownload: UiFont[] = [];
+
+  // tslint:disable: variable-name
+  private _selectableFonts$: BehaviorSubject<UiFont[]> = new BehaviorSubject<UiFont[]>([]);
+  private _blacklistedFonts$: BehaviorSubject<UiFont[]> = new BehaviorSubject<UiFont[]>([]);
+  private _availableFonts$: BehaviorSubject<UiFont[]> = new BehaviorSubject<UiFont[]>([]);
+
+  // validCategory
+  public get selectableFonts$(): Observable<UiFont[]> { return this._selectableFonts$.asObservable(); }
+  public get blacklistedFonts$(): Observable<UiFont[]> { return this._blacklistedFonts$.asObservable(); }
+  public get availableFonts$(): Observable<UiFont[]> { return this._availableFonts$.asObservable(); }
+  // fontsToDownload
 
   private timeStart;
   private timeStop;
@@ -45,61 +63,175 @@ export class FontManagerService {
   }
 
   public init() {
-
-    // this.logger.log('Test');
-    // this.logger.log('', undefined, { label: 'Get Font Categories', action: 'start' });
-    // this.logger.log('', { 'Categories Size': this.googleFontCategories.size, 'another var': 100 });
-
-    this.googleFontDataLoading.next(true);
+    // clear data to avoid duplicates when run twice in debugging build
     this.validCategoryFonts = [];
     this.blacklistedFonts = [];
     this.availableFonts = [];
     this.selectableFonts = [];
     this.fontsToDownload = [];
-    this.getAllGoogleFonts();
+
+    this.setGoogleFontsDataState(GoogleFontsDataStateEnum.LOADING);
+    this.allFonts$ = this.getAllGoogleFonts();
+    // subscribe so we have the Google Fonts data available to sort
+    //  - fast enough to not be an issue loading on app init
+    //  - if we didn't want to load the data unless the UI was using it we could continue the Observable chain and avoid subscribing
+    this.allFonts$.subscribe(
+      (allFonts: UiFont[]) => {
+        this.parseFontsData(allFonts);
+      },
+      (err: any) => {
+        console.log('!!!!! FontManagerService Error Handler: ' + err);
+        /** @TODO hande this in the GoogleFontsApiService / NgRx */
+        this.setGoogleFontsDataState(GoogleFontsDataStateEnum.ERROR);
+      },
+      () => {
+        // expect the subscription to complete
+        this.setGoogleFontsDataState(GoogleFontsDataStateEnum.LOADED);
+      }
+    );
   }
 
-  private getAllGoogleFonts() {
-    if (!this.allFonts || !this.allFonts.length) {
-      this.googleFontsApiService.getFonts$('popularity')
+  /**
+   * Get the list of all Google Fonts and convert to UiFont[]
+   */
+  private getAllGoogleFonts(): Observable<UiFont[]> {
+    if (!this.allFonts$) {
+      return this.googleFontsApiService.getFonts$('popularity')
         .pipe(
           take(1),
           map(googleFonts => {
-            this.allFonts = googleFonts.map(googleFont => {
-              const iUiFont: IUiFont = {
-                family: googleFont.family,
-                // uiText: is populated using family and overwritten if db has different value
-                // hrefId: is populated from family and reconstructed when building URI for <link> tag
-                properties: {
-                  id: -1,
-                  variants: this.parseVariants(googleFont),
-                  category: googleFont.category,
-                },
-              };
-              return new UiFont(iUiFont);
+            return googleFonts.map(googleFont => {
+              return this.mapGoogleFontToUiFont(googleFont);
             });
           })
-        ).subscribe(
-          (data) => { /*console.log('+++++ FontManagerService data: ' + data)*/ },
-          (err: any) => { 
-            console.log('!!!!! FontManagerService Error Handler: ' + err);
-            this.googleFontDataLoading.next(false);
-            this.googleFontDataLoaded.next(true);
-            this.googleFontDataError.next(true);
-          },
-          () => {
-            this.googleFontDataLoading.next(false);
-            this.googleFontDataLoaded.next(true);
-            this.googleFontDataError.next(false);
-
-            this.parseFontsForCategories();
-            this.getSelectableFonts$();
-            this.getBlacklistedFonts$();
-          }
         );
+    } else {
+      return this.allFonts$;
     }
   }
 
+  private parseFontsData(fontsData: UiFont[]) {
+    console.log('##### parseFontsData()');
+
+    combineLatest([
+      this.fontsApiService.getFontSelectable$().pipe(take(1)),
+      this.fontsApiService.getFontBlacklisted$().pipe(take(1)),
+      this.googleFontDataLoaded.pipe(filter(loaded => !!loaded), take(1)),
+    ]).pipe(
+      take(1), // unsubscribe after getting result
+      every(([selectable, blacklisted,]) => {
+        fontsData.forEach(uiFont => {
+          this.parseFontCategory(uiFont);
+          // remove blacklisted fonts by family (all variants of font)
+          const isBlacklisted = blacklisted.find(blf => blf.family === uiFont.family);
+          // selectable font variant should exist in UiFont (from GoogleFont allFonts)
+          const isSelectable = selectable.find(sf => uiFont.contains(sf));
+          if (isBlacklisted) {
+            this.blacklistedFonts.push(isBlacklisted);
+          } else if (isSelectable) {
+            this.selectableFonts.push(isSelectable);
+          } else {
+            this.availableFonts.push(uiFont);
+          }
+        });
+        this._selectableFonts$.next(this.selectableFonts);
+        this._blacklistedFonts$.next(this.blacklistedFonts);
+        this._availableFonts$.next(this.availableFonts);
+        // debugger;
+        return true;
+      }
+    )).subscribe(() => { console.log('##### parseFontsData subscription COMPLETE'); });
+  }
+
+  /**
+   * Add the category of the provided font to a set to capture all category values
+   * @param uiFont font to parse for category value
+   */
+  private parseFontCategory(uiFont: UiFont) {
+    this.googleFontCategories.add(uiFont.properties.category);
+  }
+
+  // public getAvailableFonts$(): Observable<UiFont[]> {
+  //   return combineLatest([
+  //     this.getSelectableFonts$(),
+  //     this.getBlacklistedFonts$()
+  //   ]).pipe(
+  //     reduce((accFontsResult, [selectable, blacklisted]) => {
+  //       this.allFonts.forEach(font => {
+  //         if (!this.selectableFonts.find(sf => font.equals(sf))
+  //           && !this.blacklistedFonts.find(bf => font.equals(bf))) {
+  //           accFontsResult.push(font);
+  //         }
+  //       });
+  //       return accFontsResult;
+  //     }, new Array<UiFont>())
+  //   );
+  // }
+
+  // /**
+  //  * Get the fonts what will be available for selection (e.g. from Fonts dropdown)
+  //  */
+  // public getSelectableFonts$(): Observable<UiFont[]> {
+  //   const selectableFontsFromDb$ = this.fontsApiService.getFontSelectable$();
+  //   return combineLatest([
+  //     this.googleFontDataLoaded.pipe(filter(loaded => !!loaded), take(1)),
+  //     selectableFontsFromDb$.pipe(filter(loaded => !!loaded), take(1)),
+  //   ]).pipe(
+  //     reduce((accFontsResult, [loaded, dbFontsArray]) => {
+  //       accFontsResult = this.filterDbFontsThatExistInGoogleFonts(dbFontsArray);
+  //       return accFontsResult;
+  //     }, new Array<UiFont>())
+  //   );
+  // }
+
+  // public getBlacklistedFonts$(): Observable<UiFont[]> {
+  //   const blacklistedFontsFromDb$ = this.fontsApiService.getFontBlacklisted$();
+  //   return combineLatest([
+  //     this.googleFontDataLoaded.pipe(filter(loaded => !!loaded), take(1)),
+  //     blacklistedFontsFromDb$.pipe(filter(loaded => !!loaded), take(1)),
+  //   ]).pipe(
+  //     reduce((accFontsResult, [loaded, dbFontsArray]) => {
+  //       accFontsResult = this.filterDbFontsThatExistInGoogleFonts(dbFontsArray);
+  //       return accFontsResult;
+  //     }, new Array<UiFont>())
+  //   );
+  // }
+
+  // private filterDbFontsThatExistInGoogleFonts(dbFontArray: UiFont[]): UiFont[] {
+  //   const fontsResult: UiFont[] = [];
+  //   dbFontArray.forEach(fontFromDb => {
+  //     const fontFromAllFonts = this.allFonts.find(font => font.family === fontFromDb.family);
+  //     if (fontFromAllFonts) {
+  //       if (fontFromAllFonts.contains(fontFromDb)) {
+  //         fontsResult.push(fontFromDb);
+  //       } else {
+  //         console.log('WARNING: Font from DB not found in All Fonts array: '
+  //           + fontFromDb.family, + ', ' + fontFromDb.uiText);
+  //       }
+  //     } else {
+  //       console.log('WARNING: Font from DB not found in All Fonts array: '
+  //         + fontFromDb.family + ', ' + fontFromDb.uiText);
+  //     }
+  //   });
+
+  //   console.log('\n\n***** filterDbFontsThatExistInGoogleFonts ' + ': ');
+  //   fontsResult.forEach(f => console.log('\t* ' + f.family + ', ' + f.properties.id));
+  //   return fontsResult;
+  // }
+
+  private mapGoogleFontToUiFont(googleFont: GoogleFontsApi): UiFont {
+    const iUiFont: IUiFont = {
+      family: googleFont.family,
+      // uiText: is populated using family and overwritten if db has different value
+      // hrefId: is populated from family and reconstructed when building URI for <link> tag
+      properties: {
+        id: -1,
+        variants: this.parseVariants(googleFont),
+        category: googleFont.category,
+      },
+    };
+    return new UiFont(iUiFont);
+  }
   /**
    * Crete a FontWeight-boolean map of whether font weight is italic-able
    * @param googleFont Font to parse variants of
@@ -130,85 +262,36 @@ export class FontManagerService {
     return variants;
   }
 
-  /**
-   * Create a Set of unique categories from list of all Google Fonts
-   */
-  private parseFontsForCategories() {
-    // add category of each font to Set to retrieve unique category values
-    this.allFonts.forEach(font => {
-      this.googleFontCategories.add(font.properties.category);
-    });
-    // this.logger.log('', [{ 'Categories Size': this.googleFontCategories.size, Categories: this.googleFontCategories }]);
-    // this.logger.log('', null, { label: 'Get Font Categories', action: 'stop' });
+  // private mapUiFontToGoogleFontUri(googleFont: GoogleFontsApi): GoogleFontsUri { }
+  // private mapUiFontToDbFont(uiFont: UiFont): DbFont { }
+
+  private setGoogleFontsDataState(state: GoogleFontsDataStateEnum) {
+    switch (state) {
+      case GoogleFontsDataStateEnum.UNLOADED:
+        // BehaviorSubjects have initial value when created
+        break;
+      case GoogleFontsDataStateEnum.LOADING:
+        this.googleFontDataLoading.next(true);
+        break;
+      case GoogleFontsDataStateEnum.LOADED:
+        this.googleFontDataLoading.next(false);
+        this.googleFontDataLoaded.next(true);
+        this.googleFontDataError.next(false);
+
+        //this.googleFontDataLoading.complete();
+        //this.googleFontDataLoaded.complete();
+        //this.googleFontDataError.complete();
+        break;
+      case GoogleFontsDataStateEnum.ERROR:
+        this.googleFontDataLoading.next(false);
+        this.googleFontDataLoaded.next(true);
+        this.googleFontDataError.next(true);
+
+        //this.googleFontDataLoading.complete();
+        //this.googleFontDataLoaded.complete();
+        //this.googleFontDataError.complete();
+        break;
+      default: { }
+    }
   }
-
-  
-  public getAvailableFonts$(): Observable<UiFont[]> {
-    return combineLatest(
-      this.getSelectableFonts$(),
-      this.getBlacklistedFonts$()
-    ).pipe(
-      reduce((accFontsResult, [selectable, blacklisted]) => {
-        this.allFonts.forEach(font => {
-          if (!this.selectableFonts.find(sf => font.equals(sf))
-            && !this.blacklistedFonts.find(bf => font.equals(bf))) {
-            accFontsResult.push(font);
-          }
-        });
-        return accFontsResult;
-      }, new Array<UiFont>())
-    );
-  }
-
-  /**
-   * Get the fonts what will be available for selection (e.g. from Fonts dropdown)
-   */
-  public getSelectableFonts$(): Observable<UiFont[]> {
-    const selectableFontsFromDb$ = this.fontsApiService.getFontSelectable$();
-    return combineLatest(
-      this.googleFontDataLoaded.pipe(filter(loaded => !!loaded), take(1)),
-      selectableFontsFromDb$.pipe(filter(loaded => !!loaded), take(1)),
-    ).pipe(
-      reduce((accFontsResult, [loaded, dbFontsArray]) => {
-        accFontsResult = this.filterDbFontsThatExistInGoogleFonts(dbFontsArray);
-        return accFontsResult;
-      }, new Array<UiFont>())
-    );
-  }
-
-  public getBlacklistedFonts$(): Observable<UiFont[]> {
-    const blacklistedFontsFromDb$ = this.fontsApiService.getFontBlacklisted$();
-    return combineLatest(
-      this.googleFontDataLoaded.pipe(filter(loaded => !!loaded), take(1)),
-      blacklistedFontsFromDb$.pipe(filter(loaded => !!loaded), take(1)),
-    ).pipe(
-      reduce((accFontsResult, [loaded, dbFontsArray]) => {
-        accFontsResult = this.filterDbFontsThatExistInGoogleFonts(dbFontsArray);
-        return accFontsResult;
-      }, new Array<UiFont>())
-    );
-  }
-
-  private filterDbFontsThatExistInGoogleFonts(dbFontArray: UiFont[]): UiFont[] {
-    const fontsResult: UiFont[] = [];
-    dbFontArray.forEach(fontFromDb => {
-      const fontFromAllFonts = this.allFonts.find(font => font.family === fontFromDb.family);
-      if (fontFromAllFonts) {
-        if (fontFromAllFonts.contains(fontFromDb)) {
-          fontsResult.push(fontFromDb);
-        } else {
-          console.log('WARNING: Font from DB not found in All Fonts array: '
-            + fontFromDb.family, + ', ' + fontFromDb.uiText);
-        }
-      } else {
-        console.log('WARNING: Font from DB not found in All Fonts array: '
-          + fontFromDb.family + ', ' + fontFromDb.uiText);
-      }
-    });
-
-    console.log('\n\n***** filterDbFontsThatExistInGoogleFonts ' + ': ');
-    fontsResult.forEach(f => console.log('\t* ' + f.family + ', ' + f.properties.id));
-    return fontsResult;
-  }
-
 }

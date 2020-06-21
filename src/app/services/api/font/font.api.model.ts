@@ -6,7 +6,7 @@ export type FontCategory = 'header' | 'text' | 'nav' | 'title';
 export type FontVariants = Map<FontWeight, boolean>;
 
 // match what the backend is returning for the fonts API
-export interface Font {
+export interface FontApi {
   id: number;
   family: string;
   label?: string | null;

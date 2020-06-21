@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  ul {
+    list-style-type: none;
+  }
+  span {
+    display: inline-block;
+    min-width: 250px;
+    &:nth-child(2) {
+      min-width: 80px;
+    }
+    &:nth-child(3) {
+      min-width: 160px;
+    }
+    &.col {
+      min-width: 120px;
+    }
+  }
+}

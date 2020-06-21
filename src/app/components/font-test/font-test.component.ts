@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
   UiFont,
-  fonts,
-  headerFonts,
-  textFonts,
 } from '../../models/ui-font.model';
 import { FormsModule } from '@angular/forms';
 import { CheckboxComponent } from '../shared/checkbox/checkbox.component';
@@ -11,7 +8,7 @@ import { FontApiService } from '../../services/api/font/font.api.service';
 import { GoogleFontsApiService } from '../../services/external/google/google-fonts-api.service';
 import { Observable } from 'rxjs';
 import { GoogleFontsApiSort, GoogleFontsApi } from '../../services/external/google/google-fonts-api.model';
-import { take } from 'rxjs/operators';
+import { take, map, filter } from 'rxjs/operators';
 import { FontManagerService } from '../../services/font-manager/font-manager.service';
 
 enum ControlsEnum {
@@ -27,7 +24,7 @@ enum ControlsEnum {
 export class FontTestComponent implements OnInit {
 
   // fonts available in dropdowns
-  public readonly fontOptions: UiFont[] = Object.assign([], fonts);
+  //public readonly fontOptions: UiFont[] = Object.assign([], fonts);
 
   // make enum values available in template
   public readonly controlsEnum = ControlsEnum;
@@ -35,16 +32,16 @@ export class FontTestComponent implements OnInit {
   public headerStyle: object = {};
   public textStyle: object = {}; // { 'font-family': 'PT Sans' };
   // ngModels
-  public headerFont: UiFont = headerFonts[0];
-  public textFont: UiFont = this.fontOptions.find(
-    (font) => font.uiText === 'PT Sans Bold'
-  );
+  //public headerFont: UiFont = headerFonts[0];
+  //public textFont: UiFont = this.fontOptions.find(
+  //  (font) => font.uiText === 'PT Sans Bold'
+  //);
   // controls for adding new fonts
   public fontNameToAdd: string;
   public fontHrefToAdd: string;
 
-  public hFonts = headerFonts;
-  public tFonts = textFonts;
+  //public hFonts = headerFonts;
+  //public tFonts = textFonts;
 
   public fontList$: Observable<UiFont[]>;
   public googleFontList: GoogleFontsApi[];
@@ -54,19 +51,20 @@ export class FontTestComponent implements OnInit {
 
   // public boldCheckbox : boolean;
 
-  public selectableFonts$: Observable<UiFont[]> = this.fontManagerService.getSelectableFonts$();
-  public blacklistedFonts$: Observable<UiFont[]> = this.fontManagerService.getBlacklistedFonts$();
-  public availableFonts$: Observable<UiFont[]> = this.fontManagerService.getAvailableFonts$();
-  public availableFonts: UiFont[] = [];
+  public selectableFonts$: Observable<UiFont[]> = this.fontManagerService.selectableFonts$;
+  public blacklistedFonts$: Observable<UiFont[]> = this.fontManagerService.blacklistedFonts$;
+  public availableFonts$: Observable<UiFont[]> = this.fontManagerService.availableFonts$;
+  public top100Fonts$: Observable<UiFont[]> = this.availableFonts$.pipe(map(f => f.slice(0, 100)));
 
   constructor(
     private fontService: FontApiService,
     private fontsApiService: GoogleFontsApiService,
-    public fontManagerService: FontManagerService,) {}
+    public fontManagerService: FontManagerService,
+  ) { }
 
   ngOnInit(): void {
-
-
+    //debugger;
+    //this.top100Fonts$ = this.availableFonts$.pipe(map(f => f.slice(0, 100)));
     this.onModelChange(ControlsEnum.header);
     this.onModelChange(ControlsEnum.text);
 

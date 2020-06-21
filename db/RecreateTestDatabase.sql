@@ -105,6 +105,8 @@ CREATE TABLE font (
 );
 INSERT INTO font (family, label, href, italic, fk_font_weight_id, fk_font_category_id)
 VALUES
+    ('Roboto', null, null, false, 4, 2),
+    ('Roboto', null, null, true, 7, 2),
     ('Alfa Slab One', null, null, false, 4, 1),
     ('Anton', null, null, false, 4, 1),
     ('Bevan', null, null, false, 4, 1),

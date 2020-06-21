@@ -1,7 +1,13 @@
 <div>
   <ul>
     <li *ngFor="let font of fontList">
-      {{font.family}}
+      <span>{{ font.family }}</span>
+      <span>id: {{ font.properties.id }}</span>
+      <span>category: {{ font.properties.category }}</span>
+      variants: 
+      <span class='col' *ngFor="let variant of font.properties.variants.entries()">
+        | {{ variant }}
+      </span>
     </li>
   </ul>
 </div>
