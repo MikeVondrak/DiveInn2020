@@ -9,7 +9,7 @@ FontManagerService
   - need category API method
 
 
-New Pages
+New Pages - DONE
   * Font Selection
   * Font Configuration
   * Font Demo
@@ -19,7 +19,7 @@ Font Lists
   display list of:
     1. selectable - DONE
     2. blacklisted - DONE
-    3. available
+    3. available - DONE
 
 POST a new font to the db
   - logic to check if font already exists

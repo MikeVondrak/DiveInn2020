@@ -1,0 +1,18 @@
+<div class="page wide">
+  
+  Selectable Fonts:
+  <br>
+  -----------------
+  <app-font-list-display [fontList]="selectableFonts$ | async"></app-font-list-display>
+  <br><br>
+  Blacklisted Fonts:
+  <br>
+  -----------------
+  <app-font-list-display [fontList]="blacklistedFonts$ | async"></app-font-list-display>
+  <br><br>
+  Available Fonts:
+  <br>
+  -----------------
+  <app-font-list-display [fontList]="top100Fonts$ | async"></app-font-list-display>
+
+</div>
