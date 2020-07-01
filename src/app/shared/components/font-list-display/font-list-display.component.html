@@ -1,6 +1,6 @@
 <div>
   <ul>
-    <li *ngFor="let font of fontList">
+    <li *ngFor="let font of fontList$ | async">
       <span>{{ font.family }}</span>
       <span>id: {{ font.properties.id }}</span>
       <span>category: {{ font.properties.category }}</span>
@@ -8,7 +8,7 @@
       <span class='col' *ngFor="let variant of font.properties.variants.entries()">
         | {{ variant }}
       </span>
-      <button class="remove-button" (click)="onClickRemove(font)">X</button>
+      <button class="remove-button" (click)="moveFromAvailToSelectable(font)">></button>
     </li>
   </ul>
 </div>

@@ -12,7 +12,7 @@ import { take } from 'rxjs/operators';
 // our backend
 import { ServerApp } from './server-app';
 import { logger } from './middleware/logger';
-import { sqlQueries } from './sqlQueries';
+import { sqlQueries } from './sql-queries';
 import { routes, FontGroupEnum } from './routes';
 import { queryCallback } from 'mysql';
 

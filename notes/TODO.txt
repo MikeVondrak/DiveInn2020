@@ -8,18 +8,10 @@ FontManagerService
 * Filter fonts by category before using in lists
   - need category API method
 
-
-New Pages - DONE
-  * Font Selection
-  * Font Configuration
-  * Font Demo
-
-Font Lists
-  * create a new page for Font Selection
-  display list of:
-    1. selectable - DONE
-    2. blacklisted - DONE
-    3. available - DONE
+Transitions
+  - Initial site loading
+  - Page loading
+  - Remove on Available Fonts list
 
 POST a new font to the db
   - logic to check if font already exists
@@ -86,3 +78,14 @@ Cache X number of sort methods
     * GoogleFontsApiService
   - data cached (only make the call once per session) -- use NgRx(??)
   
+New Pages - DONE
+  * Font Selection
+  * Font Configuration
+  * Font Demo
+
+Font Lists
+  * create a new page for Font Selection
+  display list of:
+    1. selectable - DONE
+    2. blacklisted - DONE
+    3. available - DONE

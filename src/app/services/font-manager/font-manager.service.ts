@@ -7,7 +7,7 @@ import { take, map, tap, filter, reduce, every } from 'rxjs/operators';
 import { LoggerService } from '../logger/logger.service';
 import { UiFont, IUiFont } from '../../models/ui-font.model';
 import { FontVariants, FontWeight } from '../api/font/font.api.model';
-import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
 
 enum GoogleFontsDataStateEnum {
   UNLOADED,
@@ -39,9 +39,9 @@ export class FontManagerService {
   private _availableFonts$: BehaviorSubject<UiFont[]> = new BehaviorSubject<UiFont[]>([]);
 
   // validCategory
-  public get selectableFonts$(): Observable<UiFont[]> { return this._selectableFonts$.asObservable(); }
-  public get blacklistedFonts$(): Observable<UiFont[]> { return this._blacklistedFonts$.asObservable(); }
-  public get availableFonts$(): Observable<UiFont[]> { return this._availableFonts$.asObservable(); }
+  public get selectableFonts$(): Subject<UiFont[]> { return this._selectableFonts$; }
+  public get blacklistedFonts$(): Subject<UiFont[]> { return this._blacklistedFonts$; }
+  public get availableFonts$(): Subject<UiFont[]> { return this._availableFonts$; }
   // fontsToDownload
 
   private timeStart;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { FontManagerService } from '../../services/font-manager/font-manager.service';
 import { UiFont } from '../../models/ui-font.model';
 import { map } from 'rxjs/operators';
@@ -11,9 +11,9 @@ import { map } from 'rxjs/operators';
 })
 export class ConfigurationPageComponent implements OnInit {
 
-  public selectableFonts$: Observable<UiFont[]> = this.fontManagerService.selectableFonts$;
-  public blacklistedFonts$: Observable<UiFont[]> = this.fontManagerService.blacklistedFonts$;
-  public availableFonts$: Observable<UiFont[]> = this.fontManagerService.availableFonts$;
+  public selectableFonts$: Subject<UiFont[]> = this.fontManagerService.selectableFonts$;
+  public blacklistedFonts$: Subject<UiFont[]> = this.fontManagerService.blacklistedFonts$;
+  public availableFonts$: Subject<UiFont[]> = this.fontManagerService.availableFonts$;
   public top100Fonts$: Observable<UiFont[]> = this.availableFonts$.pipe(map(f => f.slice(0, 100)));
 
   constructor(private fontManagerService: FontManagerService) { }

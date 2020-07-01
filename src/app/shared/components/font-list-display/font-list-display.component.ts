@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { UiFont, IUiFont } from '../../../models/ui-font.model';
 import { FontManagerService } from '../../../services/font-manager/font-manager.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 export type DisplayType = 'family-only' | 'variant-details';
 
@@ -14,11 +15,7 @@ export type DisplayType = 'family-only' | 'variant-details';
 export class FontListDisplayComponent implements OnInit {
 
   @Input() displayType: DisplayType = 'variant-details';
-
-  @Output() fontListChange = new EventEmitter<UiFont[]>();
-  @Input() fontList: UiFont[] = [];
-
-  //@Input() fontList$: Observable<UiFont[]>;
+  @Input() fontList$: Subject<UiFont[]>;
 
   constructor(private cdr: ChangeDetectorRef, private fontMgr: FontManagerService) { }
 
@@ -26,8 +23,12 @@ export class FontListDisplayComponent implements OnInit {
 
   public onClickRemove(font: UiFont) {
     console.log('@@@@@ remove font: ' + font.uiText);
-    const idx = this.fontList.indexOf(font);
-    this.fontList.splice(idx, 1);
-    this.fontListChange.emit(this.fontList);
+    this.fontList$
+      .pipe(take(1))
+      .subscribe((fontList) => {
+        const idx = fontList.indexOf(font);
+        fontList.splice(idx, 1);
+        this.fontList$.next(fontList);
+      });
   }
 }
