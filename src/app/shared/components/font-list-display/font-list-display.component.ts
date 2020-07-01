@@ -13,12 +13,21 @@ export type DisplayType = 'family-only' | 'variant-details';
 })
 export class FontListDisplayComponent implements OnInit {
 
-  @Input() displayType: DisplayType;
+  @Input() displayType: DisplayType = 'variant-details';
+
+  @Output() fontListChange = new EventEmitter<UiFont[]>();
   @Input() fontList: UiFont[] = [];
-  @Input() fontList$: Observable<UiFont[]>;
+
+  //@Input() fontList$: Observable<UiFont[]>;
 
   constructor(private cdr: ChangeDetectorRef, private fontMgr: FontManagerService) { }
 
   ngOnInit(): void { }
 
+  public onClickRemove(font: UiFont) {
+    console.log('@@@@@ remove font: ' + font.uiText);
+    const idx = this.fontList.indexOf(font);
+    this.fontList.splice(idx, 1);
+    this.fontListChange.emit(this.fontList);
+  }
 }

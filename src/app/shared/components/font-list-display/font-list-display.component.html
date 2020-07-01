@@ -8,6 +8,7 @@
       <span class='col' *ngFor="let variant of font.properties.variants.entries()">
         | {{ variant }}
       </span>
+      <button class="remove-button" (click)="onClickRemove(font)">X</button>
     </li>
   </ul>
 </div>
