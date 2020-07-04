@@ -1,11 +1,19 @@
 import { FontVariants, FontWeight } from '../services/api/font/font.api.model';
 
+export enum FontListsEnum {
+  SELECTABLE = "SELECTABLE",
+  BLACKLISTED = "BLACKLISTED",
+  AVAILABLE = "AVAILABLE"
+}
+
 export interface FontProperties {
   // sizeRem?: number;
   // letterSpacingPx?: number;
   id?: number;
   category?: string;
   variants?: FontVariants;
+
+  listId?: FontListsEnum;
 }
 
 export interface IUiFont {

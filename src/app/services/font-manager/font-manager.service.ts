@@ -5,7 +5,7 @@ import { FontApiService } from '../api/font/font.api.service';
 import { HeadUriLoaderService } from '../head-uri-loader/head-uri-loader.service';
 import { take, map, tap, filter, reduce, every } from 'rxjs/operators';
 import { LoggerService } from '../logger/logger.service';
-import { UiFont, IUiFont } from '../../models/ui-font.model';
+import { UiFont, IUiFont, FontListsEnum } from '../../models/ui-font.model';
 import { FontVariants, FontWeight } from '../api/font/font.api.model';
 import { Observable, BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
 
@@ -17,7 +17,7 @@ enum GoogleFontsDataStateEnum {
 }
 @Injectable({
   providedIn: 'root'
-})
+}) 
 export class FontManagerService {
 
   private googleFontCategories: Set<string> = new Set();
@@ -127,10 +127,13 @@ export class FontManagerService {
           // selectable font variant should exist in UiFont (from GoogleFont allFonts)
           const isSelectable = selectable.find(sf => uiFont.contains(sf));
           if (isBlacklisted) {
+            isBlacklisted.properties.listId = FontListsEnum.BLACKLISTED;
             this.blacklistedFonts.push(isBlacklisted);
           } else if (isSelectable) {
+            isSelectable.properties.listId = FontListsEnum.SELECTABLE;
             this.selectableFonts.push(isSelectable);
           } else {
+            uiFont.properties.listId = FontListsEnum.AVAILABLE;
             this.availableFonts.push(uiFont);
           }
         });
@@ -229,5 +232,29 @@ export class FontManagerService {
         break;
       default: { }
     }
+  }
+
+
+  public moveFontToAvailable(font: UiFont) {
+    let type: Observable<UiFont[]>;
+    switch (font.properties.listId) {
+      case FontListsEnum.BLACKLISTED:
+        type = this.blacklistedFonts$;
+        break;
+      case FontListsEnum.AVAILABLE:
+        type = this.availableFonts$;
+        break;
+      case FontListsEnum.SELECTABLE:
+        type = this.selectableFonts$;
+        break;
+    }
+    type
+    .pipe(take(1))
+    .subscribe((fontList) => {
+      const idx = fontList.indexOf(font);
+      fontList.splice(idx, 1);
+      console.log('***** FontManagerService removeFont: ' + font.family + ', enum: ' + font.properties.listId + " Index: " + idx);
+
+  });
   }
 }

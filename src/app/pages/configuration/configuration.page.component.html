@@ -3,16 +3,16 @@
   Selectable Fonts:
   <br>
   -----------------
-  <app-font-list-display [fontList$]="selectableFonts$"></app-font-list-display>
+  <app-font-list-display [fontList$]="selectableFonts$" [listType]="fontListsEnum.SELECTABLE" (fontClicked)="fontClick($event)"></app-font-list-display>
   <br><br>
   Blacklisted Fonts:
   <br>
   -----------------
-  <app-font-list-display [fontList$]="blacklistedFonts$"></app-font-list-display>
+  <app-font-list-display [fontList$]="blacklistedFonts$" [listType]="fontListsEnum.BLACKLISTED" (fontClicked)="fontClick($event)" ></app-font-list-display>
   <br><br>
   Available Fonts:
   <br>
   -----------------
-  <app-font-list-display [fontList$]="top100Fonts$"></app-font-list-display>
+  <app-font-list-display [fontList$]="top100Fonts$" [listType]="fontListsEnum.AVAILABLE" (fontClicked)="fontClick($event)"></app-font-list-display>
 
 </div>
