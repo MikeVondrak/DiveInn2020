@@ -17,7 +17,7 @@ enum GoogleFontsDataStateEnum {
 }
 @Injectable({
   providedIn: 'root'
-}) 
+})
 export class FontManagerService {
 
   private googleFontCategories: Set<string> = new Set();
@@ -142,7 +142,7 @@ export class FontManagerService {
         this._availableFonts$.next(this.availableFonts);
         return true;
       }
-    )).subscribe(() => { console.log('##### parseFontsData subscription COMPLETE'); });
+      )).subscribe(() => { console.log('##### parseFontsData subscription COMPLETE'); });
   }
 
   /**
@@ -156,7 +156,7 @@ export class FontManagerService {
   /**
    * Convert the provided GoogleFontsApi into a UiFont
    * @param googleFont GoogleFontsApi to convert
-   */ 
+   */
   private mapGoogleFontToUiFont(googleFont: GoogleFontsApi): UiFont {
     const iUiFont: IUiFont = {
       family: googleFont.family,
@@ -235,6 +235,58 @@ export class FontManagerService {
   }
 
 
+  public updateFontsState(font: UiFont, moveToList?: FontListsEnum) {
+    let fromList: UiFont[];
+    let toList: UiFont[];
+    let fromList$: BehaviorSubject<UiFont[]>;
+    let toList$: BehaviorSubject<UiFont[]>;
+
+    // determine which list from property in font
+    switch (font.properties.listId) {
+      case FontListsEnum.BLACKLISTED:
+        fromList = this.blacklistedFonts;
+        fromList$ = this._blacklistedFonts$;
+        toList = this.availableFonts;
+        toList$ = this._availableFonts$;
+        break;
+      case FontListsEnum.SELECTABLE:
+        fromList = this.selectableFonts;
+        fromList$ = this._selectableFonts$;
+        toList = this.availableFonts;
+        toList$ = this._availableFonts$;
+        break;
+      case FontListsEnum.AVAILABLE:
+        fromList = this.availableFonts;
+        fromList$ = this._availableFonts$;
+        // figure out which list to move the font to, all actions move font from 1 list to another
+        switch (moveToList) {
+          case FontListsEnum.BLACKLISTED:
+            toList = this.blacklistedFonts;
+            toList$ = this._blacklistedFonts$;
+            break;
+          case FontListsEnum.SELECTABLE:
+            toList = this.selectableFonts;
+            toList$ = this._selectableFonts$;
+            break;
+          case FontListsEnum.AVAILABLE:
+            throw new Error('Cannot move font, already in Available Fonts: ' + font.family);
+            break;
+          default: throw new Error('Invalid moveToList argument: ' + moveToList);
+        }
+        break;
+    }
+
+    // move the font and emit new data
+    const idx = fromList.findIndex(f => f.family === font.family);
+    fromList.splice(idx, 1);
+    fromList$.next(fromList);
+
+    toList.push(font);
+    toList$.next(toList);
+
+    console.log('***** FontManagerService updateFontsState: ' + font.family + ', font list: ' + font.properties.listId + ', moveToList: ' + moveToList);    
+  }
+
   public moveFontToAvailable(font: UiFont) {
     let type: Observable<UiFont[]>;
     switch (font.properties.listId) {
@@ -249,12 +301,12 @@ export class FontManagerService {
         break;
     }
     type
-    .pipe(take(1))
-    .subscribe((fontList) => {
-      const idx = fontList.indexOf(font);
-      fontList.splice(idx, 1);
-      console.log('***** FontManagerService removeFont: ' + font.family + ', enum: ' + font.properties.listId + " Index: " + idx);
+      .pipe(take(1))
+      .subscribe((fontList) => {
+        const idx = fontList.indexOf(font);
+        fontList.splice(idx, 1);
+        console.log('***** FontManagerService removeFont: ' + font.family + ', enum: ' + font.properties.listId + " Index: " + idx);
 
-  });
+      });
   }
 }

@@ -11,7 +11,7 @@ export class FontConfigurationComponent implements OnInit {
   constructor(private fontManagerService: FontManagerService) { }
 
   ngOnInit(): void {
-    this.fontManagerService.init();
+    // this.fontManagerService.init();
   }
 
 }

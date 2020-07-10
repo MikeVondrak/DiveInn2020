@@ -1,6 +1,8 @@
 ___________________________________
 TODO
 
+1. Create functionality for moving fonts from Available to Selectable or Blacklisted
+
 * REAMDE.md files - markdown (text) files describing key components/services
 
 FontManagerService
@@ -22,10 +24,8 @@ UI to show selected fonts, button to remove(?)
     separate table (Y) or 
   ! flag on font object - rather than a separate table just have another value on font
 
-Add List ID field to Font - enum SELECTABLE / BLACKLISTED / AVAILABLE
+Add List ID field to Font - enum SELECTABLE / BLACKLISTED / AVAILABLE - DONE
   - gets rid of blacklisted / selectable tables
-
-Pass list arrays instead of enum?
 
 Entire font family added to blacklist and selectable
 

@@ -28,6 +28,6 @@ export class ConfigurationPageComponent implements OnInit {
     
     console.log('%%%%% configuration page fontClick: ' + font.family);
     
-    this.fontManagerService.moveFontToAvailable(font);
+    this.fontManagerService.updateFontsState(font);
   }
 }
