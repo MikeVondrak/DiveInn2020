@@ -4,11 +4,16 @@
       <span>{{ font.family }}</span>
       <span>id: {{ font.properties.id }}</span>
       <span>category: {{ font.properties.category }}</span>
-      variants: 
-      <span class='col' *ngFor="let variant of font.properties.variants.entries()">
-        | {{ variant }}
-      </span>
-      <button class="remove-button" (click)="fontClick(font)">X</button>
+      <button *ngIf="!(font.properties.listId===fontListEnum.BLACKLISTED)"
+        class="remove-button" 
+        (click)="fontClick({fontObj: font, buttonId: 'left'})">
+          &lt;
+      </button>
+      <button *ngIf="!(font.properties.listId===fontListEnum.SELECTABLE)"
+        class="remove-button" 
+        (click)="fontClick({fontObj: font, buttonId: 'right'})">
+          &gt;
+      </button>
     </li>
   </ul>
 </div>

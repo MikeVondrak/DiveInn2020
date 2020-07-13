@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { FontManagerService } from '../../services/font-manager/font-manager.service';
 import { UiFont, FontListsEnum } from '../../models/ui-font.model';
 import { map } from 'rxjs/operators';
+import { FontClickedPayload } from '../../shared/components/font-list-display/font-list-display.component';
 
 
 @Component({
@@ -24,10 +25,10 @@ export class ConfigurationPageComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public fontClick(font: UiFont) {
+  public fontClick($event: FontClickedPayload) {
     
-    console.log('%%%%% configuration page fontClick: ' + font.family);
+    console.log('%%%%% configuration page fontClick: ' + $event.fontObj.uiText + ', button: ' + $event.buttonId);
     
-    this.fontManagerService.updateFontsState(font);
+    this.fontManagerService.updateFontsState($event);
   }
 }

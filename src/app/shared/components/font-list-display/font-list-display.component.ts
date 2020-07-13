@@ -6,6 +6,11 @@ import { take } from 'rxjs/operators';
 
 export type DisplayType = 'family-only' | 'variant-details';
 
+export interface FontClickedPayload {
+  fontObj: UiFont;
+  buttonId: string;
+}
+
 @Component({
   selector: 'app-font-list-display',
   templateUrl: './font-list-display.component.html',
@@ -13,29 +18,23 @@ export type DisplayType = 'family-only' | 'variant-details';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FontListDisplayComponent implements OnInit {
-
+  public fontListEnum = FontListsEnum;
+  
   @Input() displayType: DisplayType = 'variant-details';
   @Input() fontList$: Subject<UiFont[]>;
   @Input() listType: FontListsEnum;
-  @Output() fontClicked = new EventEmitter<UiFont>();
+  @Input() actionList: FontListsEnum;
+
+  @Output() fontClicked = new EventEmitter<FontClickedPayload>();
 
   constructor(private cdr: ChangeDetectorRef, private fontMgr: FontManagerService) { }
 
   ngOnInit(): void { }
 
-  public fontClick(font: UiFont) {
-    console.log('@@@@@  FontListDisplay click font: ' + font.uiText);
+  public fontClick($event: FontClickedPayload) {
+  
+    console.log('@@@@@  FontListDisplay click\n font: ' + $event.fontObj.uiText + ', button: ' + $event.buttonId);
 
-    this.fontClicked.emit(font);
-
-    // this.fontList$
-    //   .pipe(take(1))
-    //   .subscribe((fontList) => {
-    //     const idx = fontList.indexOf(font);
-    //     fontList.splice(idx, 1);
-    //     this.fontList$.next(fontList);
-
-    //     this.fontClicked.emit(font);
-    //   });
+    this.fontClicked.emit($event);
   }
 }

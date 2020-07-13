@@ -8,6 +8,7 @@ import { LoggerService } from '../logger/logger.service';
 import { UiFont, IUiFont, FontListsEnum } from '../../models/ui-font.model';
 import { FontVariants, FontWeight } from '../api/font/font.api.model';
 import { Observable, BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
+import { FontClickedPayload } from '../../shared/components/font-list-display/font-list-display.component';
 
 enum GoogleFontsDataStateEnum {
   UNLOADED,
@@ -95,15 +96,30 @@ export class FontManagerService {
    * Get the list of all Google Fonts and convert to UiFont[]
    */
   private getAllGoogleFonts(): Observable<UiFont[]> {
-    if (!this.allFonts$) {
+
+    // !!! REMOVE THIS !!! - test with small data set
+    let fontLimit = 10;
+    let fontCount = 0;
+
+    if (!this.allFonts$) {      
       return this.googleFontsApiService.getFonts$('popularity')
         .pipe(
           take(1),
           map(googleFonts => {
-            return googleFonts.map(googleFont => {
-              return this.mapGoogleFontToUiFont(googleFont);
-            });
-          })
+            return googleFonts
+              .map(googleFont => {              
+                return this.mapGoogleFontToUiFont(googleFont);
+              })
+
+              // !!! REMOVE THIS !!! - test with small data set
+              .filter(googleFont => {
+                console.log('^^^^^ getAllGoogleFonts count: ' + fontCount + ', limit: ' + fontLimit);
+                fontCount++;
+                return fontCount < fontLimit;
+              })
+            
+
+          }),
         );
     } else {
       return this.allFonts$;
@@ -235,11 +251,16 @@ export class FontManagerService {
   }
 
 
-  public updateFontsState(font: UiFont, moveToList?: FontListsEnum) {
+  //public updateFontsState(font: UiFont, btn: FontListsEnum) {
+  public updateFontsState(payload: FontClickedPayload) {
+    const font = payload.fontObj;
+    const moveToList = payload.buttonId;
+
     let fromList: UiFont[];
     let toList: UiFont[];
     let fromList$: BehaviorSubject<UiFont[]>;
     let toList$: BehaviorSubject<UiFont[]>;
+    let newList: FontListsEnum;
 
     // determine which list from property in font
     switch (font.properties.listId) {
@@ -248,25 +269,29 @@ export class FontManagerService {
         fromList$ = this._blacklistedFonts$;
         toList = this.availableFonts;
         toList$ = this._availableFonts$;
+        newList = FontListsEnum.AVAILABLE;
         break;
       case FontListsEnum.SELECTABLE:
         fromList = this.selectableFonts;
         fromList$ = this._selectableFonts$;
         toList = this.availableFonts;
         toList$ = this._availableFonts$;
+        newList = FontListsEnum.AVAILABLE;
         break;
       case FontListsEnum.AVAILABLE:
         fromList = this.availableFonts;
         fromList$ = this._availableFonts$;
         // figure out which list to move the font to, all actions move font from 1 list to another
         switch (moveToList) {
-          case FontListsEnum.BLACKLISTED:
+          case "left":
             toList = this.blacklistedFonts;
             toList$ = this._blacklistedFonts$;
+            newList = FontListsEnum.BLACKLISTED;
             break;
-          case FontListsEnum.SELECTABLE:
+          case "right":
             toList = this.selectableFonts;
             toList$ = this._selectableFonts$;
+            newList = FontListsEnum.SELECTABLE;
             break;
           case FontListsEnum.AVAILABLE:
             throw new Error('Cannot move font, already in Available Fonts: ' + font.family);
@@ -277,12 +302,14 @@ export class FontManagerService {
     }
 
     // move the font and emit new data
-    const idx = fromList.findIndex(f => f.family === font.family);
+        const idx = fromList.findIndex(f => f.family === font.family);
     fromList.splice(idx, 1);
     fromList$.next(fromList);
 
     toList.push(font);
     toList$.next(toList);
+
+    font.properties.listId = newList;
 
     console.log('***** FontManagerService updateFontsState: ' + font.family + ', font list: ' + font.properties.listId + ', moveToList: ' + moveToList);    
   }
