@@ -106,31 +106,6 @@ fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
   }
 });
 
-const fontGroupRoute = routes.api.font._root + '/:' + routes.api.font._urlParam.fontGroup;
-console.log('FONTS ROUTER: ' + fontGroupRoute);
-fontsRouter.get(fontGroupRoute, (req: Request, res: Response) => {
-  // const route = routes.api.font._root + routes.api.font._urlParam.fontGroup;
-  let fontGroupQuery = '';
-  // .../font/:font-group = .../font/selectable or .../font/blacklisted
-  let r = routes.api.font._urlParam.fontGroup;
-  // console.log('Express: ' + fontGroupRoute + ', params: ' +
-  //  JSON.stringify(req.params, null, 4) + '\nreq.params: ' + routes.api.font._urlParam.fontGroup);
-  // handle routes with url param
-  if (req.params && req.params[routes.api.font._urlParam.fontGroup]) {
-    const urlParam = routes.api.font._urlParam.fontGroup;
-    const fontGroup = req.params[urlParam];
-    switch (fontGroup) {
-      case FontGroupEnum.SELECTABLE: fontGroupQuery = sqlQueries.selectFontsSeletable; break;
-      case FontGroupEnum.BLACKLISTED: fontGroupQuery = sqlQueries.selectFontsBlacklisted; break;
-      default: {
-        console.log('Error: invalid value for parameter "' + urlParam + '": ' + fontGroup);
-        throw new Error('Error: invalid route: ' + fontGroup);
-      }
-    }
-    makePoolQuery<DbFont>(fontGroupRoute, fontGroupQuery, res);
-  }
-});
-
 const testDataRouter = express.Router();
 testDataRouter.get(routes.api.test, (req: Request, res: Response) => {
   console.log('testDataRouter');

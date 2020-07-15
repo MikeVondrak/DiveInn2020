@@ -13,6 +13,8 @@ export interface FontApi {
   href?: string | null;
   italic: boolean;
   weight: FontWeight;
+  selectable: boolean;
+  blacklisted: boolean;
   variants: FontVariants;
   category: FontCategory;
 }

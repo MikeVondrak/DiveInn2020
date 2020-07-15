@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 // shared from backend
 import { routes, FontGroupEnum } from '../../../../../server/app/routes';
 
-import { UiFont, IUiFont } from '../../../models/ui-font.model';
+import { UiFont, IUiFont, FontListsEnum } from '../../../models/ui-font.model';
 import { FontApi, FontWeight } from './font.api.model';
 import { map } from 'rxjs/operators';
 
@@ -26,29 +26,6 @@ export class FontApiService {
     return this.mapDbFontToUiFont(dbFonts);
   }
 
-  /**
-   * Return all Font family values from font table
-   */
-  public getFontSelectable$(): Observable<UiFont[]> {
-    const dbFonts: Observable<FontApi[]>
-      = this.http.get<FontApi[]>(
-          routes.api._root +
-          routes.api.font._root + '/' +
-          FontGroupEnum.SELECTABLE
-    );
-    return this.mapDbFontToUiFont(dbFonts);
-  }
-
-  public getFontBlacklisted$(): Observable<UiFont[]> {
-    const dbFonts: Observable<FontApi[]>
-      = this.http.get<FontApi[]>(
-          routes.api._root +
-          routes.api.font._root + '/' +
-          FontGroupEnum.BLACKLISTED
-    );
-    return this.mapDbFontToUiFont(dbFonts);
-  }
-
   public addFont(font: UiFont) {
     // TODO
   }
@@ -63,6 +40,7 @@ export class FontApiService {
     const uiFontArray: Observable<UiFont[]> = dbFonts.pipe(
       map((fontArray: FontApi[]) => {
         return fontArray.map((font: FontApi) => {
+          const listId = font.blacklisted ? FontListsEnum.BLACKLISTED : font.selectable ? FontListsEnum.SELECTABLE : FontListsEnum.AVAILABLE;
           const uiFont: IUiFont = {
             family: font.family,
             uiText: font.label,
@@ -71,6 +49,7 @@ export class FontApiService {
               id: font.id,
               variants: new Map<FontWeight, boolean>([[font.weight, font.italic]]),
               category: font.category,
+              listId: listId
             },
           };
           console.log('font.api mapDbToUi font: ');

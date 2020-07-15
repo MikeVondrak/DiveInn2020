@@ -126,28 +126,29 @@ export class FontManagerService {
     }
   }
 
+  /**
+   * Breaks the set of Google fonts into Selectable, Blacklisted, and Available font lists
+   * @param fontsData Set of Google fonts to check against our DB fonts
+   */
   private parseFontsData(fontsData: UiFont[]) {
-    console.log('##### parseFontsData()');
-
     combineLatest([
-      this.fontsApiService.getFontSelectable$().pipe(take(1)),
-      this.fontsApiService.getFontBlacklisted$().pipe(take(1)),
-      this.googleFontDataLoaded.pipe(filter(loaded => !!loaded), take(1)),
+      this.fontsApiService.getAllFonts$().pipe(take(1)),
+      this.googleFontDataLoaded.pipe(filter(loaded => !!loaded), take(1)), // fonts data loaded from Google API
     ]).pipe(
       take(1), // unsubscribe after getting result
-      every(([selectable, blacklisted,]) => {
+      every(([dbFonts, googleFontsLoaded]) => {
+        // iterate through each converted Google font to see if it exists in our DB fonts
         fontsData.forEach(uiFont => {
           this.parseFontCategory(uiFont);
-          // remove blacklisted fonts by family (all variants of font)
-          const isBlacklisted = blacklisted.find(blf => blf.family === uiFont.family);
-          // selectable font variant should exist in UiFont (from GoogleFont allFonts)
-          const isSelectable = selectable.find(sf => uiFont.contains(sf));
-          if (isBlacklisted) {
-            isBlacklisted.properties.listId = FontListsEnum.BLACKLISTED;
-            this.blacklistedFonts.push(isBlacklisted);
-          } else if (isSelectable) {
-            isSelectable.properties.listId = FontListsEnum.SELECTABLE;
-            this.selectableFonts.push(isSelectable);
+          // match fonts by family only
+          const dbFont = dbFonts.find(dbf => dbf.family === uiFont.family);
+          uiFont.properties.listId = dbFont?.properties?.listId;
+          if (uiFont.properties.listId === FontListsEnum.BLACKLISTED) {
+            uiFont.properties.id = dbFont.properties.id;
+            this.blacklistedFonts.push(uiFont);
+          } else if (uiFont.properties.listId === FontListsEnum.SELECTABLE) {
+            uiFont.properties.id = dbFont.properties.id;
+            this.selectableFonts.push(uiFont);
           } else {
             uiFont.properties.listId = FontListsEnum.AVAILABLE;
             this.availableFonts.push(uiFont);
@@ -162,7 +163,7 @@ export class FontManagerService {
   }
 
   /**
-   * Add the category of the provided font to a set to capture all category values
+   * Add the category of the provided font to a Set to capture all category values
    * @param uiFont font to parse for category value
    */
   private parseFontCategory(uiFont: UiFont) {
@@ -299,10 +300,11 @@ export class FontManagerService {
           default: throw new Error('Invalid moveToList argument: ' + moveToList);
         }
         break;
+      default: console.log('ERROR in updateFontsState - Invalid listId: ' + font?.properties?.listId);
     }
 
     // move the font and emit new data
-        const idx = fromList.findIndex(f => f.family === font.family);
+    const idx = fromList.findIndex(f => f.family === font.family);
     fromList.splice(idx, 1);
     fromList$.next(fromList);
 

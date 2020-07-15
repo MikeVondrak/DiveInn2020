@@ -13,7 +13,7 @@ export interface FontProperties {
   category?: string;
   variants?: FontVariants;
 
-  listId?: FontListsEnum;
+  listId?: FontListsEnum; // id of list that font exists in
 }
 
 export interface IUiFont {

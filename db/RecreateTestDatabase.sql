@@ -94,6 +94,8 @@ CREATE TABLE font (
     label               VARCHAR(50),
     href                VARCHAR(50),
     italic              BOOLEAN         NOT NULL,
+    selectable          BOOLEAN         NOT NULL,
+    blacklisted         BOOLEAN         NOT NULL,
     fk_font_weight_id   INT,
     FOREIGN KEY (fk_font_weight_id)
         REFERENCES font_weight(id)
@@ -103,48 +105,48 @@ CREATE TABLE font (
         REFERENCES font_category(id)
         ON DELETE SET NULL
 );
-INSERT INTO font (family, label, href, italic, fk_font_weight_id, fk_font_category_id)
+INSERT INTO font (family, label, href, italic, selectable, blacklisted, fk_font_weight_id, fk_font_category_id)
 VALUES
-    ('Roboto', null, null, false, 4, 2),
-    ('Roboto Mono', null, null, true, 7, 2),
-    ('Alfa Slab One', null, null, false, 4, 1),
-    ('Anton', null, null, false, 4, 1),
-    ('Bevan', null, null, false, 4, 1),
-    ('Patua One', null, null, false, 4, 1),
-    ('Piedra', null, null, false, 4, 1),
-    ('PT Sans', null, null, false, 4, 2),
-    ('PT Sans', 'PT Sans Bold', 'PT+Sans:wght@700', false, 7, 2),
-    ('PT Sans', 'PT Sans Italic', 'PT+Sans:ital@1', true, 4, 2),
-    ('PT BAD FONT Sans', null, null, false, 4, 2),
-    ('PT Sans', 'PT Sans Invalid Weight', 'PT+Sans:wght@200', false, 2, 2);
+    ('Roboto', null, null, false, true, false, 4, 2),
+    ('Roboto Mono', null, null, true, false, true, 7, 2),
+    ('Alfa Slab One', null, null, false, true, false, 4, 1),
+    ('Anton', null, null, false, true, false, 4, 1),
+    ('Bevan', null, null, false, true, false, 4, 1),
+    ('Patua One', null, null, false, true, false, 4, 1),
+    ('Piedra', null, null, false, true, false, 4, 1),
+    ('PT Sans', null, null, false, true, false, 4, 2),
+    -- ('PT Sans', 'PT Sans Bold', 'PT+Sans:wght@700', false, true, false, 7, 2),
+    -- ('PT Sans', 'PT Sans Italic', 'PT+Sans:ital@1', true, true, false, 4, 2),
+    ('NOT A FONT ERROR', null, null, false, true, false, 4, 2),
+    ('PT Sans', 'PT Sans Invalid Weight', 'PT+Sans:wght@200', false, true, false, 2, 2);
 
 
-DROP TABLE IF EXISTS selectable_font;
-CREATE TABLE selectable_font (
-    PRIMARY KEY (id),
-    id                  INT     NOT NULL AUTO_INCREMENT,
-    fk_font_id    INT     NOT NULL,
-    FOREIGN KEY (fk_font_id) 
-        REFERENCES font(id)
-        ON DELETE CASCADE
-);
-INSERT INTO selectable_font (fk_font_id)
-VALUES
-    (1), (3), (4), (6), (7), (8);
+-- DROP TABLE IF EXISTS selectable_font;
+-- CREATE TABLE selectable_font (
+--     PRIMARY KEY (id),
+--     id                  INT     NOT NULL AUTO_INCREMENT,
+--     fk_font_id    INT     NOT NULL,
+--     FOREIGN KEY (fk_font_id) 
+--         REFERENCES font(id)
+--         ON DELETE CASCADE
+-- );
+-- INSERT INTO selectable_font (fk_font_id)
+-- VALUES
+--     (1), (3), (4), (6), (7), (8);
 
 
-DROP TABLE IF EXISTS blacklisted_font;
-CREATE TABLE blacklisted_font (
-    PRIMARY KEY (id),
-    id                  INT     NOT NULL AUTO_INCREMENT,
-    fk_font_id    INT     NOT NULL,
-    FOREIGN KEY (fk_font_id) 
-        REFERENCES font(id)
-        ON DELETE CASCADE
-);
-INSERT INTO blacklisted_font (fk_font_id)
-VALUES
-    (2), (5);
+-- DROP TABLE IF EXISTS blacklisted_font;
+-- CREATE TABLE blacklisted_font (
+--     PRIMARY KEY (id),
+--     id                  INT     NOT NULL AUTO_INCREMENT,
+--     fk_font_id    INT     NOT NULL,
+--     FOREIGN KEY (fk_font_id) 
+--         REFERENCES font(id)
+--         ON DELETE CASCADE
+-- );
+-- INSERT INTO blacklisted_font (fk_font_id)
+-- VALUES
+--     (2), (5);
 
 # create font_set table that maps a font and font_type to a font_set row, 
 # multiple font_set rows with the same set_id comprise a "font set" that can be applied to the mock site

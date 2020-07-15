@@ -22,12 +22,22 @@ POST a new font to the db
 UI to show selected fonts, button to remove(?)
   - blacklist fonts so they don't show up in available fonts selection
     separate table (Y) or 
+
+Refactor
   ! flag on font object - rather than a separate table just have another value on font
+  1. DB script
+    remove selectable and blacklist tables
+    add properties to fonts table
+    update the initial data
+  2. Express
+    update the model with new properties
+    remove any unneeded code related to selectable/blacklisted
+  3. Angular
+    update the model
+    fix ALL the code
 
-Add List ID field to Font - enum SELECTABLE / BLACKLISTED / AVAILABLE - DONE
-  - gets rid of blacklisted / selectable tables
-
-Entire font family added to blacklist and selectable
+  font-usage (name?) table with specifics of font instance
+    size, weight, italic, letter-spacing, etc
 
 __________________________________
 Mike Tasks
@@ -54,6 +64,11 @@ Long Term
     google API
 
 ------
+
+Add List ID field to Font - enum SELECTABLE / BLACKLISTED / AVAILABLE - DONE
+  - gets rid of blacklisted / selectable tables
+
+Entire font family added to blacklist and selectable - DONE
 
 Dropdown / radio buttons of sort options
 

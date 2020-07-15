@@ -5,4 +5,6 @@ export interface DbFont {
   ui_text?: string | null;
   weight: number;
   italic: boolean;
+  selectable: boolean;
+  blacklisted: boolean;
 }
