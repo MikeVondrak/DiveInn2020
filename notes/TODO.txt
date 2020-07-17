@@ -23,21 +23,19 @@ UI to show selected fonts, button to remove(?)
   - blacklist fonts so they don't show up in available fonts selection
     separate table (Y) or 
 
-Refactor
-  ! flag on font object - rather than a separate table just have another value on font
-  1. DB script
-    remove selectable and blacklist tables
-    add properties to fonts table
-    update the initial data
-  2. Express
-    update the model with new properties
-    remove any unneeded code related to selectable/blacklisted
-  3. Angular
-    update the model
-    fix ALL the code
-
   font-usage (name?) table with specifics of font instance
     size, weight, italic, letter-spacing, etc
+
+-----
+List of fonts, paginated
+  some way to select how many fonts per page
+
+Buttons(?) for add to favorites or blacklist
+
+Style option checkmarks ?
+  italic ? bold ?
+
+  
 
 __________________________________
 Mike Tasks
@@ -63,7 +61,8 @@ Long Term
     db
     google API
 
-------
+______________________________________________________________________________________________________
+DONE
 
 Add List ID field to Font - enum SELECTABLE / BLACKLISTED / AVAILABLE - DONE
   - gets rid of blacklisted / selectable tables
@@ -72,18 +71,18 @@ Entire font family added to blacklist and selectable - DONE
 
 Dropdown / radio buttons of sort options
 
-List of fonts, paginated
-  some way to select how many fonts per page
-
-Buttons(?) for add to favorites or blacklist
-
-
-Style option checkmarks ?
-  italic ? bold ?
-
-
-______________________________________________________________________________________________________
-DONE
+Refactor - DONE
+  ! flag on font object - rather than a separate table just have another value on font
+  1. DB script
+    remove selectable and blacklist tables
+    add properties to fonts table
+    update the initial data
+  2. Express
+    update the model with new properties
+    remove any unneeded code related to selectable/blacklisted
+  3. Angular
+    update the model
+    fix ALL the code
 
 Cache X number of sort methods
   Popularity, trending - DONE
