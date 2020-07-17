@@ -28,6 +28,16 @@ export class FontApiService {
 
   public addFont(font: UiFont) {
     // TODO
+    console.log('ADD FONT: ' + font.family);
+
+    // Map UiFont to FontApi
+    // - UiFont listId -> sets flags selectable and blacklisted for FontApi
+
+  }
+
+  public removeFont(font: UiFont) {
+    // TODO
+    console.log('REMOVE FONT: ' + font.family);
   }
 
 

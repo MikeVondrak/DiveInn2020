@@ -10,6 +10,11 @@ import { FontVariants, FontWeight } from '../api/font/font.api.model';
 import { Observable, BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
 import { FontClickedPayload } from '../../shared/components/font-list-display/font-list-display.component';
 
+enum DatabaseAction {
+  ADD,
+  REMOVE
+}
+
 enum GoogleFontsDataStateEnum {
   UNLOADED,
   LOADING,
@@ -63,7 +68,7 @@ export class FontManagerService {
     // this.logger.enableLogger(true);
   }
 
-  public init() {
+  public init(): void {
     // clear data to avoid duplicates when run twice in debugging build
     this.validCategoryFonts = [];
     this.blacklistedFonts = [];
@@ -130,7 +135,7 @@ export class FontManagerService {
    * Breaks the set of Google fonts into Selectable, Blacklisted, and Available font lists
    * @param fontsData Set of Google fonts to check against our DB fonts
    */
-  private parseFontsData(fontsData: UiFont[]) {
+  private parseFontsData(fontsData: UiFont[]): void {
     combineLatest([
       this.fontsApiService.getAllFonts$().pipe(take(1)),
       this.googleFontDataLoaded.pipe(filter(loaded => !!loaded), take(1)), // fonts data loaded from Google API
@@ -221,7 +226,7 @@ export class FontManagerService {
   // private mapUiFontToGoogleFontUri(googleFont: GoogleFontsApi): GoogleFontsUri { }
   // private mapUiFontToDbFont(uiFont: UiFont): DbFont { }
 
-  private setGoogleFontsDataState(state: GoogleFontsDataStateEnum) {
+  private setGoogleFontsDataState(state: GoogleFontsDataStateEnum): void {
     switch (state) {
       case GoogleFontsDataStateEnum.UNLOADED:
         // BehaviorSubjects have initial value when created
@@ -253,7 +258,7 @@ export class FontManagerService {
 
 
   //public updateFontsState(font: UiFont, btn: FontListsEnum) {
-  public updateFontsState(payload: FontClickedPayload) {
+  public updateFontsState(payload: FontClickedPayload): void {
     const font = payload.fontObj;
     const moveToList = payload.buttonId;
 
@@ -262,8 +267,9 @@ export class FontManagerService {
     let fromList$: BehaviorSubject<UiFont[]>;
     let toList$: BehaviorSubject<UiFont[]>;
     let newList: FontListsEnum;
+    let dbAction: DatabaseAction;
 
-    // determine which list from property in font
+    // determine which list the font is from by listId property in font
     switch (font.properties.listId) {
       case FontListsEnum.BLACKLISTED:
         fromList = this.blacklistedFonts;
@@ -271,6 +277,7 @@ export class FontManagerService {
         toList = this.availableFonts;
         toList$ = this._availableFonts$;
         newList = FontListsEnum.AVAILABLE;
+        dbAction = DatabaseAction.REMOVE;
         break;
       case FontListsEnum.SELECTABLE:
         fromList = this.selectableFonts;
@@ -278,10 +285,12 @@ export class FontManagerService {
         toList = this.availableFonts;
         toList$ = this._availableFonts$;
         newList = FontListsEnum.AVAILABLE;
+        dbAction = DatabaseAction.REMOVE;
         break;
       case FontListsEnum.AVAILABLE:
         fromList = this.availableFonts;
         fromList$ = this._availableFonts$;
+        dbAction = DatabaseAction.ADD;
         // figure out which list to move the font to, all actions move font from 1 list to another
         switch (moveToList) {
           case "left":
@@ -311,31 +320,26 @@ export class FontManagerService {
     toList.push(font);
     toList$.next(toList);
 
+    // update which list the font exists in (UI side)
     font.properties.listId = newList;
 
+    // update db side
+    switch (dbAction) { 
+      case DatabaseAction.ADD:
+        this.fontsApiService.addFont(font);
+        break;
+      case DatabaseAction.REMOVE:
+        this.fontsApiService.removeFont(font);
+        break;
+      default:
+        throw new Error('Invalid database action: ' + dbAction);
+    }
+    
     console.log('***** FontManagerService updateFontsState: ' + font.family + ', font list: ' + font.properties.listId + ', moveToList: ' + moveToList);    
   }
 
-  public moveFontToAvailable(font: UiFont) {
-    let type: Observable<UiFont[]>;
-    switch (font.properties.listId) {
-      case FontListsEnum.BLACKLISTED:
-        type = this.blacklistedFonts$;
-        break;
-      case FontListsEnum.AVAILABLE:
-        type = this.availableFonts$;
-        break;
-      case FontListsEnum.SELECTABLE:
-        type = this.selectableFonts$;
-        break;
-    }
-    type
-      .pipe(take(1))
-      .subscribe((fontList) => {
-        const idx = fontList.indexOf(font);
-        fontList.splice(idx, 1);
-        console.log('***** FontManagerService removeFont: ' + font.family + ', enum: ' + font.properties.listId + " Index: " + idx);
+  public writeFontStateToDb(): void {
 
-      });
   }
+
 }

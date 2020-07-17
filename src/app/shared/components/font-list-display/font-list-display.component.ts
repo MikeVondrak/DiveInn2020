@@ -24,6 +24,7 @@ export class FontListDisplayComponent implements OnInit {
   @Input() fontList$: Subject<UiFont[]>;
   @Input() listType: FontListsEnum;
   @Input() actionList: FontListsEnum;
+  @Input() listName: string;
 
   @Output() fontClicked = new EventEmitter<FontClickedPayload>();
 
