@@ -9,6 +9,8 @@ export const routes = {
     _root: '/api',
     font: {
       _root: '/font',
+      add: '/add',
+      remove: '/remove',
       _queryParam: {
         family: '?fontdata=family'
       },

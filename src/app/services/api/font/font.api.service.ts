@@ -23,51 +23,96 @@ export class FontApiService {
       = this.http.get<FontApi[]>(
           routes.api._root + routes.api.font._root
     );
-    return this.mapDbFontToUiFont(dbFonts);
+    return this.mapDbFontsToUiFonts(dbFonts);
   }
 
-  public addFont(font: UiFont) {
+  public addFont(font: UiFont): Observable<UiFont[]> {
     // TODO
     console.log('ADD FONT: ' + font.family);
+    
+    const headers = { 'content-type': 'application/json' };
+    const body = this.mapUiFontToDbFont(font);
 
-    // Map UiFont to FontApi
-    // - UiFont listId -> sets flags selectable and blacklisted for FontApi
-
+    const postResponse = this.http.post<FontApi[]>(
+      routes.api._root + routes.api.font._root + routes.api.font.add, 
+      body,
+      { 'headers': headers }
+    );
+    
+    return this.mapDbFontsToUiFonts(postResponse);
   }
 
-  public removeFont(font: UiFont) {
-    // TODO
+  public removeFont(font: UiFont): Observable<UiFont[]> {
     console.log('REMOVE FONT: ' + font.family);
-  }
 
+    const headers = { 'content-type': 'application/json' };
+    const body = this.mapUiFontToDbFont(font);
+
+    const postResponse = this.http.post<FontApi[]>(
+      routes.api._root + routes.api.font._root + routes.api.font.remove,
+      body,
+      { 'headers': headers }
+    );
+
+    return this.mapDbFontsToUiFonts(postResponse);
+  }
 
   /**
    * Map db results to UiFont
    * @param dbFonts fonts from db table
    */
-  private mapDbFontToUiFont(dbFonts: Observable<FontApi[]>): Observable<UiFont[]> {
+  private mapDbFontsToUiFonts(dbFonts: Observable<FontApi[]>): Observable<UiFont[]> {
     console.log('font.api mapDbToUi');
     const uiFontArray: Observable<UiFont[]> = dbFonts.pipe(
       map((fontArray: FontApi[]) => {
         return fontArray.map((font: FontApi) => {
-          const listId = font.blacklisted ? FontListsEnum.BLACKLISTED : font.selectable ? FontListsEnum.SELECTABLE : FontListsEnum.AVAILABLE;
-          const uiFont: IUiFont = {
-            family: font.family,
-            uiText: font.label,
-            hrefId: font.href,
-            properties: {
-              id: font.id,
-              variants: new Map<FontWeight, boolean>([[font.weight, font.italic]]),
-              category: font.category,
-              listId: listId
-            },
-          };
-          console.log('font.api mapDbToUi font: ');
-          console.log(uiFont);
-          return new UiFont(uiFont);
+          return this.mapDbFontToUiFont(font);
         });
       })
     );
     return uiFontArray;
+  }
+
+  private mapDbFontToUiFont(font: FontApi): UiFont {
+    const listId = font.blacklisted ? FontListsEnum.BLACKLISTED : font.selectable ? FontListsEnum.SELECTABLE : FontListsEnum.AVAILABLE;
+    const uiFont: IUiFont = {
+      family: font.family,
+      uiText: font.label,
+      hrefId: font.href,
+      properties: {
+        id: font.id,
+        variants: new Map<FontWeight, boolean>([[font.weight, font.italic]]),
+        category: font.category,
+        listId: listId
+      },
+    };
+    console.log('font.api mapDbToUi font: ');
+    console.log(uiFont);
+    return new UiFont(uiFont);
+  }
+
+  private mapUiFontToDbFont(uiFont: UiFont): FontApi {
+    let isSelectable: boolean;
+    let isBlacklisted: boolean;
+    if (uiFont.properties.listId === "SELECTABLE") {
+      isSelectable = true;
+    } else if (uiFont.properties.listId === "BLACKLISTED") {
+      isBlacklisted = true;
+    }
+    let a: FontApi = {
+      family: uiFont.family,
+      id: uiFont.properties.id,
+      label: uiFont.uiText,
+      href: uiFont.hrefId, // refactor and remove? can construct from family
+      
+      variants: uiFont.properties.variants,
+      selectable: isSelectable,
+      blacklisted: isBlacklisted,
+      // TODO: refactor and remove these?
+      italic: false,
+      category: "text",
+      weight: "100",
+    }
+    return a;
   }
 }

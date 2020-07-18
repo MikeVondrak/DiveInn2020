@@ -168,6 +168,27 @@ export class FontManagerService {
   }
 
   /**
+   * Update the Selectable, Blacklisted, and Available font lists with data from POST response
+   */
+  private updateFontLists(fontsData: UiFont[]) {
+    fontsData.forEach(uiFont => {
+      if (uiFont.properties.listId === FontListsEnum.BLACKLISTED) {
+        this.blacklistedFonts.push(uiFont);
+      } else if (uiFont.properties.listId === FontListsEnum.SELECTABLE) {
+        this.selectableFonts.push(uiFont);
+      } else {
+        throw new Error('Should not have AVAILABLE fonts coming from DB');
+        this.availableFonts.push(uiFont);
+      }
+    });
+    this._selectableFonts$.next(this.selectableFonts);
+    this._blacklistedFonts$.next(this.blacklistedFonts);
+    
+    // TODO - update available list before POST?
+    //this._availableFonts$.next(this.availableFonts);
+  }
+
+  /**
    * Add the category of the provided font to a Set to capture all category values
    * @param uiFont font to parse for category value
    */
@@ -312,24 +333,29 @@ export class FontManagerService {
       default: console.log('ERROR in updateFontsState - Invalid listId: ' + font?.properties?.listId);
     }
 
-    // move the font and emit new data
-    const idx = fromList.findIndex(f => f.family === font.family);
-    fromList.splice(idx, 1);
-    fromList$.next(fromList);
-
-    toList.push(font);
-    toList$.next(toList);
-
-    // update which list the font exists in (UI side)
-    font.properties.listId = newList;
-
     // update db side
     switch (dbAction) { 
       case DatabaseAction.ADD:
-        this.fontsApiService.addFont(font);
+        this.fontsApiService.addFont(font).subscribe((allFontsList: UiFont[]) => {
+          console.log('FontManagerSerice ADD FONT RESPONSE');
+          debugger;
+          this.handleUpdatedFontData(font, newList, allFontsList);
+          
+          // if we're adding the font (to Selectable or Blacklisted), it will be removed from Available
+          const idx = this.availableFonts.findIndex(f => f.family === font.family);
+          this.availableFonts.splice(idx, 1);
+          this.availableFonts$.next(this.availableFonts);
+        });
         break;
       case DatabaseAction.REMOVE:
-        this.fontsApiService.removeFont(font);
+        this.fontsApiService.removeFont(font).subscribe((allFontsList: UiFont[]) => {
+          console.log('FontManagerSerice REMOVE FONT RESPONSE');
+          this.handleUpdatedFontData(font, newList, allFontsList);
+          
+          // if we're removing the font (from Selectable or Blacklisted), it will be added to Available
+          this.availableFonts.push(font);
+          this.availableFonts$.next(toList);
+        });
         break;
       default:
         throw new Error('Invalid database action: ' + dbAction);
@@ -338,8 +364,12 @@ export class FontManagerService {
     console.log('***** FontManagerService updateFontsState: ' + font.family + ', font list: ' + font.properties.listId + ', moveToList: ' + moveToList);    
   }
 
-  public writeFontStateToDb(): void {
-
+  private handleUpdatedFontData(font: UiFont, newList: FontListsEnum, allFontsList: UiFont[]) {
+    // update which list the font exists in (UI side)
+    font.properties.listId = newList;
+    
+    // move the font and emit new data
+    this.updateFontLists(allFontsList);
   }
 
 }

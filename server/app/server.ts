@@ -80,7 +80,7 @@ function makePoolQuery<returnType>(route: string, query: string, res: Response) 
 
 const fontsRouter = express.Router();
 fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
-  // console.log('Express: ' + routes.api.font._root);
+  console.log('----- fontsRouter GET: ' + routes.api.font._root);
   // handle routes where request has query parameters included
   if (req.query && Object.keys(req.query).length > 0) {
 
@@ -105,6 +105,24 @@ fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
     makePoolQuery<DbFont>(routes.api.font._root, sqlQueries.selectFontsTable, res);
   }
 });
+
+// handle adding new font
+fontsRouter.post(routes.api.font._root + routes.api.font.add, (req: Request, res: Response) => {
+  const newFont = req.body as DbFont;
+  
+  console.log('fontsRoutes ADD: ' + JSON.stringify(newFont, null, 4));
+  
+  res.send([]);
+});
+// handle removing font
+fontsRouter.post(routes.api.font._root + routes.api.font.remove, (req: Request, res: Response) => {
+  const removeFont = req.body as DbFont;
+
+  console.log('fontsRoutes REMOVE: ' + JSON.stringify(removeFont, null, 4));
+  
+  res.send([]);
+});
+
 
 const testDataRouter = express.Router();
 testDataRouter.get(routes.api.test, (req: Request, res: Response) => {
