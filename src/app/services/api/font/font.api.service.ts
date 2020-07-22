@@ -32,7 +32,7 @@ export class FontApiService {
     
     const headers = { 'content-type': 'application/json' };
     const body = this.mapUiFontToDbFont(font);
-
+    debugger;
     const postResponse = this.http.post<FontApi[]>(
       routes.api._root + routes.api.font._root + routes.api.font.add, 
       body,
@@ -46,7 +46,7 @@ export class FontApiService {
     console.log('REMOVE FONT: ' + font.family);
 
     const headers = { 'content-type': 'application/json' };
-    const body = this.mapUiFontToDbFont(font);
+    const body = { id: font.properties.id };
 
     const postResponse = this.http.post<FontApi[]>(
       routes.api._root + routes.api.font._root + routes.api.font.remove,
@@ -62,9 +62,10 @@ export class FontApiService {
    * @param dbFonts fonts from db table
    */
   private mapDbFontsToUiFonts(dbFonts: Observable<FontApi[]>): Observable<UiFont[]> {
-    console.log('font.api mapDbToUi');
+    console.log('font.api mapDbToUi');    
     const uiFontArray: Observable<UiFont[]> = dbFonts.pipe(
       map((fontArray: FontApi[]) => {
+        debugger;
         return fontArray.map((font: FontApi) => {
           return this.mapDbFontToUiFont(font);
         });
@@ -77,12 +78,12 @@ export class FontApiService {
     const listId = font.blacklisted ? FontListsEnum.BLACKLISTED : font.selectable ? FontListsEnum.SELECTABLE : FontListsEnum.AVAILABLE;
     const uiFont: IUiFont = {
       family: font.family,
-      uiText: font.label,
-      hrefId: font.href,
+      uiText: '',//font.label,
+      hrefId: '',//font.href,
       properties: {
         id: font.id,
-        variants: new Map<FontWeight, boolean>([[font.weight, font.italic]]),
-        category: font.category,
+        //variants: new Map<FontWeight, boolean>([[font.weight, font.italic]]),
+        //category: font.category,
         listId: listId
       },
     };
@@ -92,27 +93,27 @@ export class FontApiService {
   }
 
   private mapUiFontToDbFont(uiFont: UiFont): FontApi {
-    let isSelectable: boolean;
-    let isBlacklisted: boolean;
+    let isSelectable: boolean = false;
+    let isBlacklisted: boolean = false;
     if (uiFont.properties.listId === "SELECTABLE") {
       isSelectable = true;
     } else if (uiFont.properties.listId === "BLACKLISTED") {
       isBlacklisted = true;
     }
-    let a: FontApi = {
+    let fontApi: FontApi = {
       family: uiFont.family,
-      id: uiFont.properties.id,
-      label: uiFont.uiText,
-      href: uiFont.hrefId, // refactor and remove? can construct from family
+      //id: uiFont.properties.id,
+      //label: uiFont.uiText,
+      //href: uiFont.hrefId, // refactor and remove? can construct from family
       
-      variants: uiFont.properties.variants,
+      //variants: uiFont.properties.variants,
       selectable: isSelectable,
       blacklisted: isBlacklisted,
       // TODO: refactor and remove these?
-      italic: false,
-      category: "text",
-      weight: "100",
+      //italic: false,
+      //category: "text",
+      //weight: "100",
     }
-    return a;
+    return fontApi;
   }
 }

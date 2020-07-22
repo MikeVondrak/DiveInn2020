@@ -168,27 +168,6 @@ export class FontManagerService {
   }
 
   /**
-   * Update the Selectable, Blacklisted, and Available font lists with data from POST response
-   */
-  private updateFontLists(fontsData: UiFont[]) {
-    fontsData.forEach(uiFont => {
-      if (uiFont.properties.listId === FontListsEnum.BLACKLISTED) {
-        this.blacklistedFonts.push(uiFont);
-      } else if (uiFont.properties.listId === FontListsEnum.SELECTABLE) {
-        this.selectableFonts.push(uiFont);
-      } else {
-        throw new Error('Should not have AVAILABLE fonts coming from DB');
-        this.availableFonts.push(uiFont);
-      }
-    });
-    this._selectableFonts$.next(this.selectableFonts);
-    this._blacklistedFonts$.next(this.blacklistedFonts);
-    
-    // TODO - update available list before POST?
-    //this._availableFonts$.next(this.availableFonts);
-  }
-
-  /**
    * Add the category of the provided font to a Set to capture all category values
    * @param uiFont font to parse for category value
    */
@@ -336,9 +315,11 @@ export class FontManagerService {
     // update db side
     switch (dbAction) { 
       case DatabaseAction.ADD:
+
+        font.properties.listId = newList;
+
         this.fontsApiService.addFont(font).subscribe((allFontsList: UiFont[]) => {
           console.log('FontManagerSerice ADD FONT RESPONSE');
-          debugger;
           this.handleUpdatedFontData(font, newList, allFontsList);
           
           // if we're adding the font (to Selectable or Blacklisted), it will be removed from Available
@@ -365,11 +346,40 @@ export class FontManagerService {
   }
 
   private handleUpdatedFontData(font: UiFont, newList: FontListsEnum, allFontsList: UiFont[]) {
+    debugger;
     // update which list the font exists in (UI side)
     font.properties.listId = newList;
     
     // move the font and emit new data
-    this.updateFontLists(allFontsList);
+    this.clearFontLists();
+    this.populateFontLists(allFontsList);
   }
 
+  private clearFontLists() {
+    this.blacklistedFonts = [];
+    this.selectableFonts = [];
+  }
+  
+  /**
+   * Update the Selectable, Blacklisted, and Available font lists with data from POST response
+   */
+  private populateFontLists(fontsData: UiFont[]) {
+    
+    fontsData.forEach(uiFont => {
+      if (uiFont.properties.listId === FontListsEnum.BLACKLISTED) {
+        this.blacklistedFonts.push(uiFont);
+      } else if (uiFont.properties.listId === FontListsEnum.SELECTABLE) {
+        this.selectableFonts.push(uiFont);
+      } else {
+        throw new Error('Should not have AVAILABLE fonts coming from DB');
+        this.availableFonts.push(uiFont);
+      }
+    });
+    this._selectableFonts$.next(this.selectableFonts);
+    this._blacklistedFonts$.next(this.blacklistedFonts);
+    
+    // TODO - update available list before POST?
+    //this._availableFonts$.next(this.availableFonts);
+  }
+  
 }

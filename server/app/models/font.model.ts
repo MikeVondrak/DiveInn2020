@@ -1,10 +1,15 @@
 export interface DbFont {
-  font_id: number;
-  font_family: string;
-  href_id?: string | null;
-  ui_text?: string | null;
-  weight: number;
-  italic: boolean;
+  id: number;
+  family: string;
   selectable: boolean;
   blacklisted: boolean;
+}
+
+export interface DbFontInstance {
+  font: DbFont;
+  href?: string | null;
+  ui_label?: string | null;
+  weight: string; // TODO: enum of font weight values on server side?
+  italic: boolean;
+  category: string; // TODO: enum?
 }

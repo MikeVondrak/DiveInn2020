@@ -6,15 +6,30 @@ export type FontCategory = 'header' | 'text' | 'nav' | 'title';
 export type FontVariants = Map<FontWeight, boolean>;
 
 // match what the backend is returning for the fonts API
+// export interface FontApi {
+//   id: number;
+//   family: string;
+//   label?: string | null;
+//   href?: string | null;
+//   italic: boolean;
+//   weight: FontWeight;
+//   selectable: boolean;
+//   blacklisted: boolean;
+//   variants: FontVariants;
+//   category: FontCategory;
+// }
+
 export interface FontApi {
-  id: number;
+  id?: number;
   family: string;
-  label?: string | null;
-  href?: string | null;
-  italic: boolean;
-  weight: FontWeight;
   selectable: boolean;
   blacklisted: boolean;
-  variants: FontVariants;
-  category: FontCategory;
+}
+export interface FontApiInstance {
+  font: FontApi;
+  href?: string | null;
+  ui_label?: string | null;
+  weight: string; // TODO: enum of font weight values on server side?
+  italic: boolean;
+  category: string; // TODO: enum?
 }

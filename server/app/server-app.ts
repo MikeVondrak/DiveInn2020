@@ -108,7 +108,7 @@ export class ServerApp {
    * @returns Observable of array of provided type, containing query results
    */
   // public poolQuery<T>(sqlQuery: string, callback: queryCallback): void {
-  public poolQuery<T>(sqlQuery: string): Observable<T[]> {
+  public poolQuery<T>(sqlQuery: string, values?: any): Observable<T[]> {
 
     const queryResult$ = (observer: Observer<T[]>) => {
 
@@ -124,7 +124,11 @@ export class ServerApp {
         observer.complete();
       };
 
-      this.pool.query(queryOptions, responseCallback);
+      if (values) {
+        this.pool.query(queryOptions, values, responseCallback);
+      } else {
+        this.pool.query(queryOptions, responseCallback);
+      }
     };
 
     return new Observable<T[]>(queryResult$);

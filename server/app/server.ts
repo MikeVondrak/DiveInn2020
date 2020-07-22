@@ -64,9 +64,9 @@ const default200Response: RequestHandler = (req: Request, res: Response) => {
  * @param query SQL query to make
  * @param res Response object from Express Router
  */
-function makePoolQuery<returnType>(route: string, query: string, res: Response) {
-  // console.log('**** makePoolQuery: route= ' + route + ', query= ' + query);
-  serverApp.poolQuery<returnType>(query)
+function makePoolQuery<returnType>(route: string, query: string, res: Response, values?: any) {
+   console.log('**** makePoolQuery: route= ' + route + ', query= ' + query + ', data= ' + JSON.stringify(values,null,4) || 'none');
+  serverApp.poolQuery<returnType>(query, values)
     .pipe(take(1))
     .subscribe(
       (results: returnType[]) => {
@@ -107,20 +107,30 @@ fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
 });
 
 // handle adding new font
-fontsRouter.post(routes.api.font._root + routes.api.font.add, (req: Request, res: Response) => {
+const addFontRoute = routes.api.font._root + routes.api.font.add;
+fontsRouter.post(addFontRoute, (req: Request, res: Response) => {
   const newFont = req.body as DbFont;
   
-  console.log('fontsRoutes ADD: ' + JSON.stringify(newFont, null, 4));
+  console.log('fontsRouter ADD: ' + JSON.stringify(newFont, null, 4));
+
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // TODO need to return the new font list array instead of poolQuery result (add functionality to makePoolQuery?)
   
-  res.send([]);
+  makePoolQuery<DbFont>(addFontRoute, sqlQueries.insertFont, res, newFont);
+  
+  //res.send([]);
 });
 // handle removing font
-fontsRouter.post(routes.api.font._root + routes.api.font.remove, (req: Request, res: Response) => {
-  const removeFont = req.body as DbFont;
+const removeFontRoute = routes.api.font._root + routes.api.font.remove;
+fontsRouter.post(removeFontRoute, (req: Request, res: Response) => {
+  const removeFontId = req.body.id;
 
-  console.log('fontsRoutes REMOVE: ' + JSON.stringify(removeFont, null, 4));
+  console.log('fontsRouter REMOVE: ' + removeFontId);
   
-  res.send([]);
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // TODO need to return the new font list array instead of poolQuery result (add functionality to makePoolQuery?)
+
+  makePoolQuery<DbFont>(removeFontRoute, sqlQueries.removeFont, res, removeFontId);
 });
 
 
