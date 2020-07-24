@@ -1,6 +1,6 @@
 import { Component, OnInit, Renderer2, ElementRef, forwardRef, Input, EventEmitter, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
-import { GoogleFont } from '../../../models/googleFonts.model';
+import { UiFont } from '../../../models/ui-font.model';
 
 @Component({
   selector: 'checkbox',
@@ -10,8 +10,9 @@ import { GoogleFont } from '../../../models/googleFonts.model';
 })
 export class CheckboxComponent implements OnInit {
 
-  @Output() checkedValueChanged = new EventEmitter<boolean>();
+  @Input() uiLabel: string = '';
 
+  @Output() checkedValueChange = new EventEmitter<boolean>();
   @Input() get checkedValue() {
     console.log('checkbox getter: ' + this._checkedValue);
     return this._checkedValue;
@@ -21,7 +22,7 @@ export class CheckboxComponent implements OnInit {
     this._checkedValue = newVal;
 
     // emit our checkValueChanged event to outside listeners
-    this.checkedValueChanged.emit(this._checkedValue);
+    this.checkedValueChange.emit(this._checkedValue);
     this.cdr.detectChanges();
   }
 

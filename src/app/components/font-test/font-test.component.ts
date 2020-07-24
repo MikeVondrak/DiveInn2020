@@ -1,43 +1,111 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleFont, fonts, headerFonts, textFonts } from '../../models/googleFonts.model';
-import { FormsModule } from '@angular/forms'
+import {
+  UiFont,
+} from '../../models/ui-font.model';
+import { FormsModule } from '@angular/forms';
 import { CheckboxComponent } from '../shared/checkbox/checkbox.component';
+import { FontApiService } from '../../services/api/font/font.api.service';
+import { GoogleFontsApiService } from '../../services/external/google/google-fonts-api.service';
+import { Observable } from 'rxjs';
+import { GoogleFontsApiSort, GoogleFontsApi } from '../../services/external/google/google-fonts-api.model';
+import { take, map, filter } from 'rxjs/operators';
+import { FontManagerService } from '../../services/font-manager/font-manager.service';
 
 enum ControlsEnum {
   'header',
-  'text'
+  'text',
 }
 
 @Component({
   selector: 'app-font-test',
   templateUrl: './font-test.component.html',
-  styleUrls: ['./font-test.component.scss']
+  styleUrls: ['./font-test.component.scss'],
 })
 export class FontTestComponent implements OnInit {
+
   // fonts available in dropdowns
-  public readonly fontOptions: GoogleFont[] = Object.assign([], fonts);
+  //public readonly fontOptions: UiFont[] = Object.assign([], fonts);
+
   // make enum values available in template
   public readonly controlsEnum = ControlsEnum;
   // ngStyles
   public headerStyle: object = {};
   public textStyle: object = {}; // { 'font-family': 'PT Sans' };
   // ngModels
-  public headerFont: GoogleFont = headerFonts[0];//this.fontOptions[0];
-  public textFont: GoogleFont = this.fontOptions.find(font => font.uiText === 'PT Sans Bold');
+  //public headerFont: UiFont = headerFonts[0];
+  //public textFont: UiFont = this.fontOptions.find(
+  //  (font) => font.uiText === 'PT Sans Bold'
+  //);
   // controls for adding new fonts
   public fontNameToAdd: string;
   public fontHrefToAdd: string;
 
-  public hFonts = headerFonts;
-  public tFonts = textFonts;
+  //public hFonts = headerFonts;
+  //public tFonts = textFonts;
+
+  public fontList$: Observable<UiFont[]>;
+  public googleFontList: GoogleFontsApi[];
+
+  public fontsSelectable: UiFont[];
+  public fontsBlacklisted: UiFont[];
 
   // public boldCheckbox : boolean;
 
-  constructor() { }
+  public selectableFonts$: Observable<UiFont[]> = this.fontManagerService.selectableFonts$;
+  public blacklistedFonts$: Observable<UiFont[]> = this.fontManagerService.blacklistedFonts$;
+  public availableFonts$: Observable<UiFont[]> = this.fontManagerService.availableFonts$;
+  public top100Fonts$: Observable<UiFont[]> = this.availableFonts$.pipe(map(f => f.slice(0, 100)));
+
+  constructor(
+    private fontService: FontApiService,
+    private fontsApiService: GoogleFontsApiService,
+    public fontManagerService: FontManagerService,
+  ) { }
 
   ngOnInit(): void {
+    //debugger;
+    //this.top100Fonts$ = this.availableFonts$.pipe(map(f => f.slice(0, 100)));
     this.onModelChange(ControlsEnum.header);
     this.onModelChange(ControlsEnum.text);
+
+    this.fontList$ = this.fontService.getAllFonts$();
+
+    //console.time('font-test getFonts$');
+    this.fontsApiService.getFonts$('popularity')
+      .pipe(take(1))
+      .subscribe(f => {
+        this.googleFontList = f;
+        // for (let i = 0; i < 1; i++) {
+        //   console.log(JSON.stringify(this.googleFontList[i], null, 4));
+        //   console.timeEnd('font-test getFonts$');
+        // }
+      });
+
+    // this.fontsApiService.getFonts$('trending')
+    //   .pipe(take(1))
+    //   .subscribe(fonts => {
+    //     this.googleFontList = fonts;
+    //     for (let i=0; i<1; i++) {
+    //       console.log(JSON.stringify(this.googleFontList[i], null, 4));
+    //     }
+    //   });
+
+    // this.fontsApiService.getFonts$('trending')
+    //   .pipe(take(1))
+    //   .subscribe(fonts => {
+    //     this.googleFontList = fonts;
+    //     for (let i=0; i<1; i++) {
+    //       console.log(JSON.stringify(this.googleFontList[i], null, 4));
+    //     }
+    //   });
+    // this.fontsApiService.getFonts$('popularity')
+    //   .pipe(take(1))
+    //   .subscribe(fonts => {
+    //     this.googleFontList = fonts;
+    //     for (let i=0; i<1; i++) {
+    //       console.log(JSON.stringify(this.googleFontList[i], null, 4));
+    //     }
+    //   });
   }
 
   /**
@@ -46,14 +114,24 @@ export class FontTestComponent implements OnInit {
    * @param controlId Enum value to distinguish initiating control
    * @param $newVal New font selected
    */
-  public onModelChange(controlId: ControlsEnum, $newVal?: GoogleFont) {
-    switch (controlId) {
-      case ControlsEnum.header:
-        this.headerStyle = { 'font-family': this.headerFont.family };
-        break;
-      case ControlsEnum.text:
-        this.textStyle = { 'font-family': this.textFont.family };
-        break;
+  public onModelChange(controlId: ControlsEnum, $newVal?: UiFont) {
+    if ($newVal) {
+      switch (controlId) {
+        case ControlsEnum.header:
+          //this.headerStyle = { 'font-family': this.headerFont.family };
+          this.headerStyle = this.buildStyleObject(
+            this.headerStyle,
+            $newVal.family
+          );
+          break;
+        case ControlsEnum.text:
+          //this.textStyle = { 'font-family': this.textFont.family };
+          this.textStyle = this.buildStyleObject(
+            this.textStyle,
+            $newVal.family
+          );
+          break;
+      }
     }
   }
 
@@ -61,17 +139,54 @@ export class FontTestComponent implements OnInit {
    * Standard dropdown change event, fires after ngModelChange
    * @param $event DOM event
    */
-  public onChange($event: Event) {
-    console.log('font-test - customCheckboxChanged DOM event: ' + $event);
+  // public onChange($event: Event) {
+  //   console.log('font-test - customCheckboxChanged DOM event: ' + $event);
+  // }
+
+  // public customCheckboxChanged(newVal: boolean) {
+  //   console.log('customCheckboxChanged: ' + newVal);
+  //   this.textFont.properties.bold = newVal;
+  // [(ngModel)]="textFont.properties.bold"
+  // (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
+  // [checked]="textFont.properties.weight === 700"
+  //}
+
+  private _checkedValue: boolean = false;
+
+  get checkedValue() {
+    return this._checkedValue;
   }
 
-  public customCheckboxChanged(newVal: boolean) {
-    console.log('customCheckboxChanged: ' + newVal);
-    this.textFont.properties.bold = newVal;
+  set checkedValue(newVal) {
+    setTimeout(() => {
+      this._checkedValue = newVal;
+      // newVal
+      //   ? (this.textFont.properties.weight = 700)
+      //   : (this.textFont.properties.weight = 400);
+      // this.textFont.properties.bold = newVal;
 
-    // [(ngModel)]="textFont.properties.bold"
-    // (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
-    // [checked]="textFont.properties.weight === 700"
-
+      this.textStyle = this.buildStyleObject(
+        this.textStyle,
+        undefined,
+        this._checkedValue ? '700' : '400'
+      );
+    });
   }
+
+  /**
+   * Create a style object to pass into ngStyle binding
+   * @TODO refactor to pass in any number and type of properties for styles
+   */
+  private buildStyleObject(
+    styleObject: object,
+    fontFamily?: string,
+    fontWeight?: string
+  ): object {
+    const newStyle = {
+      'font-family': fontFamily ? fontFamily : styleObject['font-family'],
+      'font-weight': fontWeight ? fontWeight : styleObject['font-weight'],
+    };
+    return newStyle;
+  }
+
 }

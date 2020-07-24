@@ -18,3 +18,9 @@ Google Web Fonts Heroku App (has .woff etc)
 Google Fonts
   https://fonts.google.com/
 
+
+_____
+Ideas
+
+Use Google Fonts api to get list and add fonts
+  https://developers.google.com/fonts/docs/developer_api

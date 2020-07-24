@@ -1,11 +1,11 @@
-@import '../scss/common-imports';
+@import '~src/scss/common-imports';
 
 :host {
   display: block; // set custom element display since default for unknown elements is 'inline' in most browsers
 
-  margin: 2rem;
-  padding: 2rem;
-  border: 1px solid $dive-red;
+  // margin: 2rem;
+  // padding: 2rem;
+  // border: 1px solid $dive-red;
 
   .gray-lt {
     color: $dive-gray-lt;
@@ -16,4 +16,13 @@
   .gray-dk {
     color: $dive-gray-dk;
   }
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.footer {
+  margin-top: auto;
 }

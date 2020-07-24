@@ -6,18 +6,7 @@
   (change)="onChange($event)"
   (ngModelChange)="onNgModelChange($event)"
 />
-<label for="textBold"><span>Bold</span></label>
-
-<p>checkedValue:<br>{{checkedValue}}</p>
-
-<!-- <input type="checkbox" id="checkbox" name="isChecked"
-      [(ngModel)]="checkBox.checked"
-      (ngModelChange)="$event ? checkBox.value = 'on' : checkBox.value = 'off'"
->
-<label><span>{{ checkBox.value }}</span></label> -->
-
-<!-- <div class="checkbox-container">
-  <input type="checkbox" id="{{ controlID }}"
-        [checked]="checked" (change)="onChange($event)" />
-  <label for="{{ controlID }}"></label>
-</div> -->
+<label for="textBold">
+  <span>{{uiLabel}}</span>
+</label>
+<!-- <p>checkedValue:<br>{{checkedValue}}</p> -->

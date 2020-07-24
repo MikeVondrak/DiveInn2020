@@ -1,7 +1,7 @@
 import { Injectable, Renderer2, Inject, RendererFactory2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
-import { fonts } from '../../models/googleFonts.model';
+import { fonts } from './head-uri-loader.model';
 
 @Injectable({
   providedIn: 'root'
