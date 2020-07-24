@@ -26,35 +26,35 @@ export class FontApiService {
     return this.mapDbFontsToUiFonts(dbFonts);
   }
 
-  public addFont(font: UiFont): Observable<UiFont[]> {
+  public addFont(font: UiFont): Observable<object> {
     // TODO
     console.log('ADD FONT: ' + font.family);
     
     const headers = { 'content-type': 'application/json' };
     const body = this.mapUiFontToDbFont(font);
-    debugger;
-    const postResponse = this.http.post<FontApi[]>(
+
+    const postResponse = this.http.post(
       routes.api._root + routes.api.font._root + routes.api.font.add, 
       body,
       { 'headers': headers }
     );
     
-    return this.mapDbFontsToUiFonts(postResponse);
+    return postResponse;
   }
 
-  public removeFont(font: UiFont): Observable<UiFont[]> {
+  public removeFont(font: UiFont): Observable<object> {
     console.log('REMOVE FONT: ' + font.family);
 
     const headers = { 'content-type': 'application/json' };
     const body = { id: font.properties.id };
 
-    const postResponse = this.http.post<FontApi[]>(
+    const postResponse = this.http.post(
       routes.api._root + routes.api.font._root + routes.api.font.remove,
       body,
       { 'headers': headers }
     );
 
-    return this.mapDbFontsToUiFonts(postResponse);
+    return postResponse;
   }
 
   /**
@@ -65,7 +65,6 @@ export class FontApiService {
     console.log('font.api mapDbToUi');    
     const uiFontArray: Observable<UiFont[]> = dbFonts.pipe(
       map((fontArray: FontApi[]) => {
-        debugger;
         return fontArray.map((font: FontApi) => {
           return this.mapDbFontToUiFont(font);
         });

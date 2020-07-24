@@ -98,13 +98,13 @@ INSERT INTO font (family, selectable, blacklisted)
 VALUES
     ('Roboto', true, false),
     ('Roboto Condensed', false, true),
-    ('Alfa Slab One', true, false),
     ('Montserrat', true, false),
     ('Lato', true, false),
-    ('Poppins', false, true),
     ('Oswald', false, true),
-    ('PT Sans', true, false),
-    ('NOT A FONT ERROR', true, false);
+    ('Raleway', true, false),
+    ('Source Sans Pro', false, true),
+    ('Noto Sans JP', false, true),
+    ('Open Sans', false, true);
 
 -- Create font properties? table - properties for a specific usage of a font
 -- TODO: finish this

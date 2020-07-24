@@ -3,7 +3,7 @@ import { GoogleFontsApiService } from '../external/google/google-fonts-api.servi
 import { GoogleFontsApi } from '../external/google/google-fonts-api.model';
 import { FontApiService } from '../api/font/font.api.service';
 import { HeadUriLoaderService } from '../head-uri-loader/head-uri-loader.service';
-import { take, map, tap, filter, reduce, every } from 'rxjs/operators';
+import { take, map, tap, filter, reduce, every, switchMap, catchError } from 'rxjs/operators';
 import { LoggerService } from '../logger/logger.service';
 import { UiFont, IUiFont, FontListsEnum } from '../../models/ui-font.model';
 import { FontVariants, FontWeight } from '../api/font/font.api.model';
@@ -120,7 +120,7 @@ export class FontManagerService {
               .filter(googleFont => {
                 console.log('^^^^^ getAllGoogleFonts count: ' + fontCount + ', limit: ' + fontLimit);
                 fontCount++;
-                return fontCount < fontLimit;
+                return fontCount <= fontLimit;
               })
             
 
@@ -312,32 +312,67 @@ export class FontManagerService {
       default: console.log('ERROR in updateFontsState - Invalid listId: ' + font?.properties?.listId);
     }
 
+    // update which list the font exists in (UI side)
+    // - because Available font list is not updated from server data we need to set the new listId for fonts being moved into the Available list
+    const oldListId = font.properties.listId;
+    font.properties.listId = newList;
+    
     // update db side
     switch (dbAction) { 
       case DatabaseAction.ADD:
 
-        font.properties.listId = newList;
+        this.fontsApiService.addFont(font).pipe(
+          switchMap(addFontSuccessful => {
+            console.log('FontManagerSerice ADD FONT RESPONSE');
+            // if we're adding the font (to Selectable or Blacklisted), it will be removed from Available
+            const idx = this.availableFonts.findIndex(f => f.family === font.family);
+            // manually remove font from the Available list since it's not updated from server data
+            this.availableFonts.splice(idx, 1);
+            
+            // return updated font list from DB
+            return this.fontsApiService.getAllFonts$().pipe(
+              catchError(err => {
+                debugger;
+                // TODO: how to actually handle errors
+                font.properties.listId = oldListId;
+                return of(null);
+              })
+            );
+          }),
+          catchError(err => {
+            debugger;
+            font.properties.listId = oldListId;
+            return of(null);
+          })
+        ).subscribe((newFontList: UiFont[]) => {
+          this.handleUpdatedFontData(newFontList);
+        });
+        break;
+      
 
-        this.fontsApiService.addFont(font).subscribe((allFontsList: UiFont[]) => {
-          console.log('FontManagerSerice ADD FONT RESPONSE');
-          this.handleUpdatedFontData(font, newList, allFontsList);
-          
-          // if we're adding the font (to Selectable or Blacklisted), it will be removed from Available
-          const idx = this.availableFonts.findIndex(f => f.family === font.family);
-          this.availableFonts.splice(idx, 1);
-          this.availableFonts$.next(this.availableFonts);
-        });
-        break;
       case DatabaseAction.REMOVE:
-        this.fontsApiService.removeFont(font).subscribe((allFontsList: UiFont[]) => {
-          console.log('FontManagerSerice REMOVE FONT RESPONSE');
-          this.handleUpdatedFontData(font, newList, allFontsList);
-          
-          // if we're removing the font (from Selectable or Blacklisted), it will be added to Available
-          this.availableFonts.push(font);
-          this.availableFonts$.next(toList);
+
+        this.fontsApiService.removeFont(font).pipe(
+          switchMap(removeFontSuccessful => {
+            console.log('FontManagerSerice REMOVE FONT RESPONSE');
+
+            // reset ID of font when removing
+            font.properties.id = -1;
+            // if we're removing the font (from Selectable or Blacklisted), it will be added to Available
+            this.availableFonts.push(font);
+
+            // return updated font list from DB
+            return this.fontsApiService.getAllFonts$();
+          }),
+          catchError(err => {
+            debugger;
+            return of(null);
+          })
+        ).subscribe( (newFontList: UiFont[]) => {
+          this.handleUpdatedFontData(newFontList);
         });
         break;
+
       default:
         throw new Error('Invalid database action: ' + dbAction);
     }
@@ -345,19 +380,18 @@ export class FontManagerService {
     console.log('***** FontManagerService updateFontsState: ' + font.family + ', font list: ' + font.properties.listId + ', moveToList: ' + moveToList);    
   }
 
-  private handleUpdatedFontData(font: UiFont, newList: FontListsEnum, allFontsList: UiFont[]) {
-    debugger;
-    // update which list the font exists in (UI side)
-    font.properties.listId = newList;
-    
+  private handleUpdatedFontData(newFontsList: UiFont[]) {
     // move the font and emit new data
     this.clearFontLists();
-    this.populateFontLists(allFontsList);
+    this.populateFontLists(newFontsList);
   }
 
   private clearFontLists() {
     this.blacklistedFonts = [];
     this.selectableFonts = [];
+    this._selectableFonts$.next(this.selectableFonts);
+    this._blacklistedFonts$.next(this.blacklistedFonts);
+    this._availableFonts$.next(this.availableFonts);
   }
   
   /**
