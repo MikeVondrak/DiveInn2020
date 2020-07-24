@@ -1,0 +1,110 @@
+<!-- <h1 [ngStyle]="{'font-family': 'PT Sans'}">Dive Inn - What's Inside ? ! @ # $ % * ( ) ~ - + = ' " ;</h1> -->
+
+<!-- <div class="controlsContainer">
+  <div>
+    <select
+      [ngModel]="headerFont"
+      (ngModelChange)="onModelChange(controlsEnum.header, $event)"
+    >
+      <optgroup label="Header Fonts">
+        <option *ngFor="let font of fontList$ | async"
+          [ngValue]="font"
+        >
+          {{ font.uiText }}
+        </option>
+      </optgroup>
+      <optgroup label="Text Fonts">
+        <option *ngFor="let font of tFonts"
+          [ngValue]="font"
+        >
+          {{ font.uiText }}
+        </option>
+      </optgroup>
+    </select>
+    <br/>
+    <!-- <label for="headerBold">Bold: </label>
+    <input type="checkbox"
+      id="headerBold"
+      (ngModelChange)="$event ? headerFont.properties.weight = '700' : headerFont.properties.weight = 'regular'"
+      [checked]="headerFont.properties.weight === '700'"
+    /> --
+    <p>Selected Font:<br>{{headerFont.uiText}}</p>
+    <!-- <p>weight: {{headerFont.properties.weight}}</p> --
+  </div> -->
+
+  <!-- <div>
+    <select
+      [ngModel]="textFont"
+      (ngModelChange)="onModelChange(controlsEnum.text, $event)"
+    >
+      <option *ngFor="let font of fontOptions"
+        [ngValue]="font"
+      >
+        {{ font.uiText }}
+      </option>
+    </select>
+    <br/>
+    <p>Selected Font:<br>{{textFont.uiText}}</p>
+    <!-- <p>weight: {{textFont.properties.weight}}</p> --
+  </div>
+
+
+  <div>
+    <checkbox
+      uiLabel='Bold'
+      [(checkedValue)]='checkedValue'
+    ></checkbox>
+    <!-- <p>Weight value: {{textFont.properties.weight}}</p> --
+  </div> --
+
+    <!-- <checkbox [(ngModel)]="boldCheckbox"></checkbox> --
+    <!-- <input type="checkbox"
+      id="textBold"
+      [(ngModel)]="textFont.properties.bold"
+      (ngModelChange)="$event ? textFont.properties.weight = 700 : textFont.properties.weight = 400"
+      [checked]="textFont.properties.weight === 700" --
+    <!-- /> --
+    <!-- <label for="textBold"><span>Bold AT|jpgy</span></label>
+    <p>Selected Font:<br>{{textFont.uiText}}</p>
+    <p>bold: {{textFont.properties.bold}}<br>weight: {{textFont.properties.weight}}</p>
+  </div> -->
+
+
+  <!-- <div>
+    <h4>Add a new font</h4>
+    <label for="addFontFamily">Family: </label>
+    <input type="text"
+      id="addFontFamily"
+      name='bogusName'
+      [(ngModel)]="fontNameToAdd"
+      #addFontFamily="ngModel"
+      required
+    />
+    <p>Input: {{ fontNameToAdd }}</p>
+    <p>Valid: {{ addFontFamily.valid }}</p>
+    <label for="addFontHref">Href: </label>
+    <input type="text"
+      id="addFontHref"
+      [(ngModel)]="fontHrefToAdd"
+      #addFontHref="ngModel"
+    />
+    <p>Input: {{ fontNameToAdd }}</p>
+    <p>Valid: {{ addFontHref.valid }}</p>
+  </div>
+</div> -->
+
+<!-- <div class="controlsContainer">
+  <div>
+    <input type="radio"
+      name="testRadio"
+      id="testRadio1"
+    />
+    <label for="testRadio1"><span>Test Radio jpgy</span></label>
+    <br><br>
+    <input type="radio"
+      name="testRadio"
+      id="testRadio2"
+    />
+    <label for="testRadio2"><span>jpgy Test Radio</span></label>
+  </div>
+</div> -->

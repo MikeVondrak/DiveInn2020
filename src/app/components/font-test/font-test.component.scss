@@ -1,0 +1,21 @@
+@import '~src/scss/common-imports';
+
+:host {
+  display: block;
+
+  .controlsContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  hr {
+    margin: 2em 0;
+  }
+
+  optgroup {
+    border-bottom: 1px solid $dive-red;
+    &:last-child {
+      border: none;
+    }
+  }
+}
