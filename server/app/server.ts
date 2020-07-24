@@ -1,32 +1,37 @@
 // const express = require('express'); // old js way of importing
+
+// express and middleware
 import express, { RequestHandler, Router, Request, Response } from 'express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
 import * as path from 'path';
 
-import { Observable } from 'rxjs';
+// framework
 import { take } from 'rxjs/operators';
 
+// our backend
 import { ServerApp } from './server-app';
 import { logger } from './middleware/logger';
-import { sqlQueries } from './sqlQueries';
-import { routes } from './routes';
-import { TestData } from './models/test-data.model';
+import { sqlQueries } from './sql-queries';
+import { routes, FontGroupEnum } from './routes';
 import { queryCallback } from 'mysql';
 
-const _port: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
+import { TestData } from './models/test-data.model';
+import { DbFont } from './models/font.model';
+
+
+const PORT: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
 
 // running server app from ./server/app or ./server/dist (for prod)
-const _angularAppLocation: string = '../../dist/dive-inn'; // output from ng build --prod
-const _angularAssetsLocation: string = '../../src/assets'; /** @TODO more consistent locations / file structure */
+const ANGULAR_APP_LOCATION = '../../dist/dive-inn'; // output from ng build --prod
+const ANGULAR_ASSETS_LOCATION = '../../src/assets'; /** @TODO more consistent locations / file structure */
 
 debugFileAndDir();
 
 // list of paths for statically served content
 // __dirname provided by Express, location app is running from
-const angularDist = path.join(__dirname, _angularAppLocation);
-const assets = path.join(__dirname, _angularAssetsLocation);
+const angularDist = path.join(__dirname, ANGULAR_APP_LOCATION);
+const assets = path.join(__dirname, ANGULAR_ASSETS_LOCATION);
 const staticPaths: string[] = [
   angularDist, // published files from Angular --prod build
   assets // images, fonts, etc
@@ -49,56 +54,113 @@ const controllers: Router[] = [];
 const default200Response: RequestHandler = (req: Request, res: Response) => {
   console.log('NODE: Router default 200 response');
   // serve default file (index.html) for Angular app
-  //res.status(200).sendFile('/', {root: _angularAppLocation});
+  // res.status(200).sendFile('/', {root: ANGULAR_APP_LOCATION});
   res.send('{ "test_id": 200 }');
+};
+
+/**
+ * Makes a typed request to poolQuery and returns array of results via Express Response
+ * @param route API route to handle
+ * @param query SQL query to make
+ * @param res Response object from Express Router
+ */
+function makePoolQuery<returnType>(route: string, query: string, res: Response, values?: any) {
+   console.log('**** makePoolQuery: route= ' + route + ', query= ' + query + ', data= ' + JSON.stringify(values,null,4) || 'none');
+  serverApp.poolQuery<returnType>(query, values)
+    .pipe(take(1))
+    .subscribe(
+      (results: returnType[]) => {
+        res.send(results);
+      },
+      (err) => {
+        console.log('\n!!!!! Express - Failed getting data from: ' + route + '\n\t' + err);
+      }
+    );
 }
+
+const fontsRouter = express.Router();
+fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
+  console.log('----- fontsRouter GET: ' + routes.api.font._root);
+  // handle routes where request has query parameters included
+  if (req.query && Object.keys(req.query).length > 0) {
+
+    const queryParam = Object.keys(req.query)[0];
+    switch (queryParam) {
+
+      case 'fontdata':
+        const fontdataValue = req.query[queryParam];
+        switch (fontdataValue) {
+
+          case 'family':
+            makePoolQuery<string[]>(routes.api.font._root, sqlQueries.selectFontsFontFamily, res);
+            break;
+
+          default: throw new Error('Invalid fontdata value: ' + fontdataValue);
+        }
+        break;
+      default: throw new Error('Invalid query param: ' + queryParam);
+    }
+
+  } else {
+    makePoolQuery<DbFont>(routes.api.font._root, sqlQueries.selectFontsTable, res);
+  }
+});
+
+// handle adding new font
+const addFontRoute = routes.api.font._root + routes.api.font.add;
+fontsRouter.post(addFontRoute, (req: Request, res: Response) => {
+  const newFont = req.body as DbFont;
+  
+  console.log('fontsRouter ADD: ' + JSON.stringify(newFont, null, 4));
+
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // TODO need to return the new font list array instead of poolQuery result (add functionality to makePoolQuery?)
+  
+  makePoolQuery<DbFont>(addFontRoute, sqlQueries.insertFont, res, newFont);
+  
+  //res.send([]);
+});
+// handle removing font
+const removeFontRoute = routes.api.font._root + routes.api.font.remove;
+fontsRouter.post(removeFontRoute, (req: Request, res: Response) => {
+  const removeFontId = req.body.id;
+
+  console.log('fontsRouter REMOVE: ' + removeFontId);
+  
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // TODO need to return the new font list array instead of poolQuery result (add functionality to makePoolQuery?)
+
+  makePoolQuery<DbFont>(removeFontRoute, sqlQueries.removeFont, res, removeFontId);
+});
+
 
 const testDataRouter = express.Router();
 testDataRouter.get(routes.api.test, (req: Request, res: Response) => {
   console.log('testDataRouter');
-  
-  // const qcb: queryCallback = (err, rows, fields) => {
-  //   const data: TestData[] = rows;
-  //   res.send(rows);
-  // }
-  //serverApp.poolQuery<TestData>(sqlQueries.selectTestTable, qcb);
-
-  serverApp.poolQuery<TestData>(sqlQueries.selectTestTable)
-    .pipe(take(1))
-    .subscribe(
-      (results: TestData[]) => {
-        res.send(results);
-      },
-      (err) => {
-        console.log('\n!!!!! Failed getting data from: ' + routes.api.test + ', selectTestTable\n\t' + err);
-      }
-    );
+  makePoolQuery<TestData>(routes.api.test, sqlQueries.selectTestTable, res);
 });
-
 
 const allRoutes = express.Router();
 allRoutes.get(routes.api.other, default200Response);
 
 controllers.push(testDataRouter);
+controllers.push(fontsRouter);
 controllers.push(allRoutes);
 
 
-const serverApp = new ServerApp(angularDist, _port, staticPaths, middleWare, controllers);
+const serverApp = new ServerApp(angularDist, PORT, staticPaths, middleWare, controllers);
 serverApp.beginListening();
 
 
-
-
 /**
- * @method debugFileAndDir
  * __dirname = location where node script is currently executing
  * use path.join to resolve relative path ('../') in _appLocation
  * /server/dist/server.js -> ../../dist/dive-inn -> /dist/dive-inn/
  */
 function debugFileAndDir() {
-  console.log("\n\n********************************************************************************");
+  console.log('\n\n********************************************************************************');
   console.log('Running:\t\t' + __filename);
-  let tmp = path.join(__dirname, _angularAppLocation);
-  console.log('Angular App Path:\t' + _angularAppLocation + '\nResolved:\t\t' + tmp);
+  const tmp = path.join(__dirname, ANGULAR_APP_LOCATION);
+  console.log('Angular App Path:\t' + ANGULAR_APP_LOCATION + '\nResolved:\t\t' + tmp);
 }
 

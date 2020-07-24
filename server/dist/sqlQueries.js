@@ -1,5 +1,8 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.sqlQueries = {
-    selectTestTable: 'SELECT * FROM test_table'
+    selectTestTable: 'SELECT * FROM test_table',
+    selectFontsTable: 'SELECT * FROM fonts',
+    selectFontsFontFamily: 'SELECT font_family FROM fonts'
 };
+//# sourceMappingURL=sqlQueries.js.map
