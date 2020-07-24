@@ -19,7 +19,6 @@ import { queryCallback } from 'mysql';
 import { TestData } from './models/test-data.model';
 import { DbFont } from './models/font.model';
 
-
 const PORT: string = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
 
 // running server app from ./server/app or ./server/dist (for prod)
@@ -65,7 +64,7 @@ const default200Response: RequestHandler = (req: Request, res: Response) => {
  * @param res Response object from Express Router
  */
 function makePoolQuery<returnType>(route: string, query: string, res: Response, values?: any) {
-   console.log('**** makePoolQuery: route= ' + route + ', query= ' + query + ', data= ' + JSON.stringify(values,null,4) || 'none');
+  console.log('**** makePoolQuery: route= ' + route + ', query= ' + query + ', data= ' + JSON.stringify(values,null,4) || 'none');
   serverApp.poolQuery<returnType>(query, values)
     .pipe(take(1))
     .subscribe(
