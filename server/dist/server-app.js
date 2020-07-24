@@ -11,9 +11,12 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-exports.__esModule = true;
-var express_1 = require("express");
-var mysql_1 = require("mysql");
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = __importDefault(require("express"));
+var mysql_1 = __importDefault(require("mysql"));
 var routes_1 = require("./routes");
 var rxjs_1 = require("rxjs");
 var ServerApp = /** @class */ (function () {
@@ -30,9 +33,9 @@ var ServerApp = /** @class */ (function () {
             port: 3306,
             user: 'DiveMaster',
             password: 'D1v3M4st3r!!',
-            database: 'dive_inn_test_db'
+            database: 'dive_inn_test_db',
         };
-        this.app = express_1["default"](); // create a new express application instance
+        this.app = express_1.default(); // create a new express application instance
         this.port = process.env.PORT ? process.env.PORT : this.port; // process.env.PORT set by Heroku
         this.pool = this.createPool(this.dbConfig);
         // first to match route takes precedence,  static > middleware > controllers
@@ -53,7 +56,7 @@ var ServerApp = /** @class */ (function () {
     ServerApp.prototype.useStatic = function (paths) {
         var _this = this;
         paths.forEach(function (path) {
-            _this.app.use(express_1["default"].static(path));
+            _this.app.use(express_1.default.static(path));
             // this.app.use('/static', express.static(path)); // specify a mount path
         });
     };
@@ -101,7 +104,7 @@ var ServerApp = /** @class */ (function () {
     ServerApp.prototype.createPool = function (dbConfig, poolSize) {
         if (poolSize === void 0) { poolSize = 100; }
         var poolConfig = __assign({ connectionLimit: poolSize }, dbConfig);
-        return mysql_1["default"].createPool(poolConfig);
+        return mysql_1.default.createPool(poolConfig);
     };
     /**
      * Query using pool, automatically aquires and releases connection to db
@@ -110,11 +113,11 @@ var ServerApp = /** @class */ (function () {
      * @returns Observable of array of provided type, containing query results
      */
     // public poolQuery<T>(sqlQuery: string, callback: queryCallback): void {
-    ServerApp.prototype.poolQuery = function (sqlQuery) {
+    ServerApp.prototype.poolQuery = function (sqlQuery, values) {
         var _this = this;
         var queryResult$ = function (observer) {
             var queryOptions = {
-                sql: sqlQuery
+                sql: sqlQuery,
             };
             var responseCallback = function (err, rows, fields) {
                 if (err) {
@@ -123,7 +126,12 @@ var ServerApp = /** @class */ (function () {
                 observer.next(rows);
                 observer.complete();
             };
-            _this.pool.query(queryOptions, responseCallback);
+            if (values) {
+                _this.pool.query(queryOptions, values, responseCallback);
+            }
+            else {
+                _this.pool.query(queryOptions, responseCallback);
+            }
         };
         return new rxjs_1.Observable(queryResult$);
     };
@@ -136,4 +144,3 @@ var ServerApp = /** @class */ (function () {
     return ServerApp;
 }());
 exports.ServerApp = ServerApp;
-//# sourceMappingURL=server-app.js.map
