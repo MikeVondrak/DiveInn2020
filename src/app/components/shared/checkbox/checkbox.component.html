@@ -1,0 +1,12 @@
+<input type="checkbox"
+  id="textBold"
+  [(ngModel)]="checkedValue"
+  [checked]="checkedValue"
+
+  (change)="onChange($event)"
+  (ngModelChange)="onNgModelChange($event)"
+/>
+<label for="textBold">
+  <span>{{uiLabel}}</span>
+</label>
+<!-- <p>checkedValue:<br>{{checkedValue}}</p> -->
