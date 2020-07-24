@@ -13,7 +13,7 @@
     "latest": "npm i && cd server && npm i",
     "app-serve": "concurrently \"(cd server && npm run dev)\"  \"npm run start\"",
     "heroku-predeploy": "ng build --prod && cd server && tsc",
-    "heroku-postbuild": "echo \"HEROKU POSTBUILD\" && ng build --aot --prod",
+    "____heroku-postbuild": "echo \"HEROKU POSTBUILD\" && ng build --aot --prod",
     "db_test_recreate": "winpty mysql -uroot -p db/RecreateTestDatabase.sql",
     "convertColors": "node ./src/utilities/scripts/HexToRgb.js ../../../src/scss/_colors.scss"
   },
