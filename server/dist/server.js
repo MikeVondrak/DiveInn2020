@@ -10,7 +10,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+//Object.defineProperty(exports, "__esModule", { value: true });
 // express and middleware
 var express_1 = __importDefault(require("express"));
 var compression_1 = __importDefault(require("compression"));
