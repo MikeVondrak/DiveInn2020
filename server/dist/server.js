@@ -10,7 +10,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-//Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", { value: true });
 // express and middleware
 var express_1 = __importDefault(require("express"));
 var compression_1 = __importDefault(require("compression"));
@@ -23,7 +23,6 @@ var server_app_1 = require("./server-app");
 var logger_1 = require("./middleware/logger");
 var sql_queries_1 = require("./sql-queries");
 var routes_1 = require("./routes");
-var test1 = 2000;
 var PORT = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
 // running server app from ./server/app or ./server/dist (for prod)
 var ANGULAR_APP_LOCATION = '../../dist/dive-inn'; // output from ng build --prod
