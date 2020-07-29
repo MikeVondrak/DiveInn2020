@@ -9,5 +9,7 @@ exports.sqlQueries = {
     removeFont: 'DELETE FROM font WHERE id = ?',
     selectTableColumn: 'SELECT ?? FROM ??',
     // TODO - need to update for new data format
-    selectFontInstanceTable: "SELECT font.*, font_weight.weight, font_category.category FROM font\n      INNER JOIN font_weight ON fk_font_weight_id = font_weight.id\n      INNER JOIN font_category ON fk_font_category_id = font_category.id",
+    selectFontInstanceTable: `SELECT font.*, font_weight.weight, font_category.category FROM font
+      INNER JOIN font_weight ON fk_font_weight_id = font_weight.id
+      INNER JOIN font_category ON fk_font_category_id = font_category.id`,
 };

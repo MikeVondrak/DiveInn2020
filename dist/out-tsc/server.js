@@ -1,16 +1,19 @@
+"use strict";
 // const express = require('express'); // old js way of importing
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
 // express and middleware
-import express from 'express';
-import compression from 'compression';
-import cookieParser from 'cookie-parser';
-import * as path from 'path';
+const express_1 = tslib_1.__importDefault(require("express"));
+const compression_1 = tslib_1.__importDefault(require("compression"));
+const cookie_parser_1 = tslib_1.__importDefault(require("cookie-parser"));
+const path = tslib_1.__importStar(require("path"));
 // framework
-import { take } from 'rxjs/operators';
+const operators_1 = require("rxjs/operators");
 // our backend
-import { ServerApp } from './server-app';
-import { logger } from './middleware/logger';
-import { sqlQueries } from './sql-queries';
-import { routes } from './routes';
+const server_app_1 = require("./server-app");
+const logger_1 = require("./middleware/logger");
+const sql_queries_1 = require("./sql-queries");
+const routes_1 = require("./routes");
 const PORT = process.env.PORT || '3000'; // process.env.PORT set by server (e.g. Heroku) when hosted, or use 3000 for local testing
 // running server app from ./server/app or ./server/dist (for prod)
 const ANGULAR_APP_LOCATION = '../../dist/dive-inn'; // output from ng build --prod
@@ -27,11 +30,11 @@ const staticPaths = [
 // compile our list of middleware
 const middleWare = [
     // Express Framework Built-Ins
-    compression(),
-    express.json(),
-    cookieParser(),
+    compression_1.default(),
+    express_1.default.json(),
+    cookie_parser_1.default(),
     // custom
-    logger
+    logger_1.logger
 ];
 // define controllers for paths
 const controllers = [];
@@ -50,16 +53,16 @@ const default200Response = (req, res) => {
 function makePoolQuery(route, query, res, values) {
     console.log('**** makePoolQuery: route= ' + route + ', query= ' + query + ', data= ' + JSON.stringify(values, null, 4) || 'none');
     serverApp.poolQuery(query, values)
-        .pipe(take(1))
+        .pipe(operators_1.take(1))
         .subscribe((results) => {
         res.send(results);
     }, (err) => {
         console.log('\n!!!!! Express - Failed getting data from: ' + route + '\n\t' + err);
     });
 }
-const fontsRouter = express.Router();
-fontsRouter.get(routes.api.font._root, (req, res) => {
-    console.log('----- fontsRouter GET: ' + routes.api.font._root);
+const fontsRouter = express_1.default.Router();
+fontsRouter.get(routes_1.routes.api.font._root, (req, res) => {
+    console.log('----- fontsRouter GET: ' + routes_1.routes.api.font._root);
     // handle routes where request has query parameters included
     if (req.query && Object.keys(req.query).length > 0) {
         const queryParam = Object.keys(req.query)[0];
@@ -68,7 +71,7 @@ fontsRouter.get(routes.api.font._root, (req, res) => {
                 const fontdataValue = req.query[queryParam];
                 switch (fontdataValue) {
                     case 'family':
-                        makePoolQuery(routes.api.font._root, sqlQueries.selectFontsFontFamily, res);
+                        makePoolQuery(routes_1.routes.api.font._root, sql_queries_1.sqlQueries.selectFontsFontFamily, res);
                         break;
                     default: throw new Error('Invalid fontdata value: ' + fontdataValue);
                 }
@@ -77,39 +80,39 @@ fontsRouter.get(routes.api.font._root, (req, res) => {
         }
     }
     else {
-        makePoolQuery(routes.api.font._root, sqlQueries.selectFontsTable, res);
+        makePoolQuery(routes_1.routes.api.font._root, sql_queries_1.sqlQueries.selectFontsTable, res);
     }
 });
 // handle adding new font
-const addFontRoute = routes.api.font._root + routes.api.font.add;
+const addFontRoute = routes_1.routes.api.font._root + routes_1.routes.api.font.add;
 fontsRouter.post(addFontRoute, (req, res) => {
     const newFont = req.body;
     console.log('fontsRouter ADD: ' + JSON.stringify(newFont, null, 4));
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // TODO need to return the new font list array instead of poolQuery result (add functionality to makePoolQuery?)
-    makePoolQuery(addFontRoute, sqlQueries.insertFont, res, newFont);
+    makePoolQuery(addFontRoute, sql_queries_1.sqlQueries.insertFont, res, newFont);
     //res.send([]);
 });
 // handle removing font
-const removeFontRoute = routes.api.font._root + routes.api.font.remove;
+const removeFontRoute = routes_1.routes.api.font._root + routes_1.routes.api.font.remove;
 fontsRouter.post(removeFontRoute, (req, res) => {
     const removeFontId = req.body.id;
     console.log('fontsRouter REMOVE: ' + removeFontId);
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // TODO need to return the new font list array instead of poolQuery result (add functionality to makePoolQuery?)
-    makePoolQuery(removeFontRoute, sqlQueries.removeFont, res, removeFontId);
+    makePoolQuery(removeFontRoute, sql_queries_1.sqlQueries.removeFont, res, removeFontId);
 });
-const testDataRouter = express.Router();
-testDataRouter.get(routes.api.test, (req, res) => {
+const testDataRouter = express_1.default.Router();
+testDataRouter.get(routes_1.routes.api.test, (req, res) => {
     console.log('testDataRouter');
-    makePoolQuery(routes.api.test, sqlQueries.selectTestTable, res);
+    makePoolQuery(routes_1.routes.api.test, sql_queries_1.sqlQueries.selectTestTable, res);
 });
-const allRoutes = express.Router();
-allRoutes.get(routes.api.other, default200Response);
+const allRoutes = express_1.default.Router();
+allRoutes.get(routes_1.routes.api.other, default200Response);
 controllers.push(testDataRouter);
 controllers.push(fontsRouter);
 controllers.push(allRoutes);
-const serverApp = new ServerApp(angularDist, PORT, staticPaths, middleWare, controllers);
+const serverApp = new server_app_1.ServerApp(angularDist, PORT, staticPaths, middleWare, controllers);
 serverApp.beginListening();
 /**
  * __dirname = location where node script is currently executing

@@ -109,14 +109,14 @@ fontsRouter.get(routes.api.font._root, (req: Request, res: Response) => {
 const addFontRoute = routes.api.font._root + routes.api.font.add;
 fontsRouter.post(addFontRoute, (req: Request, res: Response) => {
   const newFont = req.body as DbFont;
-  
+
   console.log('fontsRouter ADD: ' + JSON.stringify(newFont, null, 4));
 
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // TODO need to return the new font list array instead of poolQuery result (add functionality to makePoolQuery?)
-  
+
   makePoolQuery<DbFont>(addFontRoute, sqlQueries.insertFont, res, newFont);
-  
+
   //res.send([]);
 });
 // handle removing font
@@ -125,7 +125,7 @@ fontsRouter.post(removeFontRoute, (req: Request, res: Response) => {
   const removeFontId = req.body.id;
 
   console.log('fontsRouter REMOVE: ' + removeFontId);
-  
+
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // TODO need to return the new font list array instead of poolQuery result (add functionality to makePoolQuery?)
 
@@ -149,7 +149,6 @@ controllers.push(allRoutes);
 
 const serverApp = new ServerApp(angularDist, PORT, staticPaths, middleWare, controllers);
 serverApp.beginListening();
-
 
 /**
  * __dirname = location where node script is currently executing

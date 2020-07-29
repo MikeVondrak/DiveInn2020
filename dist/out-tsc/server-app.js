@@ -1,9 +1,12 @@
+"use strict";
 // https://dev.to/aligoren/developing-an-express-application-using-typescript-3b1
-import express from 'express';
-import mysql from 'mysql';
-import { routes } from './routes';
-import { Observable } from 'rxjs';
-export class ServerApp {
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const express_1 = tslib_1.__importDefault(require("express"));
+const mysql_1 = tslib_1.__importDefault(require("mysql"));
+const routes_1 = require("./routes");
+const rxjs_1 = require("rxjs");
+class ServerApp {
     constructor(angularAppLocation = '', port = '3000', staticPathList, middleWareList, controllerList) {
         this.angularAppLocation = angularAppLocation;
         this.port = port;
@@ -17,7 +20,7 @@ export class ServerApp {
             password: 'D1v3M4st3r!!',
             database: 'dive_inn_test_db',
         };
-        this.app = express(); // create a new express application instance
+        this.app = express_1.default(); // create a new express application instance
         this.port = process.env.PORT ? process.env.PORT : this.port; // process.env.PORT set by Heroku
         this.pool = this.createPool(this.dbConfig);
         // first to match route takes precedence,  static > middleware > controllers
@@ -37,7 +40,7 @@ export class ServerApp {
      */
     useStatic(paths) {
         paths.forEach(path => {
-            this.app.use(express.static(path));
+            this.app.use(express_1.default.static(path));
             // this.app.use('/static', express.static(path)); // specify a mount path
         });
     }
@@ -57,7 +60,7 @@ export class ServerApp {
     useControllers(routers) {
         routers.forEach(router => {
             // this.app.use(routes.api.root, router);
-            this.app.use(routes.api._root, router);
+            this.app.use(routes_1.routes.api._root, router);
         });
     }
     /**
@@ -65,7 +68,7 @@ export class ServerApp {
      * @TODO proper 404 etc error handling
      */
     setCatchAllRoutes() {
-        this.app.all(routes.error._404, (req, res) => {
+        this.app.all(routes_1.routes.error._404, (req, res) => {
             // res.status(200).sendFile('/', {root: angularAppLocation});
             res.status(404).send('Route Not Found');
         });
@@ -81,7 +84,7 @@ export class ServerApp {
     }
     createPool(dbConfig, poolSize = 100) {
         const poolConfig = Object.assign({ connectionLimit: poolSize }, dbConfig);
-        return mysql.createPool(poolConfig);
+        return mysql_1.default.createPool(poolConfig);
     }
     /**
      * Query using pool, automatically aquires and releases connection to db
@@ -109,7 +112,7 @@ export class ServerApp {
                 this.pool.query(queryOptions, responseCallback);
             }
         };
-        return new Observable(queryResult$);
+        return new rxjs_1.Observable(queryResult$);
     }
     // Not sure we need to explicitly disconnet or do any cleanup?
     // Theoretically Node/Express "should never stop running"
@@ -118,4 +121,5 @@ export class ServerApp {
         connection.end();
     }
 }
+exports.ServerApp = ServerApp;
 //# sourceMappingURL=server-app.js.map

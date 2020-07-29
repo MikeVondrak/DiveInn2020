@@ -1,4 +1,6 @@
-export const sqlQueries = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sqlQueries = {
     selectTestTable: 'SELECT * FROM test_table',
     selectFontsTable: 'SELECT * FROM font',
     selectFontsFontFamily: 'SELECT family FROM font',

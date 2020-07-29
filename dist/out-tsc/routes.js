@@ -1,10 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // SHARED BETWEEN FRONTEND AND BACKEND
-export var FontGroupEnum;
+var FontGroupEnum;
 (function (FontGroupEnum) {
     FontGroupEnum["SELECTABLE"] = "selectable";
     FontGroupEnum["BLACKLISTED"] = "blacklisted";
-})(FontGroupEnum || (FontGroupEnum = {}));
-export const routes = {
+})(FontGroupEnum = exports.FontGroupEnum || (exports.FontGroupEnum = {}));
+exports.routes = {
     api: {
         _root: '/api',
         font: {
