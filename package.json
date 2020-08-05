@@ -1,6 +1,7 @@
 {
   "name": "dive-inn",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.config.json",
@@ -11,8 +12,9 @@
     "tsc": "tsc",
     "latest": "npm i && cd server && npm i",
     "app-serve": "concurrently \"(cd server && npm run dev)\"  \"npm run start\"",
+    "heroku-start": "ts-node server/src/app/server.ts",
     "heroku-predeploy": "ng build --prod && cd server && tsc",
-    "heroku-postbuild": "echo \"HEROKU POSTBUILD\" && ng build --aot --prod",
+    "heroku-postbuild": "echo \"*** HEROKU POSTBUILD ***\" && ng build --aot --prod",
     "db_test_recreate": "winpty mysql -uroot -p db/RecreateTestDatabase.sql",
     "convertColors": "node ./src/utilities/scripts/HexToRgb.js ../../../src/scss/_colors.scss"
   },
@@ -30,6 +32,7 @@
     "@angular/platform-browser": "^9.1.7",
     "@angular/platform-browser-dynamic": "^9.1.7",
     "@angular/router": "^9.1.7",
+    "@ngrx/store": "^9.2.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/snapsvg": "^0.5.0",
     "body-parser": "^1.19.0",
@@ -50,6 +53,8 @@
     "@angular/cli": "^9.1.6",
     "@angular/compiler-cli": "^9.1.7",
     "@angular/language-service": "^9.1.7",
+    "@types/compression": "^1.7.0",
+    "@types/express": "^4.17.6",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/mysql": "^2.15.12",

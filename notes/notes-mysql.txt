@@ -37,3 +37,10 @@ https://developer.okta.com/blog/2019/09/09/build-crud-app-node-mysql
   CRUD app w/Login
 https://medium.com/javascript-in-plain-english/creating-a-rest-api-with-jwt-authentication-and-role-based-authorization-using-typescript-fbfa3cab22a4
   Enterprise-level REST API
+
+Visual explanaton of SQL JOIN
+  https://blog.codinghorror.com/a-visual-explanation-of-sql-joins/
+
+MySQL Reserved Keywords
+  https://dev.mysql.com/doc/refman/8.0/en/keywords.html
+

@@ -1,21 +1,8 @@
-<img src='/assets/images/logoLg.png' />
-<img src='/assets/images/logoSm.png' />
-
-<app-font-test></app-font-test>
-<app-server-test></app-server-test>
-
-<router-outlet></router-outlet>
-
-<app-animated-cube></app-animated-cube>
-
-<app-animated-checkmark-svg></app-animated-checkmark-svg>
-
-<!-- <app-animated-checkmark-svg
-  size="100"
->
-</app-animated-checkmark-svg>
-
-<app-checkbox
-  id="testCheckbox"
-  uiLabel="Test Checkbox"
-></app-checkbox> -->
+<body class="site-body">
+  <app-nav-bar></app-nav-bar><br>
+  <app-header></app-header>
+  <main class="site-main">
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer class="footer"></app-footer>
+</body>
