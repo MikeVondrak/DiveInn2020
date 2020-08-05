@@ -36,6 +36,7 @@
     "@angular/router": "^9.1.12",
     "@ngrx/store": "^9.2.0",
     "@types/cookie-parser": "^1.4.2",
+    "@types/node": "^12.12.53",
     "@types/snapsvg": "^0.5.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
@@ -46,6 +47,7 @@
     "rxjs": "^6.6.2",
     "snapsvg": "^0.5.1",
     "snapsvg-cjs": "0.0.6",
+    "ts-node": "^8.10.2",
     "tslib": "^1.13.0",
     "typescript": "~3.8.3",
     "zone.js": "~0.10.2"
