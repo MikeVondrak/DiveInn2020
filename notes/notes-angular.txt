@@ -1,6 +1,9 @@
 _____
 Angular
 
+Angular Folder Structure
+  https://angular-folder-structure.readthedocs.io/_/downloads/en/latest/pdf/
+
 Handling Errors / Loading Indicator with async pipe
   https://codinglatte.com/posts/angular/angular-async-pipe-handle-errors/
 
