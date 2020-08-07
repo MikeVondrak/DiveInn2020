@@ -3,8 +3,9 @@
 // express and middleware
 import express, { RequestHandler, Router, Request, Response } from 'express';
 import compression from 'compression';
-import cookieParser from 'cookie-parser';
-import * as path from 'path';
+//import cookieParser from 'cookie-parser';
+// import * as path from 'path';
+import path from 'path';
 
 // framework
 import { take } from 'rxjs/operators';
@@ -41,7 +42,7 @@ const middleWare: RequestHandler[] = [
   // Express Framework Built-Ins
   compression(), // gzip for smaller file size / better performance
   express.json(), // parse JSON in body of request
-  cookieParser(), // parse cookie header of request
+  //cookieParser(), // parse cookie header of request
 
   // custom
   logger
