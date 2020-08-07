@@ -15,7 +15,7 @@
     "app-serve": "concurrently \"(cd server && npm run dev)\"  \"npm run start\"",
     "heroku-start": "ts-node server/src/app/server.ts",
     "heroku-predeploy": "ng build --prod && cd server && tsc",
-    "heroku-postbuild": "echo \"*** HEROKU POSTBUILD ***\" && ng build --aot --prod",
+    "heroku-postbuild": "echo \"*** HEROKU POSTBUILD! ***\" && ng build --aot --prod",
     "db_test_recreate": "winpty mysql -uroot -p db/RecreateTestDatabase.sql",
     "convertColors": "node ./src/utilities/scripts/HexToRgb.js ../../../src/scss/_colors.scss"
   },
